@@ -1,3 +1,4 @@
+#include <SDL_video.h>
 #include "graphics.h"
 
 SDL_Window *graphics_window = NULL;
@@ -28,7 +29,7 @@ void graphics_initialize_system(char const *window_name)
     }
 
     //Create window
-    graphics_window = SDL_CreateWindow(window_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, graphics_screen.w, graphics_screen.h, SDL_WINDOW_SHOWN);
+    graphics_window = SDL_CreateWindow(window_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, graphics_screen.w, graphics_screen.h, SDL_WINDOW_FULLSCREEN);
     if(!graphics_window)
     {
         SDL_Log("graphics_initialize_system() window not created -Error: %s\n", SDL_GetError());
