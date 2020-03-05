@@ -37,7 +37,7 @@ void sprite_close_system()
     sprite_list = NULL;
 }
 
-Sprite *sprite_load(char *filename, int frame_width, int frame_height)
+Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
 {
     void *sprite_pixels = NULL;
     int sprite_pitch = 0;
@@ -96,7 +96,7 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height)
 
     sprite_list[i].image = SDL_CreateTextureFromSurface(graphics_renderer, sprite_temp_bmp);
     strcpy(sprite_list[i].filename, filename);
-    sprite_list[i].fpl = 16;
+    sprite_list[i].fpl = fpl;
     sprite_list[i].frame_size.x = frame_width;
     sprite_list[i].frame_size.y = frame_height;
     sprite_list[i].ref++;
@@ -106,7 +106,7 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height)
     return &sprite_list[i];
 }
 
-void sprite_draw(Sprite *sprite, int frame, int x, int y)
+void sprite_draw(Sprite *sprite, int frame, int x, int y, int width, int height, int angle, SDL_RendererFlip flip)
 {
     SDL_Rect src, dest;
     if ((!sprite) || (!graphics_renderer))
@@ -121,8 +121,8 @@ void sprite_draw(Sprite *sprite, int frame, int x, int y)
 
     dest.x = x;
     dest.y = y;
-    dest.w = sprite->frame_size.x;
-    dest.h = sprite->frame_size.y;
+    dest.w = width;
+    dest.h = height;
 
-    SDL_RenderCopy(graphics_renderer, sprite->image, &src, &dest);
+    SDL_RenderCopyEx(graphics_renderer, sprite->image, &src, &dest, angle, NULL, flip);
 }

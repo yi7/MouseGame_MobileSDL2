@@ -45,7 +45,8 @@ void graphics_initialize_system(char const *window_name)
         return;
     }
 
-    SDL_SetRenderDrawColor(graphics_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    //SDL_SetRenderDrawColor(graphics_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(graphics_renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
     atexit(graphics_close_system);

@@ -34,9 +34,10 @@ void sprite_close_system();
  * @param filename the path of image to be loaded
  * @param frame_width width of the image
  * @param frame_height height of the image
+ * @param fpl frames per line
  * @return pointer to loaded sprite
  */
-Sprite* sprite_load(char *filename, int frame_width, int frame_height);
+Sprite* sprite_load(char *filename, int frame_width, int frame_height, int fpl);
 
 /**
  * @brief frees loaded sprite from memory
@@ -50,7 +51,12 @@ void sprite_free(Sprite **sprite);
  * @param frame index of sprite to draw
  * @param x x coordinate of sprite
  * @param y y coordinate of sprite
+ * @param width width of sprite to draw
+ * @param height height of sprite to draw
+ * @param angle angle of the sprite
+ * @param center center of the sprite to rotate from
+ * @param flip SDL_RendererFlip value
  */
-void sprite_draw(Sprite *sprite, int frame, int x, int y);
+void sprite_draw(Sprite *sprite, int frame, int x, int y, int width, int height, int angle, SDL_RendererFlip flip);
 
 #endif //MOUSEGAME_SPRITE_H
