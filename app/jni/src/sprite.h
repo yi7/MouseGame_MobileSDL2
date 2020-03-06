@@ -15,8 +15,8 @@ typedef struct
     int fpl; /**<frames per line in sprite sheet*/
     char filename[128]; /**<name of image file loaded*/
     SDL_Texture *image; /**<texture of the image loaded*/
-    Vector2D image_size; /**<the dimensions of the image loaded*/
-    Vector2D frame_size; /**<the dimensions of the frame in sprite sheet*/
+    Rectangle2D image_size; /**<the dimensions of the image loaded*/
+    Rectangle2D frame_size; /**<the dimensions of the frame in sprite sheet*/
 } Sprite;
 
 /**

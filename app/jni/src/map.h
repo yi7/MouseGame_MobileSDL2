@@ -8,7 +8,9 @@
 
 #include "graphics.h"
 #include "sprite.h"
+#include "entity.h"
 #include "vector.h"
+#include "wall.h"
 
 #define JSMN_HEADER
 #include "jsmn.h"
@@ -30,8 +32,8 @@ void map_initialize_system();
  * @brief loads the map
  * @param map_id id of the map
  */
-void map_load(char *filename);
+void map_load_entities(char *filename);
 
-void map_draw(int map_id);
+void map_draw_tiles(int map_id);
 
 #endif //MOUSEGAME_MAP_H

@@ -2,6 +2,20 @@
 
 Sprite *tiles, *walls, *wall_joint;
 
+char map[221][3] = {"00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
+                    "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
+                    "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
+                    "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
+                    "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
+                    "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
+                    "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
+                    "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
+                    "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
+                    "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
+                    "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
+                    "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
+                    "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00"};
+
 void map_initialize_system()
 {
     tiles = sprite_load("images/tiles.bmp", 64, 64, 6);
@@ -9,26 +23,66 @@ void map_initialize_system()
     wall_joint = sprite_load("images/wall_joint.bmp", 4, 4, 1);
 }
 
-void map_load(char *filename)
+void map_load_entities(char *filename)
 {
+    int column = 9;
+    int row = 7;
 
+    int tile_frame = graphics_screen.h / row;
+    int wall_x = tile_frame;
+    int wall_y = 0;
+    int next_row_count = 0;
+
+    for(int i = 0; i < (sizeof(map) / sizeof(map[0])); i++)
+    {
+        if(strcmp(map[i], "11") == 0) {
+            wall_initialize(wall_x, wall_y, tile_frame, 0, SDL_FLIP_NONE);
+
+            wall_x += tile_frame;
+            next_row_count++;
+        }
+        else if(strcmp(map[i], "14") == 0) {
+            wall_x += tile_frame;
+            next_row_count++;
+        }
+
+        if(next_row_count >= 8)
+        {
+            wall_x = tile_frame;
+            wall_y += tile_frame;
+            next_row_count = 0;
+        }
+    }
+
+    wall_x = 0;
+    wall_y = tile_frame;
+    next_row_count = 0;
+
+    for(int i = 0; i < (sizeof(map) / sizeof(map[0])); i++)
+    {
+        if(strcmp(map[i], "12") == 0) {
+            wall_initialize(wall_x + (tile_frame / 2) , wall_y - (tile_frame / 2), tile_frame, 90, SDL_FLIP_NONE);
+
+            wall_x += tile_frame;
+            next_row_count++;
+        }
+        else if(strcmp(map[i], "15") == 0) {
+            wall_x += tile_frame;
+            next_row_count++;
+        }
+
+        if(next_row_count >= 9)
+        {
+            wall_x = 0;
+            wall_y += tile_frame;
+            next_row_count = 0;
+        }
+    }
 }
 
-void map_draw(int map_id)
+void map_draw_tiles(int map_id)
 {
-    char map[221][3] = {"00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
-                        "13", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
-                        "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
-                        "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
-                        "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
-                        "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
-                        "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
-                        "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
-                        "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
-                        "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
-                        "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00",
-                        "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12",
-                        "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00", "11", "00"};
+
 
     int tile_length = graphics_screen.h / 7;
 
@@ -50,56 +104,6 @@ void map_draw(int map_id)
             {
                 temp_color = 0;
             }
-            tile_x += tile_length;
-            next_row_count++;
-        }
-
-        if(next_row_count >= 9)
-        {
-            tile_x = 0;
-            tile_y += tile_length;
-            next_row_count = 0;
-        }
-    }
-
-    //Draw Vertical Walls
-    tile_x = tile_length;
-    tile_y = 0;
-    next_row_count = 0;
-
-    for(int i = 0; i < (sizeof(map) / sizeof(map[0])); i++)
-    {
-        if(strcmp(map[i], "11") == 0) {
-            sprite_draw(walls, 0, tile_x - (tile_length / 32), tile_y, tile_length / 16, tile_length, 0, SDL_FLIP_NONE);
-            tile_x += tile_length;
-            next_row_count++;
-        }
-        else if(strcmp(map[i], "14") == 0) {
-            tile_x += tile_length;
-            next_row_count++;
-        }
-
-        if(next_row_count >= 8)
-        {
-            tile_x = tile_length;
-            tile_y += tile_length;
-            next_row_count = 0;
-        }
-    }
-
-    //Draw Horizontal Walls
-    tile_x = 0;
-    tile_y = tile_length;
-    next_row_count = 0;
-
-    for(int i = 0; i < (sizeof(map) / sizeof(map[0])); i++)
-    {
-        if(strcmp(map[i], "12") == 0) {
-            sprite_draw(walls, 0, tile_x - - (tile_length / 2) - (tile_length / 32), tile_y - (tile_length / 2), tile_length / 16, tile_length, 90, SDL_FLIP_HORIZONTAL);
-            tile_x += tile_length;
-            next_row_count++;
-        }
-        else if(strcmp(map[i], "14") == 0) {
             tile_x += tile_length;
             next_row_count++;
         }

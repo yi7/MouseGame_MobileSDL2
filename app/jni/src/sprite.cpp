@@ -97,13 +97,39 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
     sprite_list[i].image = SDL_CreateTextureFromSurface(graphics_renderer, sprite_temp_bmp);
     strcpy(sprite_list[i].filename, filename);
     sprite_list[i].fpl = fpl;
-    sprite_list[i].frame_size.x = frame_width;
-    sprite_list[i].frame_size.y = frame_height;
+    sprite_list[i].frame_size.w = frame_width;
+    sprite_list[i].frame_size.h = frame_height;
     sprite_list[i].ref++;
 
     //SDL_FreeSurface(sprite_formatted_surface);
 
     return &sprite_list[i];
+}
+
+void sprite_free(Sprite **sprite)
+{
+    Sprite *self;
+
+    if(!sprite)
+    {
+        return;
+    }
+
+    if(!*sprite)
+    {
+        return;
+    }
+
+    self = *sprite;
+    self->ref--;
+
+    if(self->ref <= 0)
+    {
+        SDL_DestroyTexture(self->image);
+        memset(self, 0, sizeof(Sprite));
+    }
+
+    *sprite = NULL;
 }
 
 void sprite_draw(Sprite *sprite, int frame, int x, int y, int width, int height, int angle, SDL_RendererFlip flip)
@@ -114,10 +140,10 @@ void sprite_draw(Sprite *sprite, int frame, int x, int y, int width, int height,
         return;
     }
 
-    src.x = frame % sprite->fpl * sprite->frame_size.x;
-    src.y = frame / sprite->fpl * sprite->frame_size.y;
-    src.w = sprite->frame_size.x;
-    src.h = sprite->frame_size.y;
+    src.x = frame % sprite->fpl * sprite->frame_size.w;
+    src.y = frame / sprite->fpl * sprite->frame_size.h;
+    src.w = sprite->frame_size.w;
+    src.h = sprite->frame_size.h;
 
     dest.x = x;
     dest.y = y;
