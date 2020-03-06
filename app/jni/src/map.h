@@ -7,9 +7,11 @@
 #include <SDL_image.h>
 
 #include "graphics.h"
-#include "jsmn.h"
 #include "sprite.h"
 #include "vector.h"
+
+#define JSMN_HEADER
+#include "jsmn.h"
 
 typedef struct
 {
@@ -28,6 +30,8 @@ void map_initialize_system();
  * @brief loads the map
  * @param map_id id of the map
  */
-void map_load(int map_id);
+void map_load(char *filename);
+
+void map_draw(int map_id);
 
 #endif //MOUSEGAME_MAP_H
