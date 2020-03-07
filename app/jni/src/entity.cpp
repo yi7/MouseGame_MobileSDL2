@@ -19,14 +19,7 @@ void entity_initialize_system()
 void entity_close_system()
 {
     Entity *entity;
-    for(int i = 0; i < ENTITY_MAX; i++)
-    {
-        entity = &entity_list[i];
-        if(entity->inuse)
-        {
-            entity_free(&entity);
-        }
-    }
+    entity_free_all();
     free(entity_list);
 }
 
@@ -115,10 +108,74 @@ void entity_draw_all()
 
 bool entity_intersect(Entity *a, Entity *b)
 {
+    SDL_Rect a_box;
+    SDL_Rect b_box;
+
+    if(a->shape == RECTANGLE)
+    {
+        a_box.x = a->position.x;
+        a_box.y = a->position.y;
+        a_box.w = a->rect_hitbox.w;
+        a_box.h = a->rect_hitbox.h;
+    }
+
+    if(b->shape == RECTANGLE)
+    {
+        b_box.x = b->position.x;
+        b_box.y = b->position.y;
+        b_box.w = b->rect_hitbox.w;
+        b_box.h = b->rect_hitbox.h;
+    }
+
+    if(a->shape == RECTANGLE && b->shape == RECTANGLE)
+    {
+        return vector_rects_intersect(a_box, b_box);
+    }
+    else if(a->shape == CIRCLE && b->shape == RECTANGLE)
+    {
+        return vector_circ_rect_intersect(a->circ_hitbox, b_box);
+    }
+    else if(a->shape == RECTANGLE && b->shape == CIRCLE)
+    {
+        return vector_circ_rect_intersect(b->circ_hitbox, a_box);
+    }
+    else if(a->shape == CIRCLE && b->shape == CIRCLE)
+    {
+        return vector_circs_intersect(a->circ_hitbox, b->circ_hitbox);
+    }
+
     return false;
 }
 
 Entity *entity_intersect_all(Entity *self)
 {
+    if(!self)
+    {
+        return NULL;
+    }
+
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(self == &entity_list[i])
+        {
+            continue;
+        }
+
+        if(entity_intersect(self, &entity_list[i]))
+        {
+            return &entity_list[i];
+        }
+    }
+
     return NULL;
+}
+
+void entity_update(Entity *self)
+{
+
 }

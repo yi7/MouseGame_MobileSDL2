@@ -11,6 +11,7 @@
 #include "entity.h"
 #include "vector.h"
 #include "wall.h"
+#include "mouse.h"
 
 #define JSMN_HEADER
 #include "jsmn.h"

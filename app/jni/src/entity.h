@@ -19,9 +19,16 @@ enum State
 
 enum Type
 {
-    MOUSE_NORMAL,
-    CAT_NORMAL,
-    WALL
+    MOUSE,
+    CAT,
+    WALL,
+    TILE
+};
+
+enum Shape
+{
+    CIRCLE,
+    RECTANGLE
 };
 
 typedef struct Entity_S
@@ -35,13 +42,16 @@ typedef struct Entity_S
     int angle; /**<angle of the entity*/
     SDL_RendererFlip flip; /**<SDL_RendererFlip value*/
     enum State state; /**<state of the entity*/
-    enum Type type; /**type of entity*/
-    Sprite *sprite; /**sprite associated with entity*/
-    int frame; /**current frame of entity*/
+    enum Type type; /**<type of entity*/
+    enum Shape shape; /**<shape of entity hitbox*/
+    Sprite *sprite; /**<sprite associated with entity*/
+    int frame; /**<current frame of entity*/
 
-    void (*free)(struct Entity_S *self); /**cleanup function of entity*/
+    void (*free)(struct Entity_S *self); /**<cleanup function of entity*/
     void (*draw)(struct Entity_S *self); /**<draw function of entity*/
     void (*touch)(struct Entity_S *self, struct Entity_S *other); /**<touch function of entity*/
+    void (*update)(struct Entity_S *self); /**<update function of entity*/
+    void (*think)(struct Entity_S *self); /**<think function of entity*/
 } Entity;
 
 /**
@@ -100,5 +110,27 @@ bool entity_intersect(Entity *a, Entity *b);
  * @return the entity that it collided with
  */
 Entity *entity_intersect_all(Entity *self);
+
+/**
+ * @brief updates the entity
+ * @param self the entity to update
+ */
+void entity_update(Entity *self);
+
+/**
+ * @brief calls all update functions of entities on the entity system
+ */
+void entity_update_all();
+
+/**
+ * @brief think function that runs every frame
+ * @param self the thinking entity
+ */
+void entity_think(Entity *self);
+
+/**
+ * @brief calls all think functions of entities on the entity system
+ */
+void entity_think_all();
 
 #endif //MOUSEGAME_ENTITY_H

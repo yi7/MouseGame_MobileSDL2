@@ -2,13 +2,11 @@
 
 void wall_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
 {
-    Sprite *walls = sprite_load("images/walls.bmp", 4, 64, 4);
-    int sprite_frame_width = 4;
-    int sprite_frame_height = 64;
+    Sprite *walls = sprite_load("images/walls.png", 4, 64, 4);
 
     Rectangle2D wall_frame;
     wall_frame.h = scale;
-    wall_frame.w = scale * sprite_frame_width / sprite_frame_height;
+    wall_frame.w = scale * walls->frame_size.w / walls->frame_size.h;
 
     Entity *wall = entity_new();
     wall->position.x = x - (wall_frame.w / 2);
@@ -22,11 +20,13 @@ void wall_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
     wall->flip = flip;
     wall->state = STOP;
     wall->type = WALL;
+    wall->shape = RECTANGLE;
     wall->sprite = walls;
     wall->frame = 0;
     wall->free = wall_free;
     wall->draw = wall_draw;
     wall->touch = wall_touch;
+    wall->think = NULL;
 }
 
 void wall_free(Entity *entity)
@@ -41,5 +41,38 @@ void wall_draw(Entity *entity)
 
 void wall_touch(Entity *self, Entity *other)
 {
+    if(entity_intersect(self, other))
+    {
+        switch(other->type) {
+            case MOUSE:
+            case CAT:
+                wall_update_animal(other);
+                break;
+            case TILE:
+            case WALL:
+            default:
+                break;
+        }
+    }
+}
 
+void wall_update_animal(Entity *entity)
+{
+    switch(entity->state)
+    {
+        case UP:
+            entity->state = RIGHT;
+            break;
+        case RIGHT:
+            entity->state = DOWN;
+            break;
+        case DOWN:
+            entity->state = LEFT;
+            break;
+        case LEFT:
+            entity->state = UP;
+            break;
+        default:
+            break;
+    }
 }

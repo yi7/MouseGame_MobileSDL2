@@ -28,10 +28,16 @@ void wall_free(Entity *entity);
 void wall_draw(Entity *entity);
 
 /**
- * @brief touch function of the entity
- * @param self the entity to check whether it touches anything
- * @param other the entity touched
+ * @brief touch function of the wall entity
+ * @param self the wall entity
+ * @param other the entity that collided with the wall
  */
 void wall_touch(Entity *self, Entity *other);
+
+/**
+ * @brief update function of the wall entity
+ * @param entity the entity that collided with the wall
+ */
+void wall_update_animal(Entity *entity);
 
 #endif //MOUSEGAME_WALL_H
