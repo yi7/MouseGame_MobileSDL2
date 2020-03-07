@@ -16,6 +16,9 @@
 #define JSMN_HEADER
 #include "jsmn.h"
 
+extern int map_width;
+extern int map_height;
+
 typedef struct
 {
     int columns; /**<number of columns for tilemap*/
