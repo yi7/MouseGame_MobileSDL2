@@ -42,7 +42,7 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
     void *sprite_pixels = NULL;
     int sprite_pitch = 0;
     int i;
-    SDL_Surface *sprite_temp_bmp;
+    SDL_Surface *sprite_temp;
     SDL_Surface *sprite_formatted_surface;
     SDL_Texture *sprite_texture = NULL;
 
@@ -83,8 +83,8 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
         }
     }
 
-    sprite_temp_bmp = SDL_LoadBMP(filename);
-    if(!sprite_temp_bmp)
+    sprite_temp = IMG_Load(filename);
+    if(!sprite_temp)
     {
         SDL_Log("load_sprite() unable to load sprite -Error:");
         exit(0);
@@ -94,7 +94,7 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
     //sprite_texture = SDL_CreateTexture(graphics_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, sprite_formatted_surface->w, sprite_formatted_surface->h);
 
 
-    sprite_list[i].image = SDL_CreateTextureFromSurface(graphics_renderer, sprite_temp_bmp);
+    sprite_list[i].image = SDL_CreateTextureFromSurface(graphics_renderer, sprite_temp);
     strcpy(sprite_list[i].filename, filename);
     sprite_list[i].fpl = fpl;
     sprite_list[i].frame_size.w = frame_width;

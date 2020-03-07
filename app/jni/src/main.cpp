@@ -35,12 +35,12 @@ int SDL_main( int argc, char* args[] )
     SDL_Event e;
     bool quit = false;
 
-    //Sprite *test;
-    //test = sprite_load("images/hello.bmp", 128, 128, 1);
+    Sprite *test;
+    test = sprite_load("images/loaded.png", 640, 480, 1);
 
     SDL_Log("test");
 
-    map_load_entities("test");
+    //map_load_entities("test");
 
     while(!quit)
     {
@@ -57,8 +57,9 @@ int SDL_main( int argc, char* args[] )
 
         SDL_RenderClear(graphics_renderer);
 
-        map_draw_tiles(0);
-        entity_draw_all();
+        sprite_draw(test, 0, 0, 0, 640, 480, 0, SDL_FLIP_NONE);
+        //map_draw_tiles(0);
+        //entity_draw_all();
 
         SDL_RenderPresent(graphics_renderer);
     }
