@@ -175,7 +175,53 @@ Entity *entity_intersect_all(Entity *self)
     return NULL;
 }
 
-void entity_update(Entity *self)
+void entity_touch_all()
 {
+    Entity *other;
 
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(!entity_list[i].touch)
+        {
+            continue;
+        }
+
+        other = entity_intersect_all(&entity_list[i]);
+        if(other)
+        {
+            entity_list[i].touch(&entity_list[i], other);
+        }
+    }
+}
+
+void entity_update(Entity *self);
+
+void entity_update_all();
+
+void entity_think(Entity *self)
+{
+    SDL_Log("think thik");
+}
+
+void entity_think_all()
+{
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(!entity_list[i].think)
+        {
+            continue;
+        }
+
+        entity_list[i].think(&entity_list[i]);
+    }
 }

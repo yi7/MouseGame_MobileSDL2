@@ -49,6 +49,7 @@ void mouse_touch(Entity *self, Entity *other)
     {
         switch(other->type) {
             case WALL:
+                break;
             case CAT:
             case MOUSE:
             default:

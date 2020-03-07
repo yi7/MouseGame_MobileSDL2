@@ -112,6 +112,11 @@ bool entity_intersect(Entity *a, Entity *b);
 Entity *entity_intersect_all(Entity *self);
 
 /**
+ * @brief calls all touch function of entities
+ */
+void entity_touch_all();
+
+/**
  * @brief updates the entity
  * @param self the entity to update
  */

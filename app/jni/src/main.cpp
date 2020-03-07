@@ -43,7 +43,7 @@ int SDL_main( int argc, char* args[] )
 
     while(!quit)
     {
-        //graphics_next_frame();
+        graphics_next_frame();
         //SDL_PumpEvents();
 
         while(SDL_PollEvent(&e) != 0)
@@ -55,6 +55,8 @@ int SDL_main( int argc, char* args[] )
         }
 
         SDL_RenderClear(graphics_renderer);
+        entity_think_all();
+        //entity_touch_all();
 
         //sprite_draw(test, 0, 0, 0, 640, 480, 0, SDL_FLIP_NONE);
         map_draw_tiles(0);

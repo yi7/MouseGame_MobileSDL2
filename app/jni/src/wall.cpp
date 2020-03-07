@@ -41,6 +41,16 @@ void wall_draw(Entity *entity)
 
 void wall_touch(Entity *self, Entity *other)
 {
+    if(!self)
+    {
+        SDL_Log("wall_touch() no self entity -Error:");
+    }
+
+    if(!other)
+    {
+        SDL_Log("wall_touch() no other entity -Error:");
+    }
+
     if(entity_intersect(self, other))
     {
         switch(other->type) {
@@ -62,15 +72,19 @@ void wall_update_animal(Entity *entity)
     {
         case UP:
             entity->state = RIGHT;
+            //entity->position.y -= entity->velocity;
             break;
         case RIGHT:
             entity->state = DOWN;
+            //entity->position.x -= entity->velocity;
             break;
         case DOWN:
             entity->state = LEFT;
+            //entity->position.y += entity->velocity;
             break;
         case LEFT:
             entity->state = UP;
+            //entity->position.x += entity->velocity;
             break;
         default:
             break;
