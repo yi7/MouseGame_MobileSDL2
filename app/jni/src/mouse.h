@@ -35,9 +35,35 @@ void mouse_draw(Entity *entity);
 void mouse_touch(Entity *self, Entity *other);
 
 /**
- * @brief think function that runs every frame
- * @param entity the thinking entity
+ * @brief update function of the mouse entity when colliding with a wall
+ * @param entity the entity to update
  */
-void mouse_think(Entity *entity);
+void mouse_update_wall(Entity *entity);
+
+/**
+ * @brief think function that runs every frame
+ * @param self the thinking entity
+ */
+void mouse_think(Entity *self);
+
+/**
+ * @brief move mouse forward by velocity
+ * @param self the mouse to move forward
+ */
+void mouse_step_forward(Entity *self);
+
+/**
+ * @brief move mouse backward by velocity
+ * @param self the mouse to move backward
+ */
+void mouse_step_backward(Entity *self);
+
+
+/**
+ * @brief checks what is in front of mouse
+ * @param self the mouse to check
+ * @return NULL if nothing. Otherwise the type of entity thats in front
+ */
+Type mouse_check_front_type(Entity *self);
 
 #endif //MOUSEGAME_MOUSE_H

@@ -112,6 +112,13 @@ bool entity_intersect(Entity *a, Entity *b);
 Entity *entity_intersect_all(Entity *self);
 
 /**
+ * @brief checks whether there is an entity in front
+ * @param self the entity to check
+ * @return the entity that is in front, NULL if nothing
+ */
+Entity *entity_check_front(Entity *self);
+
+/**
  * @brief calls all touch function of entities
  */
 void entity_touch_all();

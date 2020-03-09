@@ -175,6 +175,62 @@ Entity *entity_intersect_all(Entity *self)
     return NULL;
 }
 
+Entity *entity_check_front(Entity *self)
+{
+    //Move a step ahead
+    switch(self->state)
+    {
+        case UP:
+            self->position.y -= self->velocity;
+            break;
+        case RIGHT:
+            self->position.x += self->velocity;
+            break;
+        case DOWN:
+            self->position.y += self->velocity;
+            break;
+        case LEFT:
+            self->position.x -= self->velocity;
+            break;
+        case FREE:
+        case STOP:
+        default:
+            break;
+    }
+
+    Entity *entity_collided;
+    entity_collided = entity_intersect_all(self);
+
+    if(entity_collided)
+    {
+        //Move a step behind
+        switch(self->state)
+        {
+            case UP:
+                self->position.y += self->velocity;
+                break;
+            case RIGHT:
+                self->position.x -= self->velocity;
+                break;
+            case DOWN:
+                self->position.y -= self->velocity;
+                break;
+            case LEFT:
+                self->position.x += self->velocity;
+                break;
+            case FREE:
+            case STOP:
+            default:
+                break;
+        }
+        return entity_collided;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
 void entity_touch_all()
 {
     Entity *other;

@@ -55,8 +55,9 @@ int SDL_main( int argc, char* args[] )
         }
 
         SDL_RenderClear(graphics_renderer);
-        entity_think_all();
         //entity_touch_all();
+        entity_think_all();
+
 
         //sprite_draw(test, 0, 0, 0, 640, 480, 0, SDL_FLIP_NONE);
         map_draw_tiles(0);
