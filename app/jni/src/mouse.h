@@ -12,6 +12,7 @@
  * @param x x position of mouse
  * @param y y position of mouse
  * @param scale scale value for resizing
+ * @param state which direction mouse is facing
  * @param angle angle of mouse
  * @param flip SDL_RendererFlip value
  */
