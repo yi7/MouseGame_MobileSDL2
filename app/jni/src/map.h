@@ -22,6 +22,7 @@ extern int TPL; //Tiles per line
 extern float WALL_FRAME_WIDTH;
 extern const int MAP_TILE_COLUMNS;
 extern const int MAP_TILE_ROWS;
+extern Tile *tile_list;
 
 typedef struct
 {

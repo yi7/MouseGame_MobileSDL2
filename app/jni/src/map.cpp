@@ -6,7 +6,7 @@ int TPL = 0;
 float WALL_FRAME_WIDTH;
 const int MAP_TILE_COLUMNS = 9;
 const int MAP_TILE_ROWS = 7;
-static Tile *tile_list = NULL;
+Tile *tile_list = NULL;
 
 char map[285][3] = {"13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13",
                     "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "14", "00", "11",

@@ -16,6 +16,7 @@ enum Game_State
     MAIN_MENU,
     PLAY,
     PAUSE,
+    PLAN,
     QUIT
 };
 
@@ -45,13 +46,13 @@ int SDL_main( int argc, char* args[] )
     bool quit = false;
     Game_State state = MAIN_MENU;
     Point2D touch_location;
+    Point2D untouch_location;
+    bool pressed = false;
     //Sprite *test = sprite_load("images/loaded.png", 640, 480, 1);
 
     SDL_Log("test");
 
     map_load_entities("test");
-    touch_location.x = 0;
-    touch_location.y = 0;
 
     while(!quit)
     {
@@ -76,7 +77,13 @@ int SDL_main( int argc, char* args[] )
                             {
                                 state = PAUSE;
                             }
+                            else
+                            {
+                                state = PLAN;
+                            }
+
                             break;
+                        case PLAN:
                         case PAUSE:
                             if(touch_location.x > TILE_FRAME * MAP_TILE_COLUMNS)
                             {
@@ -85,12 +92,41 @@ int SDL_main( int argc, char* args[] )
                             break;
                     }
                     break;
-                case SDL_FINGERMOTION:
-                    touch_location.x = e.tfinger.x * graphics_screen.w;
-                    touch_location.y = e.tfinger.y * graphics_screen.h;
                 case SDL_FINGERUP:
-                    touch_location.x = e.tfinger.x * graphics_screen.w;
-                    touch_location.y = e.tfinger.y * graphics_screen.h;
+                    untouch_location.x = e.tfinger.x * graphics_screen.w;
+                    untouch_location.y = e.tfinger.y * graphics_screen.h;
+
+                    if(state == PLAN)
+                    {
+                        int map_x = touch_location.x / TILE_FRAME;
+                        int map_y = touch_location.y / TILE_FRAME;
+                        int tile_position = (TPL * map_y) + map_x;
+
+                        if(abs(touch_location.x - untouch_location.x) > abs(touch_location.y - untouch_location.y))
+                        {
+                            if(touch_location.x < untouch_location.x)
+                            {
+                                tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, RIGHT, 0, SDL_FLIP_NONE);
+                            }
+                            else
+                            {
+                                tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, LEFT, 0, SDL_FLIP_NONE);
+                            }
+                        }
+                        else
+                        {
+                            if(touch_location.y < untouch_location.y)
+                            {
+                                tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, DOWN, 0, SDL_FLIP_NONE);
+                            }
+                            else
+                            {
+                                tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, UP, 0, SDL_FLIP_NONE);
+                            }
+                        }
+                    }
+
+                    break;
                 default:
                     break;
             }
@@ -107,9 +143,12 @@ int SDL_main( int argc, char* args[] )
                 map_draw_tiles(0);
                 entity_draw_all();
                 break;
+            case PLAN:
             case PAUSE:
                 map_draw_tiles(0);
                 entity_draw_all();
+                break;
+            default:
                 break;
         }
 
