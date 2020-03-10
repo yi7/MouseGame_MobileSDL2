@@ -17,7 +17,7 @@ void mouse_initialize(int x, int y, int scale, enum State state, int angle, SDL_
     mouse->rect_hitbox.y = y + (WALL_FRAME_WIDTH / 2);
     mouse->rect_hitbox.w = sprite_frame.w - WALL_FRAME_WIDTH;
     mouse->rect_hitbox.h = sprite_frame.h - WALL_FRAME_WIDTH;
-    mouse->velocity = 8;
+    mouse->velocity = 16;
     mouse->angle = angle;
     mouse->flip = flip;
     mouse->state = state;
@@ -30,8 +30,6 @@ void mouse_initialize(int x, int y, int scale, enum State state, int angle, SDL_
     mouse->touch = mouse_touch;
     mouse->update = NULL;
     mouse->think = mouse_think;
-
-    SDL_Log("%d, %d", scale, mouse->position.y);
 }
 
 void mouse_free(Entity *entity)

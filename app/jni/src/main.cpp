@@ -44,7 +44,7 @@ int SDL_main( int argc, char* args[] )
 
     while(!quit)
     {
-        graphics_next_frame();
+        //graphics_next_frame();
         //SDL_PumpEvents();
 
         while(SDL_PollEvent(&e) != 0)

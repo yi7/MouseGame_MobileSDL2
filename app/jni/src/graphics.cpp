@@ -82,6 +82,5 @@ void graphics_frame_delay()
 
 void graphics_next_frame()
 {
-    SDL_RenderPresent(graphics_renderer);
     graphics_frame_delay();
 }
