@@ -1,33 +1,84 @@
 #include "map.h"
 
 Sprite *tiles;
-int map_width;
-int map_height;
+float TILE_FRAME = 0;
+int TPL = 0;
+float WALL_FRAME_WIDTH;
 const int MAP_TILE_COLUMNS = 9;
 const int MAP_TILE_ROWS = 7;
+static Tile *tile_list = NULL;
 
 char map[285][3] = {"13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13",
+                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "14", "00", "11",
+                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                    "11", "00", "14", "00", "14", "00", "14", "00", "11", "00", "11", "00", "14", "00", "14", "00", "14", "00", "11",
+                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "11",
+                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                    "11", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "11",
+                    "13", "15", "13", "15", "13", "15", "13", "12", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
                     "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
                     "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "12", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "12", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "11", "00", "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                    "11", "00", "14", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
+                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "12", "13", "15", "13", "15", "13", "15", "13", "12", "13",
                     "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
                     "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13"};
 
 void map_initialize_system()
 {
     tiles = sprite_load("images/tiles.png", 64, 64, 6);
-    int map_tile_dimension = graphics_screen.h / MAP_TILE_ROWS;
-    map_height = map_tile_dimension * MAP_TILE_ROWS;
-    map_width = map_tile_dimension * MAP_TILE_COLUMNS;
+    TILE_FRAME = graphics_screen.h / MAP_TILE_ROWS;
+    TPL = MAP_TILE_COLUMNS;
+
+    tile_list = (Tile *)malloc(sizeof(Tile) * (MAP_TILE_COLUMNS * MAP_TILE_ROWS));
+    if(!tile_list)
+    {
+        SDL_Log("map_initialize_system() failed to allocate entity system -Error:");
+        return;
+    }
+    memset(tile_list, 0, sizeof(Tile) * (MAP_TILE_COLUMNS * MAP_TILE_ROWS));
+
+    int tile_x = 0;
+    int tile_y = 0;
+    int next_row_count = 0;
+    int frame = 1;
+    int tile_index = 0;
+
+    for(int i = 0; i < (sizeof(map) / sizeof(map[0])); i++)
+    {
+        if(strcmp(map[i], "00") == 0) {
+            tile_list[tile_index++] = *tile_new(tile_x, tile_y, TILE_FRAME, frame);
+            if(frame == 0)
+            {
+                frame = 1;
+            }
+            else
+            {
+                frame = 0;
+            }
+            tile_x += TILE_FRAME;
+            next_row_count++;
+        }
+
+        if(next_row_count >= 9)
+        {
+            tile_x = 0;
+            tile_y += TILE_FRAME;
+            next_row_count = 0;
+        }
+    }
+
+    //Didn't know where I can put the wall frame to adjust hitbox for animal entities so I placed it here.
+    //4 is the pixel width of wall. 64 is the pixel height of the wall.
+    WALL_FRAME_WIDTH = TILE_FRAME * 4 / 64;
+
+    atexit(map_close_system);
+}
+
+void map_close_system()
+{
+    free(tile_list);
+    sprite_free(&tiles);
 }
 
 void map_load_entities(char *filename)
@@ -86,40 +137,27 @@ void map_load_entities(char *filename)
 
     }
 
-    mouse_initialize(tile_frame * 2 + (tile_frame / 4), tile_frame * 4 + tile_frame / 4, tile_frame, UP, 0, SDL_FLIP_NONE);
+    mouse_initialize(tile_frame * 4, tile_frame * 3, tile_frame, UP, 0, SDL_FLIP_NONE);
 }
 
 void map_draw_tiles(int map_id)
 {
-    int tile_length = graphics_screen.h / MAP_TILE_ROWS;
-
-    //Draw Tiles
-    int tile_x = 0;
-    int tile_y = 0;
-    int next_row_count = 0;
-    int temp_color = 1;
-
-    for(int i = 0; i < (sizeof(map) / sizeof(map[0])); i++)
+    for(int i = 0; i < (MAP_TILE_COLUMNS * MAP_TILE_ROWS); i++)
     {
-        if(strcmp(map[i], "00") == 0) {
-            sprite_draw(tiles, temp_color, tile_x, tile_y, tile_length, tile_length, 0, SDL_FLIP_NONE);
-            if(temp_color == 0)
-            {
-                temp_color = 1;
-            }
-            else
-            {
-                temp_color = 0;
-            }
-            tile_x += tile_length;
-            next_row_count++;
-        }
+        sprite_draw(tiles, tile_list[i].frame, tile_list[i].point.x, tile_list[i].point.y, TILE_FRAME, TILE_FRAME, 0, SDL_FLIP_NONE);
+    }
+}
 
-        if(next_row_count >= 9)
+bool map_check_on_tile(Entity *entity)
+{
+    for(int i = 0; i < (MAP_TILE_COLUMNS * MAP_TILE_ROWS); i++)
+    {
+        if(entity->position.x == tile_list[i].point.x &&
+           entity->position.y == tile_list[i].point.y)
         {
-            tile_x = 0;
-            tile_y += tile_length;
-            next_row_count = 0;
+            return true;
         }
     }
+
+    return false;
 }

@@ -14,8 +14,8 @@ void wall_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
         wall_frame.w = scale * wall_vertical->frame_size.w / wall_vertical->frame_size.h;
         wall->position.x = x - (wall_frame.w / 2);
         wall->position.y = y;
-        //wall->rect_hitbox.x = wall->position.x;
-        //wall->rect_hitbox.y = wall->position.y;
+        wall->rect_hitbox.x = wall->position.x;
+        wall->rect_hitbox.y = wall->position.y;
         wall->rect_hitbox.w = wall_frame.w;
         wall->rect_hitbox.h = wall_frame.h;
         wall->sprite = wall_vertical;
@@ -28,8 +28,8 @@ void wall_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
         //SDL_Log("%d, %d", wall_frame.h, wall_frame.w);
         wall->position.x = x;
         wall->position.y = y - (wall_frame.h / 2);
-        //wall->rect_hitbox.x = x;
-        //wall->rect_hitbox.y = y - (wall_frame.w / 2);
+        wall->rect_hitbox.x = wall->position.x;
+        wall->rect_hitbox.y = wall->position.y;
         wall->rect_hitbox.w = wall_frame.w;
         wall->rect_hitbox.h = wall_frame.h;
         wall->sprite = wall_horizontal;

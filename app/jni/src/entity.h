@@ -22,7 +22,8 @@ enum Type
     MOUSE,
     CAT,
     WALL,
-    TILE
+    TILE,
+    STUB
 };
 
 enum Shape
@@ -36,7 +37,7 @@ typedef struct Entity_S
     bool inuse; /**<flag for tracking resource*/
     Point2D position; /**<position of entity*/
     Rectangle2D frame_size; /**<frame of entity*/
-    Rectangle2D rect_hitbox; /**<rectangle hitbox of entity*/
+    SDL_Rect rect_hitbox; /**<rectangle hitbox of entity*/
     Circle2D circ_hitbox; /**<circle hitbox of entity*/
     int velocity; /**<velocity of the entity*/
     int angle; /**<angle of the entity*/

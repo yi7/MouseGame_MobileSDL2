@@ -108,7 +108,7 @@ void entity_draw_all()
 
 bool entity_intersect(Entity *a, Entity *b)
 {
-    SDL_Rect a_box;
+    /*SDL_Rect a_box;
     SDL_Rect b_box;
 
     if(a->shape == RECTANGLE)
@@ -125,19 +125,19 @@ bool entity_intersect(Entity *a, Entity *b)
         b_box.y = b->position.y;
         b_box.w = b->rect_hitbox.w;
         b_box.h = b->rect_hitbox.h;
-    }
+    }*/
 
     if(a->shape == RECTANGLE && b->shape == RECTANGLE)
     {
-        return vector_rects_intersect(a_box, b_box);
+        return vector_rects_intersect(a->rect_hitbox, b->rect_hitbox);
     }
     else if(a->shape == CIRCLE && b->shape == RECTANGLE)
     {
-        return vector_circ_rect_intersect(a->circ_hitbox, b_box);
+        return vector_circ_rect_intersect(a->circ_hitbox, b->rect_hitbox);
     }
     else if(a->shape == RECTANGLE && b->shape == CIRCLE)
     {
-        return vector_circ_rect_intersect(b->circ_hitbox, a_box);
+        return vector_circ_rect_intersect(b->circ_hitbox, a->rect_hitbox);
     }
     else if(a->shape == CIRCLE && b->shape == CIRCLE)
     {

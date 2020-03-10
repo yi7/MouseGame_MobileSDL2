@@ -4,6 +4,8 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "entity.h"
+#include "wall.h"
+#include "map.h"
 
 /**
  * @brief initializes mouse entity
@@ -58,12 +60,19 @@ void mouse_step_forward(Entity *self);
  */
 void mouse_step_backward(Entity *self);
 
+/**
+ * @brief this function will move the mouse just enough so that it won't be colliding with the wall. Will only be called when colliding with wall
+ * @param self the mouse to move off
+ * @param other the wall to step off of
+ */
+void mouse_step_off(Entity *self);
+
 
 /**
  * @brief checks what is in front of mouse
  * @param self the mouse to check
- * @return NULL if nothing. Otherwise the type of entity thats in front
+ * @return NULL if nothing. Otherwise the entity in front
  */
-Type mouse_check_front_type(Entity *self);
+Type mouse_check_front(Entity *self);
 
 #endif //MOUSEGAME_MOUSE_H

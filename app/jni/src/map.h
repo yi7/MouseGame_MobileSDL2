@@ -12,12 +12,16 @@
 #include "vector.h"
 #include "wall.h"
 #include "mouse.h"
+#include "tile.h"
 
 #define JSMN_HEADER
 #include "jsmn.h"
 
-extern int map_width;
-extern int map_height;
+extern float TILE_FRAME;
+extern int TPL; //Tiles per line
+extern float WALL_FRAME_WIDTH;
+extern const int MAP_TILE_COLUMNS;
+extern const int MAP_TILE_ROWS;
 
 typedef struct
 {
@@ -33,11 +37,27 @@ typedef struct
 void map_initialize_system();
 
 /**
+ * @brief closes the map system
+ */
+void map_close_system();
+
+/**
  * @brief loads the map
  * @param map_id id of the map
  */
 void map_load_entities(char *filename);
 
+/**
+ * @brief draws the tiles on screen
+ * @param map_id
+ */
 void map_draw_tiles(int map_id);
+
+/**
+ * @brief checks if the entity is fully on the tile
+ * @param entity the entity to check
+ * @return returns true if it's on a tile, otherwise false
+ */
+bool map_check_on_tile(Entity *entity);
 
 #endif //MOUSEGAME_MAP_H

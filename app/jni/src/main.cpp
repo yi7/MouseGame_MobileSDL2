@@ -23,8 +23,9 @@ void main_initialize_system()
 void main_close_system()
 {
     //Quit SDL subsystems
-    sprite_close_system();
+    map_close_system();
     entity_close_system();
+    sprite_close_system();
     graphics_close_system();
     SDL_Quit();
 }

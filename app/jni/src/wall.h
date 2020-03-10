@@ -1,6 +1,8 @@
 #ifndef MOUSEGAME_WALL_H
 #define MOUSEGAME_WALL_H
 
+#include <SDL.h>
+
 #include "graphics.h"
 #include "sprite.h"
 #include "entity.h"
