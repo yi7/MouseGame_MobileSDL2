@@ -44,7 +44,7 @@ int SDL_main( int argc, char* args[] )
     main_initialize_system();
     SDL_Event e;
     bool quit = false;
-    Game_State state = MAIN_MENU;
+    Game_State state = PLAY;
     Point2D touch_location;
     Point2D untouch_location;
     bool pressed = false;
@@ -102,27 +102,36 @@ int SDL_main( int argc, char* args[] )
                         int map_y = touch_location.y / TILE_FRAME;
                         int tile_position = (TPL * map_y) + map_x;
 
-                        if(abs(touch_location.x - untouch_location.x) > abs(touch_location.y - untouch_location.y))
+                        if(!tile_list[tile_position].occupied)
                         {
-                            if(touch_location.x < untouch_location.x)
+                            tile_list[tile_position].occupied = true;
+                            if(abs(touch_location.x - untouch_location.x) > abs(touch_location.y - untouch_location.y))
                             {
-                                tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, RIGHT, 0, SDL_FLIP_NONE);
+                                if(touch_location.x < untouch_location.x)
+                                {
+                                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, RIGHT, 0, SDL_FLIP_NONE);
+                                }
+                                else
+                                {
+                                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, LEFT, 0, SDL_FLIP_NONE);
+                                }
                             }
                             else
                             {
-                                tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, LEFT, 0, SDL_FLIP_NONE);
+                                if(touch_location.y < untouch_location.y)
+                                {
+                                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, DOWN, 0, SDL_FLIP_NONE);
+                                }
+                                else
+                                {
+                                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, UP, 0, SDL_FLIP_NONE);
+                                }
                             }
                         }
                         else
                         {
-                            if(touch_location.y < untouch_location.y)
-                            {
-                                tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, DOWN, 0, SDL_FLIP_NONE);
-                            }
-                            else
-                            {
-                                tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, UP, 0, SDL_FLIP_NONE);
-                            }
+                            tile_list[tile_position].occupied = false;
+                            entity_free_specific(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE);
                         }
                     }
 

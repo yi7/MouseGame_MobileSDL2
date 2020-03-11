@@ -73,6 +73,22 @@ void entity_free_all()
     }
 }
 
+void entity_free_specific(int x, int y, Type type)
+{
+    Entity *entity;
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        entity = &entity_list[i];
+        if(entity->inuse &&
+           entity->position.x == x &&
+           entity->position.y == y &&
+           entity->type == type)
+        {
+            entity_free(&entity);
+        }
+    }
+}
+
 void entity_draw(Entity *entity, int draw_x, int draw_y, int angle, SDL_RendererFlip flip)
 {
     if(!entity)

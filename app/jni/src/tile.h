@@ -11,13 +11,14 @@ typedef struct
     Point2D point; /**<tile position*/
     int frame_size; /**<frame size of tile*/
     int frame; /**<frame of tile*/
+    bool occupied; /**<flag to determine if special tile placed or not*/
 } Tile;
 
 /**
  * @brief returns a pointer to an empty tile structure
  * @return NULL on error or a valid tile pointer
  */
-Tile *tile_new(int x, int y, int frame_size, int frame);
+void tile_new(Tile *tile, int x, int y, int frame_size, int frame, bool occupied);
 
 /**
  * @brief initiazlies the tile entity

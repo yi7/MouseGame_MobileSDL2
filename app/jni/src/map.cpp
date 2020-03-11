@@ -47,7 +47,8 @@ void map_initialize_system()
     for(int i = 0; i < (sizeof(map) / sizeof(map[0])); i++)
     {
         if(strcmp(map[i], "00") == 0) {
-            tile_list[tile_index++] = *tile_new(tile_x, tile_y, TILE_FRAME, frame);
+            tile_new(&tile_list[tile_index], tile_x, tile_y, TILE_FRAME, frame, false);
+            tile_index++;
             if(frame == 0)
             {
                 frame = 1;

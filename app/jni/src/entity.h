@@ -82,6 +82,9 @@ void entity_free(Entity **entity);
  */
 void entity_free_all();
 
+
+void entity_free_specific(int x, int y, Type type);
+
 /**
  * @brief draws the entity
  * @param entity the entity to be drawn

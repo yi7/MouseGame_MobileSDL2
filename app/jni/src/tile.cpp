@@ -1,15 +1,12 @@
 #include "tile.h"
 
-Tile *tile_new(int x, int y, int frame_size, int frame)
+void tile_new(Tile *tile, int x, int y, int frame_size, int frame, bool occupied)
 {
-    Tile *tile;
-
     tile->point.x = x;
     tile->point.y = y;
     tile->frame_size = frame_size;
     tile->frame = frame;
-
-    return tile;
+    tile->occupied = occupied;
 }
 
 void tile_new_entity(int x, int y, int scale, enum State state, int angle, SDL_RendererFlip flip)
@@ -19,8 +16,8 @@ void tile_new_entity(int x, int y, int scale, enum State state, int angle, SDL_R
     Entity *tile = entity_new();
     tile->position.x = x;
     tile->position.y = y;
-    tile->frame_size.w = scale;
-    tile->frame_size.h = scale;
+    tile->frame_size.w = scale / 2;
+    tile->frame_size.h = scale / 2;
     tile->rect_hitbox.x = x;
     tile->rect_hitbox.y = y;
     tile->rect_hitbox.w = scale;
