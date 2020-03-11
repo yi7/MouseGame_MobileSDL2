@@ -7,6 +7,7 @@ float WALL_FRAME_WIDTH;
 const int MAP_TILE_COLUMNS = 9;
 const int MAP_TILE_ROWS = 7;
 Tile *tile_list = NULL;
+int ARROW_LIMIT;
 
 char map[285][3] = {"13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13",
                     "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "14", "00", "11",
@@ -24,11 +25,19 @@ char map[285][3] = {"13", "12", "13", "12", "13", "12", "13", "12", "13", "12", 
                     "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
                     "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13"};
 
+int initial_position[63][2] = {
+        {1, 4},
+        {4, 4}
+};
+
+
+
 void map_initialize_system()
 {
     tiles = sprite_load("images/tiles.png", 64, 64, 6);
     TILE_FRAME = graphics_screen.h / MAP_TILE_ROWS;
     TPL = MAP_TILE_COLUMNS;
+    ARROW_LIMIT = 3;
 
     tile_list = (Tile *)malloc(sizeof(Tile) * (MAP_TILE_COLUMNS * MAP_TILE_ROWS));
     if(!tile_list)
@@ -138,7 +147,12 @@ void map_load_entities(char *filename)
 
     }
 
-    mouse_initialize(tile_frame * 4, tile_frame * 3, tile_frame, UP, 0, SDL_FLIP_NONE);
+    //mouse_initialize(tile_frame * 4, tile_frame * 3, tile_frame, UP, 0, SDL_FLIP_NONE);
+    SDL_Log("%d", (sizeof(initial_position) / sizeof(initial_position[0])));
+    for(int i = 0; i < (sizeof(initial_position) / sizeof(initial_position[0])); i++)
+    {
+        //mouse_initialize(tile_frame * initial_position[i][0], tile_frame * initial_position[i][1], tile_frame, UP, 0, SDL_FLIP_NONE);
+    }
 }
 
 void map_draw_tiles(int map_id)

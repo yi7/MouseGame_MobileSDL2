@@ -7,6 +7,7 @@
 #include "sprite.h"
 #include "entity.h"
 #include "map.h"
+#include "map_parser.h"
 
 void main_initialize_system();
 void main_close_system();
@@ -17,6 +18,7 @@ enum Game_State
     PLAY,
     PAUSE,
     PLAN,
+    RESET,
     QUIT
 };
 
@@ -44,15 +46,17 @@ int SDL_main( int argc, char* args[] )
     main_initialize_system();
     SDL_Event e;
     bool quit = false;
-    Game_State state = PLAY;
+    Game_State state = PAUSE;
     Point2D touch_location;
     Point2D untouch_location;
-    bool pressed = false;
+    int arrow_count = 0;
     //Sprite *test = sprite_load("images/loaded.png", 640, 480, 1);
 
     SDL_Log("test");
 
-    map_load_entities("test");
+    //map_load_entities("test");
+
+    map_parser_parse_file("files/maps.txt");
 
     while(!quit)
     {
@@ -104,32 +108,37 @@ int SDL_main( int argc, char* args[] )
 
                         if(!tile_list[tile_position].occupied)
                         {
-                            tile_list[tile_position].occupied = true;
-                            if(abs(touch_location.x - untouch_location.x) > abs(touch_location.y - untouch_location.y))
+                            if(arrow_count < ARROW_LIMIT)
                             {
-                                if(touch_location.x < untouch_location.x)
+                                arrow_count++;
+                                tile_list[tile_position].occupied = true;
+                                if(abs(touch_location.x - untouch_location.x) > abs(touch_location.y - untouch_location.y))
                                 {
-                                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, RIGHT, 0, SDL_FLIP_NONE);
+                                    if(touch_location.x < untouch_location.x)
+                                    {
+                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, RIGHT, 0, SDL_FLIP_NONE);
+                                    }
+                                    else
+                                    {
+                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, LEFT, 0, SDL_FLIP_NONE);
+                                    }
                                 }
                                 else
                                 {
-                                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, LEFT, 0, SDL_FLIP_NONE);
-                                }
-                            }
-                            else
-                            {
-                                if(touch_location.y < untouch_location.y)
-                                {
-                                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, DOWN, 0, SDL_FLIP_NONE);
-                                }
-                                else
-                                {
-                                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, UP, 0, SDL_FLIP_NONE);
+                                    if(touch_location.y < untouch_location.y)
+                                    {
+                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, DOWN, 0, SDL_FLIP_NONE);
+                                    }
+                                    else
+                                    {
+                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, UP, 0, SDL_FLIP_NONE);
+                                    }
                                 }
                             }
                         }
                         else
                         {
+                            arrow_count--;
                             tile_list[tile_position].occupied = false;
                             entity_free_specific(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE);
                         }

@@ -16,8 +16,8 @@ void tile_new_entity(int x, int y, int scale, enum State state, int angle, SDL_R
     Entity *tile = entity_new();
     tile->position.x = x;
     tile->position.y = y;
-    tile->frame_size.w = scale / 2;
-    tile->frame_size.h = scale / 2;
+    tile->frame_size.w = scale;
+    tile->frame_size.h = scale;
     tile->rect_hitbox.x = x;
     tile->rect_hitbox.y = y;
     tile->rect_hitbox.w = scale;

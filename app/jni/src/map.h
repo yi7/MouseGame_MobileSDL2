@@ -23,6 +23,7 @@ extern float WALL_FRAME_WIDTH;
 extern const int MAP_TILE_COLUMNS;
 extern const int MAP_TILE_ROWS;
 extern Tile *tile_list;
+extern int ARROW_LIMIT;
 
 typedef struct
 {
