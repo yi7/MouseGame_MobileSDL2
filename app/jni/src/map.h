@@ -14,9 +14,6 @@
 #include "mouse.h"
 #include "tile.h"
 
-#define JSMN_HEADER
-#include "jsmn.h"
-
 extern float TILE_FRAME;
 extern int TPL; //Tiles per line
 extern float WALL_FRAME_WIDTH;

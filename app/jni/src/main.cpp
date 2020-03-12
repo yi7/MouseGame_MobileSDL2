@@ -28,12 +28,14 @@ void main_initialize_system()
     sprite_initialize_system();
     entity_initialize_system();
     map_initialize_system();
+    map_parser_initialize_system();
     atexit(main_close_system);
 }
 
 void main_close_system()
 {
     //Quit SDL subsystems
+    map_parser_close_system();
     map_close_system();
     entity_close_system();
     sprite_close_system();
