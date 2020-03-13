@@ -16,7 +16,7 @@
  * @param angle angle of mouse
  * @param flip SDL_RendererFlip value
  */
-void mouse_initialize(int x, int y, int scale, enum State state, int angle, SDL_RendererFlip flip);
+void mouse_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip);
 
 /**
  * @brief frees the entity
@@ -39,9 +39,9 @@ void mouse_touch(Entity *self, Entity *other);
 
 /**
  * @brief update function of the mouse entity when colliding with a wall
- * @param entity the entity to update
+ * @param self the mouse to update
  */
-void mouse_update_wall(Entity *entity);
+void mouse_update(Entity *self);
 
 /**
  * @brief think function that runs every frame

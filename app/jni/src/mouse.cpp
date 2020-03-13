@@ -1,6 +1,6 @@
 #include "mouse.h"
 
-void mouse_initialize(int x, int y, int scale, enum State state, int angle, SDL_RendererFlip flip)
+void mouse_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
 {
     Sprite *animals = sprite_load("images/animals_test.png", 64, 64, 8);
 
@@ -20,7 +20,24 @@ void mouse_initialize(int x, int y, int scale, enum State state, int angle, SDL_
     mouse->velocity = 16;
     mouse->angle = angle;
     mouse->flip = flip;
-    mouse->state = state;
+    switch(angle)
+    {
+        case 0:
+            mouse->state = UP;
+            break;
+        case 90:
+            mouse->state = RIGHT;
+            break;
+        case 180:
+            mouse->state = DOWN;
+            break;
+        case -90:
+            mouse->state = LEFT;
+            break;
+        default:
+            mouse->state = RIGHT;
+            break;
+    }
     mouse->type = MOUSE;
     mouse->shape = RECTANGLE;
     mouse->sprite = animals;
@@ -28,7 +45,7 @@ void mouse_initialize(int x, int y, int scale, enum State state, int angle, SDL_
     mouse->free = mouse_free;
     mouse->draw = mouse_draw;
     mouse->touch = mouse_touch;
-    mouse->update = NULL;
+    mouse->update = mouse_update;
     mouse->think = mouse_think;
 }
 
@@ -60,9 +77,25 @@ void mouse_touch(Entity *self, Entity *other)
     }
 }
 
-void mouse_upadte_wall(Entity *entity)
+void mouse_update(Entity *self)
 {
-
+    switch(self->state)
+    {
+        case UP:
+            self->angle = 0;
+            break;
+        case RIGHT:
+            self->angle = 90;
+            break;
+        case DOWN:
+            self->angle = 180;
+            break;
+        case LEFT:
+            self->angle = -90;
+            break;
+        default:
+            break;
+    }
 }
 
 void mouse_think(Entity *self)

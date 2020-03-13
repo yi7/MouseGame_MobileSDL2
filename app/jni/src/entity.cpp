@@ -273,7 +273,23 @@ void entity_touch_all()
 
 void entity_update(Entity *self);
 
-void entity_update_all();
+void entity_update_all()
+{
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(!entity_list[i].update)
+        {
+            continue;
+        }
+
+        entity_list[i].update(&entity_list[i]);
+    }
+}
 
 void entity_think(Entity *self)
 {

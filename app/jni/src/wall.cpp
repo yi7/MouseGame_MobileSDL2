@@ -49,6 +49,7 @@ void wall_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
     wall->free = wall_free;
     wall->draw = wall_draw;
     wall->touch = wall_touch;
+    wall->update = NULL;
     wall->think = NULL;
 }
 

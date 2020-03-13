@@ -38,6 +38,20 @@ Map_Detail *map_parser_new()
     return NULL;
 }
 
+Map_Detail *map_parser_get_map(int map_id)
+{
+    for(int i = 0; i < MAP_MAX; i++)
+    {
+        if(map_list[i].initialized &&
+           map_list[i].map_id == map_id)
+        {
+            return &map_list[i];
+        }
+    }
+
+    return NULL;
+}
+
 void map_parser_test()
 {
     for(int i = 0; i < MAP_MAX; i++)
@@ -98,6 +112,7 @@ void map_parser_convert_json(char *json)
     int count;
     char delim[] = "|";
     char *ptr = strtok(json, delim);
+    int map_index = 0;
 
     while(ptr != NULL)
     {
@@ -115,6 +130,7 @@ void map_parser_convert_json(char *json)
         }
 
         Map_Detail *map = map_parser_new();
+        map->map_id = map_index++;
 
         for(int i = 1; i < count; i++)
         {
@@ -141,6 +157,15 @@ void map_parser_convert_json(char *json)
 
                 map->map_name = (char *)malloc(tokens[i + 1].end - tokens[i + 1].start + 1);
                 strcpy(map->map_name, temp_val);
+
+                i++;
+            }
+            else if(map_parser_jsoneq(ptr, &tokens[i], "arrow_count"))
+            {
+                char temp_val[2];
+                strncpy(temp_val, ptr + tokens[i + 1].start, tokens[i + 1].end - tokens[i + 1].start);
+                temp_val[1] = '\0';
+                map->arrow_count = atoi(temp_val);
 
                 i++;
             }

@@ -6,6 +6,7 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "entity.h"
+#include "hud.h"
 #include "map.h"
 #include "map_parser.h"
 
@@ -27,16 +28,17 @@ void main_initialize_system()
     graphics_initialize_system("MouseGame");
     sprite_initialize_system();
     entity_initialize_system();
-    map_initialize_system();
+    hud_initialize_system();
     map_parser_initialize_system();
+    map_initialize_system();
     atexit(main_close_system);
 }
 
 void main_close_system()
 {
     //Quit SDL subsystems
-    map_parser_close_system();
     map_close_system();
+    map_parser_close_system();
     entity_close_system();
     sprite_close_system();
     graphics_close_system();
@@ -48,7 +50,7 @@ int SDL_main( int argc, char* args[] )
     main_initialize_system();
     SDL_Event e;
     bool quit = false;
-    Game_State state = PAUSE;
+    Game_State state = MAIN_MENU;
     Point2D touch_location;
     Point2D untouch_location;
     int arrow_count = 0;
@@ -59,6 +61,8 @@ int SDL_main( int argc, char* args[] )
     //map_load_entities("test");
 
     map_parser_parse_file("files/maps.txt");
+    map_initialize_base(0);
+    //map_load_entities(0);
 
     while(!quit)
     {
@@ -76,7 +80,7 @@ int SDL_main( int argc, char* args[] )
                     switch(state)
                     {
                         case MAIN_MENU:
-                            state = PLAY;
+                            state = PAUSE;
                             break;
                         case PLAY:
                             if(touch_location.x > TILE_FRAME * MAP_TILE_COLUMNS)
@@ -160,11 +164,13 @@ int SDL_main( int argc, char* args[] )
                 break;
             case PLAY:
                 entity_think_all();
+                entity_update_all();
                 map_draw_tiles(0);
                 entity_draw_all();
                 break;
             case PLAN:
             case PAUSE:
+                entity_update_all();
                 map_draw_tiles(0);
                 entity_draw_all();
                 break;

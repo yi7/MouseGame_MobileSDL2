@@ -22,6 +22,7 @@ typedef struct
     char map[285][3];
     Entity_Placement entities[63];
     int entity_count;
+    int arrow_count;
     char *map_name;
     int map_id;
     bool initialized;
@@ -34,6 +35,8 @@ void map_parser_initialize_system();
 void map_parser_close_system();
 
 Map_Detail *map_parser_new();
+
+Map_Detail *map_parser_get_map(int map_id);
 
 void map_parser_test();
 
