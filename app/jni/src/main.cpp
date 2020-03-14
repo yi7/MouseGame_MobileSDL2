@@ -61,8 +61,9 @@ int SDL_main( int argc, char* args[] )
     //map_load_entities("test");
 
     map_parser_parse_file("files/maps.txt");
+    map_initialize_window(0);
     map_initialize_base(0);
-    //map_load_entities(0);
+    map_load_entities(0);
 
     while(!quit)
     {
@@ -165,12 +166,14 @@ int SDL_main( int argc, char* args[] )
             case PLAY:
                 entity_think_all();
                 entity_update_all();
+                hud_draw_all_window();
                 map_draw_tiles(0);
                 entity_draw_all();
                 break;
             case PLAN:
             case PAUSE:
                 entity_update_all();
+                hud_draw_all_window();
                 map_draw_tiles(0);
                 entity_draw_all();
                 break;

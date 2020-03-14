@@ -22,12 +22,13 @@ typedef struct Window_S
     int handle;
     struct Window_S *parent;
     struct Window_S *child;
-    SDL_Rect *window_frame;
+    SDL_Rect window_frame;
     Button buttons[WINDOW_BUTTONS];
+    int button_count;
     Sprite *background;
 
-    void (*draw)(struct HUDInfo_S *self);
-    int (*update)(struct HUDInfo_S *self, int button_id);
+    void (*draw)(struct Window_S *self);
+    void (*update)(struct Window_S *self, int button_id);
 } Window;
 
 void hud_initialize_system();
@@ -40,7 +41,9 @@ Window *hud_get_window(int handle);
 
 void hud_bubble_window(int handle);
 
+void hud_set_button(Window *window, int button_id, int frame, char *text, Sprite *sprite, int x, int y, int w, int h);
 
+void hud_draw_all_window();
 
 
 

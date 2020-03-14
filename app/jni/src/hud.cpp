@@ -121,7 +121,33 @@ void hud_bubble_window(int handle)
     WIN_TOP = window_temp;
 }
 
+void hud_set_button(Window *window, int button_id, int frame, char *text, Sprite *sprite, int x, int y, int w, int h)
+{
+    Button *button = &window->buttons[window->button_count];
+    window->button_count++;
 
+    button->button_id = button_id;
+    button->frame = frame;
+    strcpy(button->button_text, text);
+    button->button = sprite;
+    button->box.x = x;
+    button->box.y = y;
+    button->box.w = w;
+    button->box.h = h;
+}
 
+void hud_draw_all_window()
+{
+    for(int i = 0; i < WINDOW_MAX; i++)
+    {
+        if(window_stack[i] != NULL)
+        {
+            if(window_stack[i]->draw != NULL)
+            {
+                window_stack[i]->draw(window_stack[i]);
+            }
+        }
+    }
+}
 
 

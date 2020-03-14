@@ -1,6 +1,7 @@
 #include "map.h"
 
 Sprite *tiles;
+Sprite *buttons;
 float TILE_FRAME = 0;
 int TPL = 0;
 float WALL_FRAME_WIDTH;
@@ -29,6 +30,7 @@ int ARROW_LIMIT;
 void map_initialize_system()
 {
     tiles = sprite_load("images/tiles.png", 64, 64, 6);
+    buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
     TILE_FRAME = graphics_screen.h / MAP_TILE_ROWS;
     TPL = MAP_TILE_COLUMNS;
     //ARROW_LIMIT = 3;
@@ -41,37 +43,6 @@ void map_initialize_system()
     }
     memset(tile_list, 0, sizeof(Tile) * (MAP_TILE_COLUMNS * MAP_TILE_ROWS));
 
-    /*int tile_x = 0;
-    int tile_y = 0;
-    int next_row_count = 0;
-    int frame = 1;
-    int tile_index = 0;
-
-    for(int i = 0; i < (sizeof(map) / sizeof(map[0])); i++)
-    {
-        if(strcmp(map[i], "00") == 0) {
-            tile_new(&tile_list[tile_index], tile_x, tile_y, TILE_FRAME, frame, false);
-            tile_index++;
-            if(frame == 0)
-            {
-                frame = 1;
-            }
-            else
-            {
-                frame = 0;
-            }
-            tile_x += TILE_FRAME;
-            next_row_count++;
-        }
-
-        if(next_row_count >= 9)
-        {
-            tile_x = 0;
-            tile_y += TILE_FRAME;
-            next_row_count = 0;
-        }
-    }*/
-
     //Didn't know where I can put the wall frame to adjust hitbox for animal entities so I placed it here.
     //4 is the pixel width of wall. 64 is the pixel height of the wall.
     WALL_FRAME_WIDTH = TILE_FRAME * 4 / 64;
@@ -83,11 +54,27 @@ void map_close_system()
 {
     free(tile_list);
     sprite_free(&tiles);
+    sprite_free(&buttons);
 }
 
 void map_initialize_window(int map_id)
 {
+    Map_Detail *level = NULL;
+    level = map_parser_get_map(map_id);
 
+    Window *map_window = NULL;
+    map_window = hud_push_window();
+
+    map_window->window_frame.x = TILE_FRAME * MAP_TILE_COLUMNS;
+    map_window->window_frame.y = 0;
+    map_window->window_frame.w = graphics_screen.w - (TILE_FRAME * MAP_TILE_COLUMNS);
+    map_window->window_frame.h = graphics_screen.h;
+    map_window->background = sprite_load("images/side_menu_background.png", 192, 448, 1);
+
+    map_window->draw = map_draw_window;
+    map_window->update = map_update_window;
+
+    hud_set_button(map_window, 0, 0, "test", buttons, map_window->window_frame.x + TILE_FRAME, map_window->window_frame.y + TILE_FRAME, TILE_FRAME / 1.6, TILE_FRAME / 1.6);
 }
 
 void map_initialize_base(int map_id)
@@ -215,6 +202,20 @@ void map_draw_tiles(int map_id)
     {
         sprite_draw(tiles, tile_list[i].frame, tile_list[i].point.x, tile_list[i].point.y, TILE_FRAME, TILE_FRAME, 0, SDL_FLIP_NONE);
     }
+}
+
+void map_draw_window(Window *self)
+{
+    sprite_draw(self->background, 0, self->window_frame.x, self->window_frame.y, self->window_frame.w, self->window_frame.h, 0, SDL_FLIP_NONE);
+    for(int i = 0; i < self->button_count; i++)
+    {
+        sprite_draw(self->buttons[i].button, self->buttons[i].frame, self->buttons[i].box.x, self->buttons[i].box.y, self->buttons[i].box.w, self->buttons[i].box.h, 0, SDL_FLIP_NONE);
+    }
+}
+
+void map_update_window(Window *self, int button_id)
+{
+
 }
 
 bool map_check_on_tile(Entity *entity)
