@@ -3,6 +3,7 @@
 
 #include "graphics.h"
 #include "sprite.h"
+#include "vector.h"
 
 #define WINDOW_BUTTONS 64
 #define WINDOW_MAX 32
@@ -35,9 +36,17 @@ void menu_initialize_system();
 
 void menu_initialize_base_window();
 
-void menu_draw_base_window(Window *self);
-
 void menu_update_base_window(Window *self, int button_id);
+
+void menu_initialize_pack_window();
+
+void menu_update_pack_window(Window *self, int button_id);
+
+void menu_initialize_map_window();
+
+void menu_update_map_window(Window *self, int button_id);
+
+void menu_draw_window(Window *self);
 
 void menu_pop_window(int handle);
 
@@ -51,7 +60,7 @@ void menu_set_button(Window *window, int button_id, int frame, char *text, Sprit
 
 void menu_draw_all_window();
 
-void menu_update_all_window(float x, float y);
+void menu_update_top_window(float touch_x, float touch_y);
 
 
 

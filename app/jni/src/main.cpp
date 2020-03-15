@@ -109,6 +109,8 @@ int SDL_main( int argc, char* args[] )
                     untouch_location.x = e.tfinger.x * graphics_screen.w;
                     untouch_location.y = e.tfinger.y * graphics_screen.h;
 
+                    menu_update_top_window(untouch_location.x, untouch_location.y);
+
                     /*if(state == PLAN)
                     {
                         int map_x = touch_location.x / TILE_FRAME;
