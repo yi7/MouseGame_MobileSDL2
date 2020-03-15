@@ -14,7 +14,7 @@
 #include "mouse.h"
 #include "tile.h"
 #include "map_parser.h"
-#include "hud.h"
+#include "menu.h"
 
 extern float TILE_FRAME;
 extern int TPL; //Tiles per line

@@ -1,5 +1,5 @@
-#ifndef MOUSEGAME_HUD_H
-#define MOUSEGAME_HUD_H
+#ifndef MOUSEGAME_MENU_H
+#define MOUSEGAME_MENU_H
 
 #include "graphics.h"
 #include "sprite.h"
@@ -31,20 +31,22 @@ typedef struct Window_S
     void (*update)(struct Window_S *self, int button_id);
 } Window;
 
-void hud_initialize_system();
+void menu_initialize_system();
 
-void hud_pop_window(int handle);
+void menu_pop_window(int handle);
 
-Window *hud_push_window();
+Window *menu_push_window();
 
-Window *hud_get_window(int handle);
+Window *menu_get_window(int handle);
 
-void hud_bubble_window(int handle);
+void menu_bubble_window(int handle);
 
-void hud_set_button(Window *window, int button_id, int frame, char *text, Sprite *sprite, int x, int y, int w, int h);
+void menu_set_button(Window *window, int button_id, int frame, char *text, Sprite *sprite, int x, int y, int w, int h);
 
-void hud_draw_all_window();
+void menu_draw_all_window();
+
+void menu_update_all_window(float x, float y);
 
 
 
-#endif //MOUSEGAME_HUD_H
+#endif //MOUSEGAME_MENU_H

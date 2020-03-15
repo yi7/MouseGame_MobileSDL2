@@ -63,7 +63,7 @@ void map_initialize_window(int map_id)
     level = map_parser_get_map(map_id);
 
     Window *map_window = NULL;
-    map_window = hud_push_window();
+    map_window = menu_push_window();
 
     map_window->window_frame.x = TILE_FRAME * MAP_TILE_COLUMNS;
     map_window->window_frame.y = 0;
@@ -74,7 +74,7 @@ void map_initialize_window(int map_id)
     map_window->draw = map_draw_window;
     map_window->update = map_update_window;
 
-    hud_set_button(map_window, 0, 0, "test", buttons, map_window->window_frame.x + TILE_FRAME, map_window->window_frame.y + TILE_FRAME, TILE_FRAME / 1.6, TILE_FRAME / 1.6);
+    menu_set_button(map_window, 0, 0, "test", buttons, map_window->window_frame.x + TILE_FRAME, map_window->window_frame.y + TILE_FRAME, TILE_FRAME / 1.6, TILE_FRAME / 1.6);
 }
 
 void map_initialize_base(int map_id)

@@ -6,7 +6,7 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "entity.h"
-#include "hud.h"
+#include "menu.h"
 #include "map.h"
 #include "map_parser.h"
 
@@ -28,7 +28,7 @@ void main_initialize_system()
     graphics_initialize_system("MouseGame");
     sprite_initialize_system();
     entity_initialize_system();
-    hud_initialize_system();
+    menu_initialize_system();
     map_parser_initialize_system();
     map_initialize_system();
     atexit(main_close_system);
@@ -166,14 +166,14 @@ int SDL_main( int argc, char* args[] )
             case PLAY:
                 entity_think_all();
                 entity_update_all();
-                hud_draw_all_window();
+                menu_draw_all_window();
                 map_draw_tiles(0);
                 entity_draw_all();
                 break;
             case PLAN:
             case PAUSE:
                 entity_update_all();
-                hud_draw_all_window();
+                menu_draw_all_window();
                 map_draw_tiles(0);
                 entity_draw_all();
                 break;

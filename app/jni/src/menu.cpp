@@ -1,4 +1,4 @@
-#include "hud.h"
+#include "menu.h"
 
 Window *window_stack[WINDOW_MAX];
 Window window_list[WINDOW_MAX];
@@ -7,7 +7,7 @@ int window_tag = 0;
 
 #define WIN_TOP window_stack[window_count - 1]
 
-void hud_initialize_system()
+void menu_initialize_system()
 {
     for(int i = 0; i < WINDOW_MAX; i++)
     {
@@ -23,7 +23,7 @@ void hud_initialize_system()
     window_count = 0;
 }
 
-void hud_pop_window(int handle)
+void menu_pop_window(int handle)
 {
     Window *window = NULL;
     Window *this_window = NULL;
@@ -34,17 +34,17 @@ void hud_pop_window(int handle)
         return;
     }
 
-    this_window = hud_get_window(handle);
+    this_window = menu_get_window(handle);
     if(this_window->child != NULL)
     {
-        hud_pop_window(this_window->handle);
+        menu_pop_window(this_window->handle);
         this_window->child = NULL;
     }
 
     window = WIN_TOP;
     if(window->handle != handle)
     {
-        hud_bubble_window(handle);
+        menu_bubble_window(handle);
         window = WIN_TOP;
     }
 
@@ -55,7 +55,7 @@ void hud_pop_window(int handle)
     window_count--;
 }
 
-Window *hud_push_window()
+Window *menu_push_window()
 {
     int i;
     if((window_count + 1) > WINDOW_MAX)
@@ -80,7 +80,7 @@ Window *hud_push_window()
     return WIN_TOP;
 }
 
-Window *hud_get_window(int handle)
+Window *menu_get_window(int handle)
 {
     for(int i = 0; i < WINDOW_MAX; i++)
     {
@@ -93,7 +93,7 @@ Window *hud_get_window(int handle)
     return NULL;
 }
 
-void hud_bubble_window(int handle)
+void menu_bubble_window(int handle)
 {
     Window *window_temp = NULL;
     int i;
@@ -121,7 +121,7 @@ void hud_bubble_window(int handle)
     WIN_TOP = window_temp;
 }
 
-void hud_set_button(Window *window, int button_id, int frame, char *text, Sprite *sprite, int x, int y, int w, int h)
+void menu_set_button(Window *window, int button_id, int frame, char *text, Sprite *sprite, int x, int y, int w, int h)
 {
     Button *button = &window->buttons[window->button_count];
     window->button_count++;
@@ -136,7 +136,7 @@ void hud_set_button(Window *window, int button_id, int frame, char *text, Sprite
     button->box.h = h;
 }
 
-void hud_draw_all_window()
+void menu_draw_all_window()
 {
     for(int i = 0; i < WINDOW_MAX; i++)
     {
