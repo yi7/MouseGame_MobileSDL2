@@ -56,14 +56,16 @@ int SDL_main( int argc, char* args[] )
     int arrow_count = 0;
     //Sprite *test = sprite_load("images/loaded.png", 640, 480, 1);
 
-    SDL_Log("test");
+    SDL_Log("start");
 
     //map_load_entities("test");
 
-    map_parser_parse_file("files/maps.txt");
-    map_initialize_window(0);
-    map_initialize_base(0);
-    map_load_entities(0);
+    //map_parser_parse_file("files/maps.txt");
+    //map_initialize_window(0);
+    //map_initialize_base(0);
+    //map_load_entities(0);
+
+    menu_initialize_base_window();
 
     while(!quit)
     {
@@ -78,7 +80,7 @@ int SDL_main( int argc, char* args[] )
                     touch_location.x = e.tfinger.x * graphics_screen.w;
                     touch_location.y = e.tfinger.y * graphics_screen.h;
 
-                    switch(state)
+                    /*switch(state)
                     {
                         case MAIN_MENU:
                             state = PAUSE;
@@ -101,13 +103,13 @@ int SDL_main( int argc, char* args[] )
                                 state = PLAY;
                             }
                             break;
-                    }
+                    }*/
                     break;
                 case SDL_FINGERUP:
                     untouch_location.x = e.tfinger.x * graphics_screen.w;
                     untouch_location.y = e.tfinger.y * graphics_screen.h;
 
-                    if(state == PLAN)
+                    /*if(state == PLAN)
                     {
                         int map_x = touch_location.x / TILE_FRAME;
                         int map_y = touch_location.y / TILE_FRAME;
@@ -149,7 +151,7 @@ int SDL_main( int argc, char* args[] )
                             tile_list[tile_position].occupied = false;
                             entity_free_specific(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE);
                         }
-                    }
+                    }*/
 
                     break;
                 default:
@@ -159,7 +161,9 @@ int SDL_main( int argc, char* args[] )
 
         SDL_RenderClear(graphics_renderer);
 
-        switch(state)
+        menu_draw_all_window();
+
+        /*switch(state)
         {
             case MAIN_MENU:
                 break;
@@ -179,7 +183,7 @@ int SDL_main( int argc, char* args[] )
                 break;
             default:
                 break;
-        }
+        }*/
 
         SDL_RenderPresent(graphics_renderer);
     }

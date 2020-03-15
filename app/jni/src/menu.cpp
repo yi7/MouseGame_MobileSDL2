@@ -23,6 +23,49 @@ void menu_initialize_system()
     window_count = 0;
 }
 
+void menu_initialize_base_window()
+{
+    Window *main_menu_window = NULL;
+    main_menu_window = menu_push_window();
+
+    Sprite *main_menu_background = sprite_load("images/main_menu_background.png", 768, 441, 1);
+    Sprite *main_menu_buttons = sprite_load("images/menu_buttons.png", 128, 64, 3);
+
+    main_menu_window->window_frame.x = 0;
+    main_menu_window->window_frame.y = 0;
+    main_menu_window->window_frame.w = graphics_screen.w;
+    main_menu_window->window_frame.h = graphics_screen.h;
+    main_menu_window->background = main_menu_background;
+    main_menu_window->draw = menu_draw_base_window;
+    main_menu_window->update = menu_update_base_window;
+
+    float button_width = main_menu_window->window_frame.w / 8;
+    float button_height = main_menu_window->window_frame.h / 8;
+    float button_x = main_menu_window->window_frame.x + (button_width / 2);
+    float button_y = main_menu_window->window_frame.y + (button_height / 1.5);
+
+    //SDL_Log("%d, %d", column_div, row_div);
+
+    menu_set_button(main_menu_window, 0, 0, "Play", main_menu_buttons, button_x, button_y, button_width, button_height);
+    menu_set_button(main_menu_window, 1, 2, "How to Play", main_menu_buttons, button_x, button_y * 3, button_width, button_height);
+
+    //menu_set_button(map_window, 0, 0, "test", buttons, map_window->window_frame.x + TILE_FRAME, map_window->window_frame.y + TILE_FRAME, TILE_FRAME / 1.6, TILE_FRAME / 1.6);
+}
+
+void menu_draw_base_window(Window *self)
+{
+    sprite_draw(self->background, 0, self->window_frame.x, self->window_frame.y, self->window_frame.w, self->window_frame.h, 0, SDL_FLIP_NONE);
+    for(int i = 0; i < self->button_count; i++)
+    {
+        sprite_draw(self->buttons[i].button, self->buttons[i].frame, self->buttons[i].box.x, self->buttons[i].box.y, self->buttons[i].box.w, self->buttons[i].box.h, 0, SDL_FLIP_NONE);
+    }
+}
+
+void menu_update_base_window(Window *self, int button_id)
+{
+
+}
+
 void menu_pop_window(int handle)
 {
     Window *window = NULL;

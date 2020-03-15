@@ -33,6 +33,12 @@ typedef struct Window_S
 
 void menu_initialize_system();
 
+void menu_initialize_base_window();
+
+void menu_draw_base_window(Window *self);
+
+void menu_update_base_window(Window *self, int button_id);
+
 void menu_pop_window(int handle);
 
 Window *menu_push_window();
