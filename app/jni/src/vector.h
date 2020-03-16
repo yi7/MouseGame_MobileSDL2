@@ -51,7 +51,7 @@ bool vector_circ_rect_intersect(Circle2D a, SDL_Rect b);
  * @param y2 second y point
  * @return distance squared
  */
-double distance_squared(int x1, int y1, int x2, int y2);
+double vector_distance_squared(int x1, int y1, int x2, int y2);
 
 #define ZERO 0
 #define MAX(a,b) (a > b ? a:b)

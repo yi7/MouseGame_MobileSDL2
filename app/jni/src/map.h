@@ -14,7 +14,6 @@
 #include "mouse.h"
 #include "tile.h"
 #include "map_parser.h"
-#include "menu.h"
 
 extern float TILE_FRAME;
 extern int TPL; //Tiles per line
@@ -42,6 +41,8 @@ void map_initialize_system();
  */
 void map_close_system();
 
+void map_free_all();
+
 void map_initialize_window(int map_id);
 
 void map_initialize_base(int map_id);
@@ -56,11 +57,7 @@ void map_load_entities(int map_id);
  * @brief draws the tiles on screen
  * @param map_id
  */
-void map_draw_tiles(int map_id);
-
-void map_draw_window(Window *self);
-
-void map_update_window(Window *self, int button_id);
+void map_draw_tiles();
 
 /**
  * @brief checks if the entity is fully on the tile

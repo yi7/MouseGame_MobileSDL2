@@ -17,7 +17,7 @@ bool vector_circs_intersect(Circle2D a, Circle2D b)
     int total_radius = a.r + b.r;
     int total_radius_squared = total_radius * total_radius;
 
-    if(distance_squared(a.x, a.y, b.x, b.y) < total_radius_squared)
+    if(vector_distance_squared(a.x, a.y, b.x, b.y) < total_radius_squared)
     {
         return true;
     }
@@ -56,7 +56,7 @@ bool vector_circ_rect_intersect(Circle2D a, SDL_Rect b)
         close_y = a.y;
     }
 
-    if(distance_squared(a.x, a.y, close_x, close_y) < (a.r * a.r))
+    if(vector_distance_squared(a.x, a.y, close_x, close_y) < (a.r * a.r))
     {
         return true;
     }
@@ -64,7 +64,7 @@ bool vector_circ_rect_intersect(Circle2D a, SDL_Rect b)
     return false;
 }
 
-double distance_squared(int x1, int y1, int x2, int y2)
+double vector_distance_squared(int x1, int y1, int x2, int y2)
 {
     int delta_x = x2 - x1;
     int delta_y = y2 - y1;

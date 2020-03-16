@@ -1,6 +1,6 @@
 #include "tile.h"
 
-void tile_new(Tile *tile, int x, int y, int frame_size, int frame, bool occupied)
+void tile_new(Tile *tile, int x, int y, float frame_size, int frame, bool occupied)
 {
     tile->point.x = x;
     tile->point.y = y;

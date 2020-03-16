@@ -52,29 +52,16 @@ void map_initialize_system()
 
 void map_close_system()
 {
+    entity_free_all();
     free(tile_list);
     sprite_free(&tiles);
     sprite_free(&buttons);
 }
 
-void map_initialize_window(int map_id)
+void map_free_all()
 {
-    Map_Detail *level = NULL;
-    level = map_parser_get_map(map_id);
-
-    Window *map_window = NULL;
-    map_window = menu_push_window();
-
-    map_window->window_frame.x = TILE_FRAME * MAP_TILE_COLUMNS;
-    map_window->window_frame.y = 0;
-    map_window->window_frame.w = graphics_screen.w - (TILE_FRAME * MAP_TILE_COLUMNS);
-    map_window->window_frame.h = graphics_screen.h;
-    map_window->background = sprite_load("images/side_menu_background.png", 192, 448, 1);
-
-    map_window->draw = map_draw_window;
-    map_window->update = map_update_window;
-
-    menu_set_button(map_window, 0, 0, "test", buttons, map_window->window_frame.x + TILE_FRAME, map_window->window_frame.y + TILE_FRAME, TILE_FRAME / 1.6, TILE_FRAME / 1.6);
+    entity_free_all();
+    memset(tile_list, 0, sizeof(Tile) * (MAP_TILE_COLUMNS * MAP_TILE_ROWS));
 }
 
 void map_initialize_base(int map_id)
@@ -87,7 +74,7 @@ void map_initialize_base(int map_id)
     int tile_x = 0;
     int tile_y = 0;
     int next_row_count = 0;
-    int frame = 1;
+    int frame = 2;
     int tile_index = 0;
 
     for(int i = 0; i < (sizeof(level->map) / sizeof(level->map[0])); i++)
@@ -95,13 +82,13 @@ void map_initialize_base(int map_id)
         if(strcmp(level->map[i], "00") == 0) {
             tile_new(&tile_list[tile_index], tile_x, tile_y, TILE_FRAME, frame, false);
             tile_index++;
-            if(frame == 0)
+            if(frame == 2)
             {
-                frame = 1;
+                frame = 3;
             }
             else
             {
-                frame = 0;
+                frame = 2;
             }
             tile_x += TILE_FRAME;
             next_row_count++;
@@ -196,26 +183,12 @@ void map_load_entities(int map_id)
     }*/
 }
 
-void map_draw_tiles(int map_id)
+void map_draw_tiles()
 {
     for(int i = 0; i < (MAP_TILE_COLUMNS * MAP_TILE_ROWS); i++)
     {
         sprite_draw(tiles, tile_list[i].frame, tile_list[i].point.x, tile_list[i].point.y, TILE_FRAME, TILE_FRAME, 0, SDL_FLIP_NONE);
     }
-}
-
-void map_draw_window(Window *self)
-{
-    sprite_draw(self->background, 0, self->window_frame.x, self->window_frame.y, self->window_frame.w, self->window_frame.h, 0, SDL_FLIP_NONE);
-    for(int i = 0; i < self->button_count; i++)
-    {
-        sprite_draw(self->buttons[i].button, self->buttons[i].frame, self->buttons[i].box.x, self->buttons[i].box.y, self->buttons[i].box.w, self->buttons[i].box.h, 0, SDL_FLIP_NONE);
-    }
-}
-
-void map_update_window(Window *self, int button_id)
-{
-
 }
 
 bool map_check_on_tile(Entity *entity)

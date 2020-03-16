@@ -6,6 +6,7 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "entity.h"
+#include "font.h"
 #include "menu.h"
 #include "map.h"
 #include "map_parser.h"
@@ -28,6 +29,7 @@ void main_initialize_system()
     graphics_initialize_system("MouseGame");
     sprite_initialize_system();
     entity_initialize_system();
+    font_initialize_system();
     menu_initialize_system();
     map_parser_initialize_system();
     map_initialize_system();
@@ -66,6 +68,7 @@ int SDL_main( int argc, char* args[] )
     //map_load_entities(0);
 
     menu_initialize_base_window();
+    SDL_Color textColor = { 0, 0, 0 };
 
     while(!quit)
     {
@@ -164,6 +167,9 @@ int SDL_main( int argc, char* args[] )
         SDL_RenderClear(graphics_renderer);
 
         menu_draw_all_window();
+        map_draw_tiles();
+        entity_draw_all();
+        //font_draw_text("TEST TEST ONE TWO THREE", 0, 0, textColor, 2);
 
         /*switch(state)
         {

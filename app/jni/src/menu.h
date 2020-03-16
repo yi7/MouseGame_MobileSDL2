@@ -4,6 +4,9 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "vector.h"
+#include "map_parser.h"
+#include "map.h"
+#include "font.h"
 
 #define WINDOW_BUTTONS 64
 #define WINDOW_MAX 32
@@ -42,7 +45,11 @@ void menu_initialize_pack_window();
 
 void menu_update_pack_window(Window *self, int button_id);
 
-void menu_initialize_map_window();
+void menu_initialize_map_list_window(char *filename);
+
+void menu_update_map_list_window(Window *self, int button_id);
+
+void menu_initialize_map_window(int button_id);
 
 void menu_update_map_window(Window *self, int button_id);
 
