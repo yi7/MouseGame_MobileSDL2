@@ -18,6 +18,7 @@ typedef struct
     char button_text[80];
     int frame;
     int button_id;
+    Message *message;
 } Button;
 
 typedef struct Window_S

@@ -1,9 +1,12 @@
 #include "font.h"
 
+static Message *message_list = NULL;
+const int MESSAGE_MAX = 1000;
+int message_count;
+
 TTF_Font *small_font = NULL;
 TTF_Font *medium_font = NULL;
 TTF_Font *large_font = NULL;
-
 
 void font_initialize_system()
 {
@@ -33,32 +36,95 @@ void font_initialize_system()
     {
         SDL_Log("font_initialize_system() failed to initialize large font -Error:");
     }
+
+    message_list = (Message *)malloc(sizeof(Message) * MESSAGE_MAX);
+    if(!message_list)
+    {
+        SDL_Log("font_initialize_system() failed to initialize font system -Error:");
+        return;
+    }
+
+    memset(message_list, 0, sizeof(Message) * MESSAGE_MAX);
+    message_count = 0;
+    atexit(font_close_system);
 }
 
-void font_draw_text(char *text, int x, int y, SDL_Color color, int size)
+void font_close_system()
 {
-    int center_x, center_y, w, h;
-    SDL_Surface *temp_surface = NULL;
-    SDL_Texture *temp_texture = NULL;
-
-    /*if(strlen(text) == 0)
+    if(!message_list)
     {
         return;
-    }*/
+    }
+
+    for(int i = 0; i < MESSAGE_MAX; i++)
+    {
+        if(message_list[i].message_texture != 0)
+        {
+            SDL_DestroyTexture(message_list[i].message_texture);
+        }
+    }
+
+    free(message_list);
+    message_list = NULL;
+}
+
+Message *font_load_message(char *message, int r, int g, int b, int size)
+{
+    int i;
+    SDL_Surface *temp_surface = NULL;
+
+    if(!message_list)
+    {
+        SDL_Log("font_load_message() font system uninitialized -Error:");
+        return NULL;
+    }
+
+    //first search to see if the requested sprite image is already loaded
+    for(i = 0; i < MESSAGE_MAX; i++)
+    {
+        if(message_list[i].ref == 0)
+        {
+            continue;
+        }
+
+        if(strcmp(message, message_list[i].message) == 0)
+        {
+            message_list[i].ref++;
+            return &message_list[i];
+        }
+    }
+
+    //make sure there's enough room for a new font message
+    if(message_count + 1 >= MESSAGE_MAX)
+    {
+        SDL_Log("font_load_message() maximum message reached -Error:");
+        exit(1);
+    }
+    message_count++;
+
+    for(i = 0; i <= message_count; i++)
+    {
+        if(!message_list[i].ref)
+        {
+            break;
+        }
+    }
+
+    SDL_Color text_color = {static_cast<Uint8>(r), static_cast<Uint8>(g), static_cast<Uint8>(b)};
 
     switch(size)
     {
         case 0:
-            temp_surface = TTF_RenderText_Solid(small_font, text, color);
+            temp_surface = TTF_RenderText_Solid(small_font, message, text_color);
             break;
         case 1:
-            temp_surface = TTF_RenderText_Solid(medium_font, text, color);
+            temp_surface = TTF_RenderText_Solid(medium_font, message, text_color);
             break;
         case 2:
-            temp_surface = TTF_RenderText_Solid(large_font, text, color);
+            temp_surface = TTF_RenderText_Solid(large_font, message, text_color);
             break;
         default:
-            return;
+            return NULL;
     }
 
     if(!temp_surface)
@@ -66,17 +132,23 @@ void font_draw_text(char *text, int x, int y, SDL_Color color, int size)
         SDL_Log("font_draw_text() failed to render text surface -Error:");
     }
 
-    temp_texture = SDL_CreateTextureFromSurface(graphics_renderer, temp_surface);
-    if(!temp_texture)
-    {
-        SDL_Log("font_draw_text() failed to render texture from rendered text -Error:");
-    }
+    strcpy(message_list[i].message, message);
+    message_list[i].ref++;
+    message_list[i].message_texture = SDL_CreateTextureFromSurface(graphics_renderer, temp_surface);
+    message_list[i].color = text_color;
+    message_list[i].width = temp_surface->w;
+    message_list[i].height = temp_surface->h;
 
+    return &message_list[i];
+}
+
+void font_draw_text(Message *message, int x, int y)
+{
     SDL_Rect dest;
     dest.x = x + 50;
     dest.y = y + 50;
-    dest.w = temp_surface->w;
-    dest.h = temp_surface->h;
+    dest.w = message->width;
+    dest.h = message->height;
 
-    SDL_RenderCopyEx(graphics_renderer, temp_texture, NULL, &dest, 0, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(graphics_renderer, message->message_texture, NULL, &dest, 0, NULL, SDL_FLIP_NONE);
 }

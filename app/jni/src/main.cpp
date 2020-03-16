@@ -41,6 +41,7 @@ void main_close_system()
     //Quit SDL subsystems
     map_close_system();
     map_parser_close_system();
+    font_close_system();
     entity_close_system();
     sprite_close_system();
     graphics_close_system();
