@@ -207,14 +207,21 @@ void menu_initialize_map_window(int button_id)
     map_window->draw = menu_draw_window;
     map_window->update = menu_update_map_window;
 
-    menu_set_button(map_window, 0, 0, "test", map_side_menu_buttons, map_window->window_frame.x + (tile_frame / 2), map_window->window_frame.y + (tile_frame / 2), tile_frame, tile_frame);
+    float padding = tile_frame / 2;
+
+    menu_set_button(map_window, 0, 0, "", map_side_menu_buttons, map_window->window_frame.x + padding, map_window->window_frame.y + padding, tile_frame, tile_frame);
+    menu_set_button(map_window, 1, 0, "", map_side_menu_buttons, map_window->window_frame.x + (padding * 4), map_window->window_frame.y + padding, tile_frame, tile_frame);
+    menu_set_button(map_window, 2, 0, "", map_side_menu_buttons, map_window->window_frame.x + padding, map_window->window_frame.y + (padding * 11), tile_frame, tile_frame);
+
+    //SDL_Color text_color = { 0, 0, 0 };
+    //font_draw_text("X", map_window->window_frame.x + (padding * 3), map_window->window_frame.y + (padding * 4), text_color, 2);
 }
 
 void menu_update_map_window(Window *self, int button_id)
 {
     switch(button_id)
     {
-        case 0:
+        case 2:
             map_free_all();
             menu_pop_window(self->handle);
             break;
@@ -226,11 +233,11 @@ void menu_update_map_window(Window *self, int button_id)
 void menu_draw_window(Window *self)
 {
     sprite_draw(self->background, 0, self->window_frame.x, self->window_frame.y, self->window_frame.w, self->window_frame.h, 0, SDL_FLIP_NONE);
-    SDL_Color textColor = { 0, 0, 0 };
+    SDL_Color text_color = { 0, 0, 0 };
     for(int i = 0; i < self->button_count; i++)
     {
         sprite_draw(self->buttons[i].button, self->buttons[i].frame, self->buttons[i].box.x, self->buttons[i].box.y, self->buttons[i].box.w, self->buttons[i].box.h, 0, SDL_FLIP_NONE);
-        font_draw_text(self->buttons[i].button_text, self->buttons[i].box.x, self->buttons[i].box.y, textColor, 1);
+        //font_draw_text(self->buttons[i].button_text, self->buttons[i].box.x, self->buttons[i].box.y, text_color, 1);
     }
 }
 
@@ -345,6 +352,8 @@ void menu_set_button(Window *window, int button_id, int frame, char *text, Sprit
     button->box.y = y;
     button->box.w = w;
     button->box.h = h;
+
+
 }
 
 void menu_draw_all_window()

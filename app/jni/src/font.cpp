@@ -41,6 +41,11 @@ void font_draw_text(char *text, int x, int y, SDL_Color color, int size)
     SDL_Surface *temp_surface = NULL;
     SDL_Texture *temp_texture = NULL;
 
+    /*if(strlen(text) == 0)
+    {
+        return;
+    }*/
+
     switch(size)
     {
         case 0:

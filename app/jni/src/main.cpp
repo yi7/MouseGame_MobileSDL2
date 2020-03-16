@@ -169,6 +169,7 @@ int SDL_main( int argc, char* args[] )
         menu_draw_all_window();
         map_draw_tiles();
         entity_draw_all();
+        entity_think_all();
         //font_draw_text("TEST TEST ONE TWO THREE", 0, 0, textColor, 2);
 
         /*switch(state)
