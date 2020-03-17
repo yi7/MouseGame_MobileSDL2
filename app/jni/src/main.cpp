@@ -7,6 +7,7 @@
 #include "font.h"
 #include "sprite.h"
 #include "menu.h"
+#include "file.h"
 //#include "entity.h"
 //#include "menu.h"
 //#include "map.h"
@@ -21,8 +22,8 @@ void main_initialize_system()
     font_initialize_system();
     sprite_initialize_system();
     menu_initialize_system();
+    file_initialize_system();
     //entity_initialize_system();
-    //map_parser_initialize_system();
     //map_initialize_system();
     atexit(main_close_system);
 }
@@ -31,8 +32,8 @@ void main_close_system()
 {
     //Quit SDL subsystems
     //map_close_system();
-    //map_parser_close_system();
     //entity_close_system();
+    file_close_system();
     menu_close_system();
     sprite_close_system();
     font_close_system();
