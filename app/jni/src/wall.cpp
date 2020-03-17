@@ -24,8 +24,6 @@ void wall_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
     {
         wall_frame.w = scale;
         wall_frame.h = scale * wall_horizontal->frame_size.h / wall_horizontal->frame_size.w;
-        //SDL_Log("%d", scale);
-        //SDL_Log("%d, %d", wall_frame.h, wall_frame.w);
         wall->position.x = x;
         wall->position.y = y - (wall_frame.h / 2);
         wall->rect_hitbox.x = wall->position.x;
@@ -33,9 +31,6 @@ void wall_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
         wall->rect_hitbox.w = wall_frame.w;
         wall->rect_hitbox.h = wall_frame.h;
         wall->sprite = wall_horizontal;
-
-        //SDL_Log("%d, %d", x, y);
-
     }
     wall->frame_size.w = wall_frame.w;
     wall->frame_size.h = wall_frame.h;
@@ -87,7 +82,7 @@ void wall_touch(Entity *self, Entity *other)
 
 void wall_update_animal(Entity *entity)
 {
-    switch(entity->state)
+    /*switch(entity->state)
     {
         case UP:
             entity->state = RIGHT;
@@ -107,5 +102,5 @@ void wall_update_animal(Entity *entity)
             break;
         default:
             break;
-    }
+    }*/
 }

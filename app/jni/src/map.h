@@ -23,6 +23,13 @@ extern const int MAP_TILE_ROWS;
 extern Tile *tile_list;
 extern int ARROW_LIMIT;
 
+enum Map_State
+{
+    PLAY,
+    PAUSE,
+    PLAN
+};
+
 typedef struct
 {
     int columns; /**<number of columns for tilemap*/
@@ -65,5 +72,13 @@ void map_draw_tiles();
  * @return returns true if it's on a tile, otherwise false
  */
 bool map_check_on_tile(Entity *entity);
+
+void map_play();
+
+void map_stop();
+
+void map_reset(int button_id);
+
+void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y);
 
 #endif //MOUSEGAME_MAP_H

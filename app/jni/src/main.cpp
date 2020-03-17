@@ -14,7 +14,7 @@
 void main_initialize_system();
 void main_close_system();
 
-enum Game_State
+/*enum Game_State
 {
     MAIN_MENU,
     PLAY,
@@ -22,7 +22,7 @@ enum Game_State
     PLAN,
     RESET,
     QUIT
-};
+};*/
 
 void main_initialize_system()
 {
@@ -53,23 +53,14 @@ int SDL_main( int argc, char* args[] )
     main_initialize_system();
     SDL_Event e;
     bool quit = false;
-    Game_State state = MAIN_MENU;
+    //Game_State state = MAIN_MENU;
     Point2D touch_location;
     Point2D untouch_location;
     int arrow_count = 0;
-    //Sprite *test = sprite_load("images/loaded.png", 640, 480, 1);
 
     SDL_Log("start");
 
-    //map_load_entities("test");
-
-    //map_parser_parse_file("files/maps.txt");
-    //map_initialize_window(0);
-    //map_initialize_base(0);
-    //map_load_entities(0);
-
     menu_initialize_base_window();
-    SDL_Color textColor = { 0, 0, 0 };
 
     while(!quit)
     {
@@ -114,7 +105,15 @@ int SDL_main( int argc, char* args[] )
                     untouch_location.y = e.tfinger.y * graphics_screen.h;
 
                     menu_update_top_window(untouch_location.x, untouch_location.y);
+                    if(true)
+                    {
+                        int map_x = touch_location.x / TILE_FRAME;
+                        int map_y = touch_location.y / TILE_FRAME;
+                        int tile_position = (TPL * map_y) + map_x;
 
+                        SDL_Log("%d", tile_position);
+                    }
+                    map_update(touch_location.x, touch_location.y, untouch_location.x, untouch_location.y);
                     /*if(state == PLAN)
                     {
                         int map_x = touch_location.x / TILE_FRAME;
@@ -171,6 +170,7 @@ int SDL_main( int argc, char* args[] )
         map_draw_tiles();
         entity_draw_all();
         entity_think_all();
+        //entity_update_all();
         //font_draw_text("TEST TEST ONE TWO THREE", 0, 0, textColor, 2);
 
         /*switch(state)

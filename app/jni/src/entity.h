@@ -9,12 +9,9 @@
 
 enum State
 {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    FREE,
-    STOP
+    MOVE,
+    STOP,
+    FREE
 };
 
 enum Type
@@ -116,13 +113,6 @@ bool entity_intersect(Entity *a, Entity *b);
 Entity *entity_intersect_all(Entity *self);
 
 /**
- * @brief checks whether there is an entity in front
- * @param self the entity to check
- * @return the entity that is in front, NULL if nothing
- */
-Entity *entity_check_front(Entity *self);
-
-/**
  * @brief calls all touch function of entities
  */
 void entity_touch_all();
@@ -136,7 +126,7 @@ void entity_update(Entity *self);
 /**
  * @brief calls all update functions of entities on the entity system
  */
-void entity_update_all();
+void entity_update_all(State state);
 
 /**
  * @brief think function that runs every frame
@@ -148,5 +138,7 @@ void entity_think(Entity *self);
  * @brief calls all think functions of entities on the entity system
  */
 void entity_think_all();
+
+void entity_change_active_entity_state(State state);
 
 #endif //MOUSEGAME_ENTITY_H

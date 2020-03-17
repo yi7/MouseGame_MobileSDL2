@@ -8,24 +8,9 @@ float WALL_FRAME_WIDTH;
 const int MAP_TILE_COLUMNS = 9;
 const int MAP_TILE_ROWS = 7;
 Tile *tile_list = NULL;
-int ARROW_LIMIT;
-
-/*char map[285][3] = {"13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "11", "00", "11", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "12", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "15", "13", "15", "13", "15", "13", "15", "13", "12", "13", "15", "13", "15", "13", "15", "13", "12", "13",
-                    "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
-                    "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13"};*/
-
+int ARROW_LIMIT = 0;
+int arrow_count = 0;
+Map_State map_state;
 
 void map_initialize_system()
 {
@@ -33,7 +18,6 @@ void map_initialize_system()
     buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
     TILE_FRAME = graphics_screen.h / MAP_TILE_ROWS;
     TPL = MAP_TILE_COLUMNS;
-    //ARROW_LIMIT = 3;
 
     tile_list = (Tile *)malloc(sizeof(Tile) * (MAP_TILE_COLUMNS * MAP_TILE_ROWS));
     if(!tile_list)
@@ -70,6 +54,8 @@ void map_initialize_base(int map_id)
     level = map_parser_get_map(map_id);
 
     ARROW_LIMIT = level->arrow_count;
+    arrow_count = 0;
+    map_state = PLAN;
 
     int tile_x = 0;
     int tile_y = 0;
@@ -174,13 +160,6 @@ void map_load_entities(int map_id)
                 break;
         }
     }
-
-    //mouse_initialize(tile_frame * 4, tile_frame * 3, tile_frame, UP, 0, SDL_FLIP_NONE);
-    /*SDL_Log("%d", (sizeof(initial_position) / sizeof(initial_position[0])));
-    for(int i = 0; i < (sizeof(initial_position) / sizeof(initial_position[0])); i++)
-    {
-        //mouse_initialize(tile_frame * initial_position[i][0], tile_frame * initial_position[i][1], tile_frame, UP, 0, SDL_FLIP_NONE);
-    }*/
 }
 
 void map_draw_tiles()
@@ -203,4 +182,76 @@ bool map_check_on_tile(Entity *entity)
     }
 
     return false;
+}
+
+void map_play()
+{
+    map_state = PLAY;
+    entity_change_active_entity_state(MOVE);
+}
+
+void map_stop()
+{
+    map_state = PAUSE;
+    entity_change_active_entity_state(STOP);
+}
+
+void map_reset(int button_id)
+{
+    map_free_all();
+    map_initialize_base(button_id);
+    map_load_entities(button_id);
+}
+
+void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
+{
+    if(map_state == PLAY || map_state == PAUSE)
+    {
+        return;
+    }
+
+    int map_x = touch_x / TILE_FRAME;
+    int map_y = touch_x / TILE_FRAME;
+    int tile_position = (TPL * map_y) + map_x;
+
+    /*SDL_Log("touch: %d, %d", touch_x, touch_y);
+    SDL_Log("untouch: %d, %d", untouch_x, untouch_y);
+    SDL_Log("pos: %d", tile_position);*/
+
+    if(!tile_list[tile_position].occupied)
+    {
+        if(arrow_count < ARROW_LIMIT)
+        {
+            arrow_count++;
+            tile_list[tile_position].occupied = true;
+            if(abs(touch_x - untouch_x) > abs(touch_y - untouch_y))
+            {
+                if(touch_x < untouch_x)
+                {
+                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 0, SDL_FLIP_NONE);
+                }
+                else
+                {
+                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 180, SDL_FLIP_NONE);
+                }
+            }
+            else
+            {
+                if(touch_y < untouch_y)
+                {
+                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 90, SDL_FLIP_NONE);
+                }
+                else
+                {
+                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, -90, SDL_FLIP_NONE);
+                }
+            }
+        }
+    }
+    else
+    {
+        arrow_count--;
+        tile_list[tile_position].occupied = false;
+        entity_free_specific(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE);
+    }
 }

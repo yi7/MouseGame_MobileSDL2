@@ -29,7 +29,7 @@ void tile_new(Tile *tile, int x, int y, float frame_size, int frame, bool occupi
  * @param angle angle of the tile
  * @param flip SDL_RendererFlip value
  */
-void tile_new_entity(int x, int y, int scale, enum State state, int angle, SDL_RendererFlip flip);
+void tile_new_entity(int x, int y, int scale, int angle, SDL_RendererFlip flip);
 
 /**
  * @brief frees the tile entity

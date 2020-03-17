@@ -163,23 +163,15 @@ void menu_initialize_map_list_window(char *filename)
 
 void menu_update_map_list_window(Window *self, int button_id)
 {
-    switch(button_id)
+    if(button_id == 20)
     {
-        case 0:
-            menu_initialize_map_window(button_id);
-            map_initialize_base(button_id);
-            map_load_entities(button_id);
-            break;
-        case 1:
-            menu_initialize_map_window(button_id);
-            map_initialize_base(button_id);
-            map_load_entities(button_id);
-            break;
-        case 20:
-            menu_pop_window(self->handle);
-            break;
-        default:
-            break;
+        menu_pop_window(self->handle);
+    }
+    else
+    {
+        menu_initialize_map_window(button_id);
+        map_initialize_base(button_id);
+        map_load_entities(button_id);
     }
 }
 
@@ -221,6 +213,12 @@ void menu_update_map_window(Window *self, int button_id)
 {
     switch(button_id)
     {
+        case 0:
+            map_play();
+            break;
+        case 1:
+            map_stop();
+            break;
         case 2:
             map_free_all();
             menu_pop_window(self->handle);
@@ -238,8 +236,6 @@ void menu_draw_window(Window *self)
     {
         sprite_draw(self->buttons[i].button, self->buttons[i].frame, self->buttons[i].box.x, self->buttons[i].box.y, self->buttons[i].box.w, self->buttons[i].box.h, 0, SDL_FLIP_NONE);
         font_draw_text(self->buttons[i].message, self->buttons[i].box.x, self->buttons[i].box.y);
-
-        //font_draw_text(self->buttons[i].button_text, self->buttons[i].box.x, self->buttons[i].box.y, text_color, 1);
     }
 }
 

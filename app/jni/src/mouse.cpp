@@ -1,5 +1,10 @@
 #include "mouse.h"
 
+#define UP -90
+#define RIGHT 0
+#define DOWN 90
+#define LEFT 180
+
 void mouse_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
 {
     Sprite *animals = sprite_load("images/animals_test.png", 64, 64, 8);
@@ -20,24 +25,7 @@ void mouse_initialize(int x, int y, int scale, int angle, SDL_RendererFlip flip)
     mouse->velocity = 16;
     mouse->angle = angle;
     mouse->flip = flip;
-    switch(angle)
-    {
-        case 0:
-            mouse->state = UP;
-            break;
-        case 90:
-            mouse->state = RIGHT;
-            break;
-        case 180:
-            mouse->state = DOWN;
-            break;
-        case -90:
-            mouse->state = LEFT;
-            break;
-        default:
-            mouse->state = RIGHT;
-            break;
-    }
+    mouse->state = STOP;
     mouse->type = MOUSE;
     mouse->shape = RECTANGLE;
     mouse->sprite = animals;
@@ -79,23 +67,23 @@ void mouse_touch(Entity *self, Entity *other)
 
 void mouse_update(Entity *self)
 {
-    switch(self->state)
+    /*switch(self->angle)
     {
         case UP:
-            self->angle = 0;
+            self->angle = UP;
             break;
         case RIGHT:
-            self->angle = 90;
+            self->angle = RIGHT;
             break;
         case DOWN:
-            self->angle = 180;
+            self->angle = DOWN;
             break;
         case LEFT:
-            self->angle = -90;
+            self->angle = LEFT;
             break;
         default:
             break;
-    }
+    }*/
 }
 
 void mouse_think(Entity *self)
@@ -117,67 +105,67 @@ void mouse_think(Entity *self)
     switch(mouse_check_front(self)) {
         case WALL:
             mouse_step_off(self);
-            switch (self->state) {
+            switch (self->angle) {
                 case UP:
-                    self->state = RIGHT;
+                    self->angle = RIGHT;
                     mouse_step_forward(self);
                     if(mouse_check_front(self) == WALL)
                     {
                         mouse_step_off(self);
-                        self->state = LEFT;
+                        self->angle = LEFT;
                         mouse_step_forward(self);
                         if(mouse_check_front(self) == WALL)
                         {
                             mouse_step_off(self);
-                            self->state = DOWN;
+                            self->angle = DOWN;
                             mouse_step_forward(self);
                         }
                     }
                     break;
                 case RIGHT:
-                    self->state = DOWN;
+                    self->angle = DOWN;
                     mouse_step_forward(self);
                     if(mouse_check_front(self) == WALL)
                     {
                         mouse_step_off(self);
-                        self->state = UP;
+                        self->angle = UP;
                         mouse_step_forward(self);
                         if(mouse_check_front(self) == WALL)
                         {
                             mouse_step_off(self);
-                            self->state = LEFT;
+                            self->angle = LEFT;
                             mouse_step_forward(self);
                         }
                     }
                     break;
                 case DOWN:
-                    self->state = LEFT;
+                    self->angle = LEFT;
                     mouse_step_forward(self);
                     if(mouse_check_front(self) == WALL)
                     {
                         mouse_step_off(self);
-                        self->state = RIGHT;
+                        self->angle = RIGHT;
                         mouse_step_forward(self);
                         if(mouse_check_front(self) == WALL)
                         {
                             mouse_step_off(self);
-                            self->state = UP;
+                            self->angle = UP;
                             mouse_step_forward(self);
                         }
                     }
                     break;
                 case LEFT:
-                    self->state = UP;
+                    self->angle = UP;
                     mouse_step_forward(self);
                     if(mouse_check_front(self) == WALL)
                     {
                         mouse_step_off(self);
-                        self->state = DOWN;
+                        self->angle = DOWN;
                         mouse_step_forward(self);
                         if(mouse_check_front(self) == WALL)
                         {
                             mouse_step_off(self);
-                            self->state = RIGHT;
+                            self->angle = RIGHT;
                             mouse_step_forward(self);
                         }
                     }
@@ -199,7 +187,7 @@ void mouse_think(Entity *self)
 
 void mouse_step_forward(Entity *self)
 {
-    switch(self->state)
+    switch(self->angle)
     {
         case UP:
             self->position.y -= self->velocity;
@@ -224,7 +212,7 @@ void mouse_step_forward(Entity *self)
 
 void mouse_step_backward(Entity *self)
 {
-    switch(self->state)
+    switch(self->angle)
     {
         case UP:
             self->position.y += self->velocity;
@@ -251,7 +239,7 @@ void mouse_step_off(Entity *self)
 {
     Entity *wall = entity_intersect_all(self);
     int difference;
-    switch(self->state)
+    switch(self->angle)
     {
         case UP:
 

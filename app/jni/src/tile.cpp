@@ -9,7 +9,7 @@ void tile_new(Tile *tile, int x, int y, float frame_size, int frame, bool occupi
     tile->occupied = occupied;
 }
 
-void tile_new_entity(int x, int y, int scale, enum State state, int angle, SDL_RendererFlip flip)
+void tile_new_entity(int x, int y, int scale, int angle, SDL_RendererFlip flip)
 {
     Sprite *tiles = sprite_load("images/tiles.png", 64, 64, 6);
 
@@ -28,26 +28,7 @@ void tile_new_entity(int x, int y, int scale, enum State state, int angle, SDL_R
     tile->type = TILE;
     tile->shape = RECTANGLE;
     tile->sprite = tiles;
-    tile->state = state;
-    switch(state)
-    {
-        case UP:
-            tile->frame = 6;
-            break;
-        case RIGHT:
-            tile->frame = 7;
-            break;
-        case DOWN:
-            tile->frame = 8;
-            break;
-        case LEFT:
-            tile->frame = 9;
-            break;
-        default:
-            tile->frame = 0;
-            break;
-    }
-
+    tile->frame = 7;
     tile->free = tile_free_entity;
     tile->draw = tile_draw_entity;
     tile->touch = NULL;
