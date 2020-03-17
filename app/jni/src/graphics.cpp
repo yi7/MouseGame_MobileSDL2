@@ -56,6 +56,7 @@ void graphics_initialize_system(char const *window_name)
     graphics_reference.tpl = graphics_reference.map_columns;
     graphics_reference.button_width = graphics_reference.screen_width / 8;
     graphics_reference.button_height = graphics_reference.screen_height / 8;
+    graphics_reference.button_padding = graphics_reference.wall_padding;
 
     atexit(graphics_close_system);
     SDL_Log("graphics_initialize_system() graphics initialized");

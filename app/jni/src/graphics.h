@@ -19,6 +19,7 @@ typedef struct
     float wall_padding; /**<the map wall's width*/
     float button_width; /**<default button width*/
     float button_height; /**<default button height*/
+    float button_padding; /**<default padding for button text*/
 } Graphics_Reference;
 
 //extern SDL_Window *graphics_window; /**<the window of the game*/

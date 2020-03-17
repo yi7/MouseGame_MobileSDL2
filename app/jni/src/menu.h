@@ -16,6 +16,7 @@ typedef struct
     SDL_Rect box; /**<position and frame size of button*/
     int frame; /**<frame of the button*/
     int button_id; /**<id of button*/
+    int padding; /**<padding of button*/
     Message *message; /**<message associated with button*/
 } Button;
 
@@ -100,7 +101,7 @@ void menu_draw_window(Window *self);
  * @param w width of button
  * @param h height of button
  */
-void menu_set_button(Window *window, int button_id, int frame, const char *text, int size, Sprite *sprite, int x, int y, int w, int h);
+void menu_set_button(Window *window, int button_id, int frame, const char *text, int size, int padding, Sprite *sprite, int x, int y, int w, int h);
 
 /**
  * @brief draws all window on stack
@@ -114,16 +115,32 @@ void menu_draw_all_window();
  */
 void menu_update_top_window(float touch_x, float touch_y);
 
-/*
+/**
+ * @brief initializes pack list window
+ */
+void menu_initialize_pack_list_window();
 
-void menu_initialize_pack_window();
+/**
+ * @brief update function of pack list window
+ * @param self current window
+ * @param button_id id of button pressed
+ */
+void menu_update_pack_list_window(Window *self, int button_id);
 
-void menu_update_pack_window(Window *self, int button_id);
-
+/**
+ * @brief initializes map list window
+ * @param filename file to load the pack maps
+ */
 void menu_initialize_map_list_window(char *filename);
 
+/**
+ * @brief update function of map list window
+ * @param self current window
+ * @param button_id id of button pressed
+ */
 void menu_update_map_list_window(Window *self, int button_id);
 
+/*
 void menu_initialize_map_window(int button_id);
 
 void menu_update_map_window(Window *self, int button_id);
