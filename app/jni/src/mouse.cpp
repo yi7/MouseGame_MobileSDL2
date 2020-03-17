@@ -67,33 +67,20 @@ void mouse_touch(Entity *self, Entity *other)
 
 void mouse_update(Entity *self)
 {
-    /*switch(self->angle)
-    {
-        case UP:
-            self->angle = UP;
-            break;
-        case RIGHT:
-            self->angle = RIGHT;
-            break;
-        case DOWN:
-            self->angle = DOWN;
-            break;
-        case LEFT:
-            self->angle = LEFT;
-            break;
-        default:
-            break;
-    }*/
+
 }
 
 void mouse_think(Entity *self)
 {
     mouse_step_forward(self);
 
-    /*
-    if(!map_check_on_tile(self))
+    /*if(map_check_on_tile(self))
     {
-        return;
+        Entity *other = entity_get_specific(self->position.x, self->position.y, TILE);
+        if(other)
+        {
+            self->angle = other->angle;
+        }
     }*/
 
     /*if(self->state == RIGHT)
@@ -174,9 +161,6 @@ void mouse_think(Entity *self)
                     break;
             }
             break;
-        case CAT:
-            entity_free(&self);
-            break;
         default:
             break;
     }
@@ -238,11 +222,10 @@ void mouse_step_backward(Entity *self)
 void mouse_step_off(Entity *self)
 {
     Entity *wall = entity_intersect_all(self);
-    int difference;
+
     switch(self->angle)
     {
         case UP:
-
             self->position.y = wall->position.y + wall->frame_size.h;
             self->rect_hitbox.y = wall->position.y + wall->frame_size.h;
             break;

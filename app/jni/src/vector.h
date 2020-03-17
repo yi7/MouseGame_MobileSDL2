@@ -53,6 +53,8 @@ bool vector_circ_rect_intersect(Circle2D a, SDL_Rect b);
  */
 double vector_distance_squared(int x1, int y1, int x2, int y2);
 
+double vector_square_intersect_percentage(SDL_Rect a, SDL_Rect b);
+
 #define ZERO 0
 #define MAX(a,b) (a > b ? a:b)
 #define MIN(a,b) (a < b ? a:b)

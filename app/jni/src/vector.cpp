@@ -70,3 +70,14 @@ double vector_distance_squared(int x1, int y1, int x2, int y2)
     int delta_y = y2 - y1;
     return (delta_x * delta_x) + (delta_y * delta_y);
 }
+
+double vector_square_intersect_percentage(SDL_Rect a, SDL_Rect b)
+{
+    int x_overlap = MAX(0, MIN(a.x + a.w, b.x + b.w)) - MAX(a.x, b.x);
+    int y_overlap = MAX(0, MIN(a.y + a.h, b.y + b.h)) - MAX(a.y, b.y);
+    float overlap_area = x_overlap * y_overlap;
+    float percentage = overlap_area / (b.w * b.h) * 100;
+    //SDL_Log("%f, %d, %f", overlap_area, (b.w * b.h), percentage);
+
+    return percentage;
+}

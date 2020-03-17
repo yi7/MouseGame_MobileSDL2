@@ -33,7 +33,7 @@ void tile_new_entity(int x, int y, int scale, int angle, SDL_RendererFlip flip)
     tile->draw = tile_draw_entity;
     tile->touch = NULL;
     tile->update = NULL;
-    tile->think = NULL;
+    tile->think = tile_think_entity;
 }
 
 void tile_free_entity(Entity *entity)
@@ -44,4 +44,9 @@ void tile_free_entity(Entity *entity)
 void tile_draw_entity(Entity *entity)
 {
     entity_draw(entity, entity->position.x, entity->position.y, entity->angle, entity->flip);
+}
+
+void tile_think_entity(Entity *entity)
+{
+    entity_tile_intersect(entity);
 }

@@ -27,7 +27,8 @@ enum Map_State
 {
     PLAY,
     PAUSE,
-    PLAN
+    PLAN,
+    INACTIVE
 };
 
 typedef struct
@@ -79,6 +80,14 @@ void map_stop();
 
 void map_reset(int button_id);
 
-void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y);
+void map_update(int tile_location);
+
+bool map_check_plan_state();
+
+int map_get_arrow_count();
+
+void map_increment_arrow_count();
+
+void map_decrement_arrow_count();
 
 #endif //MOUSEGAME_MAP_H

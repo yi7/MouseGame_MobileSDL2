@@ -89,6 +89,22 @@ void entity_free_specific(int x, int y, Type type)
     }
 }
 
+Entity *entity_get_specific(int x, int y, Type type)
+{
+    Entity *entity;
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        entity = &entity_list[i];
+        if(entity->inuse &&
+           entity->position.x == x &&
+           entity->position.y == y &&
+           entity->type == type)
+        {
+            return &entity_list[i];
+        }
+    }
+}
+
 void entity_draw(Entity *entity, int draw_x, int draw_y, int angle, SDL_RendererFlip flip)
 {
     if(!entity)
@@ -106,6 +122,12 @@ void entity_draw(Entity *entity, int draw_x, int draw_y, int angle, SDL_Renderer
 
 void entity_draw_all()
 {
+    entity_draw_all_non_active();
+    entity_draw_all_active();
+}
+
+void entity_draw_all_non_active()
+{
     for(int i = 0; i < ENTITY_MAX; i++)
     {
         if(!entity_list[i].inuse)
@@ -114,6 +136,32 @@ void entity_draw_all()
         }
 
         if(!entity_list[i].draw)
+        {
+            continue;
+        }
+
+        if(entity_list[i].type == WALL || entity_list[i].type == TILE)
+        {
+            entity_list[i].draw(&entity_list[i]);
+        }
+    }
+}
+
+void entity_draw_all_active()
+{
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(!entity_list[i].draw)
+        {
+            continue;
+        }
+
+        if(entity_list[i].type == WALL || entity_list[i].type == TILE)
         {
             continue;
         }
@@ -161,6 +209,68 @@ bool entity_intersect(Entity *a, Entity *b)
     }
 
     return false;
+}
+
+float entity_intersect_percentage(Entity *a, Entity *b)
+{
+    return vector_square_intersect_percentage(a->rect_hitbox, b->rect_hitbox);
+}
+
+void entity_tile_intersect(Entity *self)
+{
+    if(!self)
+    {
+        return;
+    }
+
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        //Skip all wall and tile entities
+        if(entity_list[i].type == WALL || entity_list[i].type == TILE)
+        {
+            continue;
+        }
+
+        //Skip if entity is already facing the direction of the arrow
+        if(entity_list[i].angle == self->angle)
+        {
+            continue;
+        }
+
+        if(entity_intersect(self, &entity_list[i]))
+        {
+            SDL_Rect a, b;
+
+            a.x = self->position.x;
+            a.y = self->position.y;
+            a.w = self->frame_size.w;
+            a.h = self->frame_size.h;
+
+            b.x = entity_list[i].position.x;
+            b.y = entity_list[i].position.y;
+            b.w = entity_list[i].frame_size.w;
+            b.h = entity_list[i].frame_size.h;
+
+            float padding = (self->frame_size.w * 4 / 64) / 2;
+
+            //vector_square_intersect_percentage(a, b);
+            //SDL_Log("%d", vector_square_intersect_percentage(a, b));
+            SDL_Log("%f", vector_square_intersect_percentage(a, b));
+            if(vector_square_intersect_percentage(a, b) > 90)
+            {
+                entity_list[i].angle = self->angle;
+                entity_list[i].position.x = self->position.x + padding;
+                entity_list[i].position.y = self->position.y + padding;
+                entity_list[i].rect_hitbox.x = self->position.x + padding;
+                entity_list[i].rect_hitbox.y = self->position.y + padding;
+            }
+        }
+    }
 }
 
 Entity *entity_intersect_all(Entity *self)

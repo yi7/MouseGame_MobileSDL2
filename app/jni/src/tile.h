@@ -43,4 +43,6 @@ void tile_free_entity(Entity *entity);
  */
 void tile_draw_entity(Entity *entity);
 
+void tile_think_entity(Entity *entity);
+
 #endif //MOUSEGAME_TILE_H

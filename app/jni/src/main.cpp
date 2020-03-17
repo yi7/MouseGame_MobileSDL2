@@ -56,7 +56,6 @@ int SDL_main( int argc, char* args[] )
     //Game_State state = MAIN_MENU;
     Point2D touch_location;
     Point2D untouch_location;
-    int arrow_count = 0;
 
     SDL_Log("start");
 
@@ -104,17 +103,8 @@ int SDL_main( int argc, char* args[] )
                     untouch_location.x = e.tfinger.x * graphics_screen.w;
                     untouch_location.y = e.tfinger.y * graphics_screen.h;
 
-                    menu_update_top_window(untouch_location.x, untouch_location.y);
-                    if(true)
-                    {
-                        int map_x = touch_location.x / TILE_FRAME;
-                        int map_y = touch_location.y / TILE_FRAME;
-                        int tile_position = (TPL * map_y) + map_x;
 
-                        SDL_Log("%d", tile_position);
-                    }
-                    map_update(touch_location.x, touch_location.y, untouch_location.x, untouch_location.y);
-                    /*if(state == PLAN)
+                    if(map_check_plan_state() && touch_location.x < TILE_FRAME * MAP_TILE_COLUMNS && touch_location.y < TILE_FRAME * MAP_TILE_ROWS)
                     {
                         int map_x = touch_location.x / TILE_FRAME;
                         int map_y = touch_location.y / TILE_FRAME;
@@ -122,42 +112,42 @@ int SDL_main( int argc, char* args[] )
 
                         if(!tile_list[tile_position].occupied)
                         {
-                            if(arrow_count < ARROW_LIMIT)
+                            if(map_get_arrow_count() < ARROW_LIMIT)
                             {
-                                arrow_count++;
+                                map_increment_arrow_count();
                                 tile_list[tile_position].occupied = true;
                                 if(abs(touch_location.x - untouch_location.x) > abs(touch_location.y - untouch_location.y))
                                 {
                                     if(touch_location.x < untouch_location.x)
                                     {
-                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, RIGHT, 0, SDL_FLIP_NONE);
+                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 0, SDL_FLIP_NONE);
                                     }
                                     else
                                     {
-                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, LEFT, 0, SDL_FLIP_NONE);
+                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 180, SDL_FLIP_NONE);
                                     }
                                 }
                                 else
                                 {
                                     if(touch_location.y < untouch_location.y)
                                     {
-                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, DOWN, 0, SDL_FLIP_NONE);
+                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 90, SDL_FLIP_NONE);
                                     }
                                     else
                                     {
-                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, UP, 0, SDL_FLIP_NONE);
+                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, -90, SDL_FLIP_NONE);
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            arrow_count--;
+                            map_decrement_arrow_count();
                             tile_list[tile_position].occupied = false;
                             entity_free_specific(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE);
                         }
-                    }*/
-
+                    }
+                    menu_update_top_window(untouch_location.x, untouch_location.y);
                     break;
                 default:
                     break;

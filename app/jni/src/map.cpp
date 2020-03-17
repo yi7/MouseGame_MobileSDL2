@@ -18,6 +18,7 @@ void map_initialize_system()
     buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
     TILE_FRAME = graphics_screen.h / MAP_TILE_ROWS;
     TPL = MAP_TILE_COLUMNS;
+    map_state = INACTIVE;
 
     tile_list = (Tile *)malloc(sizeof(Tile) * (MAP_TILE_COLUMNS * MAP_TILE_ROWS));
     if(!tile_list)
@@ -44,6 +45,8 @@ void map_close_system()
 
 void map_free_all()
 {
+    map_state = INACTIVE;
+    arrow_count = 0;
     entity_free_all();
     memset(tile_list, 0, sizeof(Tile) * (MAP_TILE_COLUMNS * MAP_TILE_ROWS));
 }
@@ -198,60 +201,43 @@ void map_stop()
 
 void map_reset(int button_id)
 {
+    arrow_count = 0;
     map_free_all();
     map_initialize_base(button_id);
     map_load_entities(button_id);
 }
 
-void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
+void map_update(int tile_position)
 {
-    if(map_state == PLAY || map_state == PAUSE)
+
+}
+
+bool map_check_plan_state()
+{
+    if(map_state == PLAN)
     {
-        return;
-    }
-
-    int map_x = touch_x / TILE_FRAME;
-    int map_y = touch_x / TILE_FRAME;
-    int tile_position = (TPL * map_y) + map_x;
-
-    /*SDL_Log("touch: %d, %d", touch_x, touch_y);
-    SDL_Log("untouch: %d, %d", untouch_x, untouch_y);
-    SDL_Log("pos: %d", tile_position);*/
-
-    if(!tile_list[tile_position].occupied)
-    {
-        if(arrow_count < ARROW_LIMIT)
-        {
-            arrow_count++;
-            tile_list[tile_position].occupied = true;
-            if(abs(touch_x - untouch_x) > abs(touch_y - untouch_y))
-            {
-                if(touch_x < untouch_x)
-                {
-                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 0, SDL_FLIP_NONE);
-                }
-                else
-                {
-                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 180, SDL_FLIP_NONE);
-                }
-            }
-            else
-            {
-                if(touch_y < untouch_y)
-                {
-                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 90, SDL_FLIP_NONE);
-                }
-                else
-                {
-                    tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, -90, SDL_FLIP_NONE);
-                }
-            }
-        }
+        return true;
     }
     else
     {
+        return false;
+    }
+}
+
+int map_get_arrow_count()
+{
+    return arrow_count;
+}
+
+void map_increment_arrow_count()
+{
+    arrow_count++;
+}
+
+void map_decrement_arrow_count()
+{
+    if(arrow_count - 1 >= 0)
+    {
         arrow_count--;
-        tile_list[tile_position].occupied = false;
-        entity_free_specific(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE);
     }
 }

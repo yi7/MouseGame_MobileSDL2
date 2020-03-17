@@ -68,12 +68,13 @@ void mouse_step_backward(Entity *self);
  */
 void mouse_step_off(Entity *self);
 
-
 /**
  * @brief checks what is in front of mouse
  * @param self the mouse to check
  * @return NULL if nothing. Otherwise the entity in front
  */
 Type mouse_check_front(Entity *self);
+
+
 
 #endif //MOUSEGAME_MOUSE_H

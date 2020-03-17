@@ -82,6 +82,8 @@ void entity_free_all();
 
 void entity_free_specific(int x, int y, Type type);
 
+Entity *entity_get_specific(int x, int y, Type type);
+
 /**
  * @brief draws the entity
  * @param entity the entity to be drawn
@@ -97,6 +99,10 @@ void entity_draw(Entity *entity, int draw_x, int draw_y, int angle, SDL_Renderer
  */
 void entity_draw_all();
 
+void entity_draw_all_non_active();
+
+void entity_draw_all_active();
+
 /**
  * @brief checks whether two entities intersect with each other
  * @param a first entity to check
@@ -104,6 +110,14 @@ void entity_draw_all();
  * @return true or false depending on whether there is a collision or not
  */
 bool entity_intersect(Entity *a, Entity *b);
+
+float entity_intersect_percentage(Entity *a, Entity *b);
+
+/**
+ * @brief used specifically for checking entity on arrow tile and updating it
+ * @param tile the tile entity
+ */
+void entity_tile_intersect(Entity *self);
 
 /**
  * @brief checks whether the passed entity intersects with any entity on the entity system
