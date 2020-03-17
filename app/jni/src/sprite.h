@@ -15,7 +15,6 @@ typedef struct
     int fpl; /**<frames per line in sprite sheet*/
     char filename[128]; /**<name of image file loaded*/
     SDL_Texture *image; /**<texture of the image loaded*/
-    Rectangle2D image_size; /**<the dimensions of the image loaded*/
     Rectangle2D frame_size; /**<the dimensions of the frame in sprite sheet*/
 } Sprite;
 
@@ -37,7 +36,7 @@ void sprite_close_system();
  * @param fpl frames per line
  * @return pointer to loaded sprite
  */
-Sprite* sprite_load(char *filename, int frame_width, int frame_height, int fpl);
+Sprite* sprite_load(const char *filename, int frame_width, int frame_height, int fpl);
 
 /**
  * @brief frees loaded sprite from memory
@@ -54,7 +53,6 @@ void sprite_free(Sprite **sprite);
  * @param width width of sprite to draw
  * @param height height of sprite to draw
  * @param angle angle of the sprite
- * @param center center of the sprite to rotate from
  * @param flip SDL_RendererFlip value
  */
 void sprite_draw(Sprite *sprite, int frame, int x, int y, int width, int height, int angle, SDL_RendererFlip flip);

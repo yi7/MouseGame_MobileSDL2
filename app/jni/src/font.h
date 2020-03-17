@@ -4,24 +4,45 @@
 #include <SDL_ttf.h>
 
 #include "graphics.h"
-#include "vector.h"
 
 typedef struct
 {
-    SDL_Color color;
-    int ref;
-    char message[128];
-    SDL_Texture *message_texture;
-    int width;
-    int height;
+    SDL_Color color; /**<color of font*/
+    int ref; /**<keeps track of reference for this element*/
+    char message[128]; /**<message to display*/
+    SDL_Texture *message_texture; /**<texture of text loaded*/
+    int width; /**<width of message*/
+    int height; /**<height of message*/
 } Message;
 
+/**
+ * @brief initializes the font system
+ */
 void font_initialize_system();
 
+/**
+ * @brief closes the font system
+ */
 void font_close_system();
 
-Message *font_load_message(char *message, int r, int g, int b, int size);
+/**
+ * @brief loads the message
+ * @param message the message to be loaded
+ * @param r r value of color
+ * @param g g value of color
+ * @param b b value of color
+ * @param size size of font
+ * @return pointer to loaded message
+ */
+Message *font_load_message(const char *message, Uint8 r, Uint8 g, Uint8 b, int size);
 
-void font_draw_text(Message *message, int x, int y);
+/**
+ * @brief draws the message
+ * @param message the message to draw
+ * @param x x coordinate of message
+ * @param y y coordinate of message
+ * @param padding padding of message
+ */
+void font_draw_text(Message *message, int x, int y, int padding);
 
 #endif //MOUSEGAME_FONT_H

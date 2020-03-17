@@ -1,14 +1,9 @@
-#include <SDL_video.h>
 #include "graphics.h"
 
 SDL_Window *graphics_window = NULL;
 SDL_Renderer *graphics_renderer = NULL;
 SDL_Rect graphics_screen = {0, 0, 320, 240};
-
-static Uint32 graphics_f_delay = 30;
-static Uint32 graphics_now = 0;
-static Uint32 graphics_then = 0;
-static float graphics_fps = 0;
+Graphics_Reference graphics_reference;
 
 void graphics_initialize_system(char const *window_name)
 {
@@ -49,6 +44,19 @@ void graphics_initialize_system(char const *window_name)
     SDL_SetRenderDrawColor(graphics_renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
+    //Defining reference throughout the game
+    graphics_reference.map_columns = 9; //fixed columns
+    graphics_reference.map_rows = 7; //fixed rows
+    graphics_reference.screen_width = graphics_screen.w;
+    graphics_reference.screen_height = graphics_screen.h;
+    graphics_reference.map_height = graphics_reference.screen_height;
+    graphics_reference.tile_padding = graphics_reference.screen_height / graphics_reference.map_rows;
+    graphics_reference.map_width = graphics_reference.tile_padding * graphics_reference.map_columns;
+    graphics_reference.wall_padding = graphics_reference.tile_padding * 4 / 64; //4, 64 is pixel width, height of wall
+    graphics_reference.tpl = graphics_reference.map_columns;
+    graphics_reference.button_width = graphics_reference.screen_width / 8;
+    graphics_reference.button_height = graphics_reference.screen_height / 8;
+
     atexit(graphics_close_system);
     SDL_Log("graphics_initialize_system() graphics initialized");
 }
@@ -66,21 +74,4 @@ void graphics_close_system()
 
     graphics_window = NULL;
     graphics_renderer = NULL;
-}
-
-void graphics_frame_delay()
-{
-    Uint32 diff;
-    graphics_then = graphics_now;
-    graphics_now = SDL_GetTicks();
-    diff = (graphics_now - graphics_then);
-    if(diff < graphics_f_delay)
-    {
-        SDL_Delay(graphics_f_delay - diff);
-    }
-}
-
-void graphics_next_frame()
-{
-    graphics_frame_delay();
 }

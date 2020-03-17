@@ -27,7 +27,7 @@ void sprite_close_system()
 
     for(int i = 0; i < SPRITE_MAX; i++)
     {
-        if(sprite_list[i].image != 0)
+        if(sprite_list[i].image)
         {
             SDL_DestroyTexture(sprite_list[i].image);
         }
@@ -37,14 +37,10 @@ void sprite_close_system()
     sprite_list = NULL;
 }
 
-Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
+Sprite *sprite_load(const char *filename, int frame_width, int frame_height, int fpl)
 {
-    void *sprite_pixels = NULL;
-    int sprite_pitch = 0;
     int i;
     SDL_Surface *sprite_temp;
-    SDL_Surface *sprite_formatted_surface;
-    SDL_Texture *sprite_texture = NULL;
 
     if(!sprite_list)
     {
@@ -52,7 +48,7 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
         return NULL;
     }
 
-    //first search to see if the requested sprite image is already loaded
+    //First search to see if the requested sprite image is already loaded
     for(i = 0; i < SPRITE_MAX; i++)
     {
         if(sprite_list[i].ref == 0)
@@ -67,7 +63,7 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
         }
     }
 
-    //make sure there's enough room for a new sprite
+    //Make sure there's enough room for a new sprite
     if(sprite_count + 1 >= SPRITE_MAX)
     {
         SDL_Log("sprite_load() maximum sprite reached -Error:");
@@ -75,6 +71,7 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
     }
     sprite_count++;
 
+    //Loop through list for available index
     for(i = 0; i <= sprite_count; i++)
     {
         if(!sprite_list[i].ref)
@@ -83,16 +80,13 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
         }
     }
 
+    //Load sprite surface
     sprite_temp = IMG_Load(filename);
     if(!sprite_temp)
     {
         SDL_Log("load_sprite() unable to load sprite -Error:");
         exit(0);
     }
-
-    //sprite_formatted_surface = SDL_ConvertSurfaceFormat(sprite_temp_bmp, SDL_PIXELFORMAT_RGBA8888, 0);
-    //sprite_texture = SDL_CreateTexture(graphics_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, sprite_formatted_surface->w, sprite_formatted_surface->h);
-
 
     sprite_list[i].image = SDL_CreateTextureFromSurface(graphics_renderer, sprite_temp);
     strcpy(sprite_list[i].filename, filename);
@@ -101,7 +95,7 @@ Sprite *sprite_load(char *filename, int frame_width, int frame_height, int fpl)
     sprite_list[i].frame_size.h = frame_height;
     sprite_list[i].ref++;
 
-    //SDL_FreeSurface(sprite_formatted_surface);
+    SDL_FreeSurface(sprite_temp);
 
     return &sprite_list[i];
 }

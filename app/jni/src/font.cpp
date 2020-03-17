@@ -19,19 +19,19 @@ void font_initialize_system()
         SDL_Log("font_initialize_system() failed to initialize font system -Error:");
     }
 
-    small_font = TTF_OpenFont("fonts/zerotwos.ttf", graphics_screen.h * 0.025f);
+    small_font = TTF_OpenFont("fonts/zerotwos.ttf", graphics_reference.screen_height * 0.025f);
     if(!small_font)
     {
         SDL_Log("font_initialize_system() failed to initialize small font -Error:");
     }
 
-    medium_font = TTF_OpenFont("fonts/zerotwos.ttf", graphics_screen.h * 0.04f);
+    medium_font = TTF_OpenFont("fonts/zerotwos.ttf", graphics_reference.screen_height * 0.04f);
     if(!medium_font)
     {
         SDL_Log("font_initialize_system() failed to initialize medium font -Error:");
     }
 
-    large_font = TTF_OpenFont("fonts/zerotwos.ttf", graphics_screen.h * 0.055f);
+    large_font = TTF_OpenFont("fonts/zerotwos.ttf", graphics_reference.screen_height * 0.055f);
     if(!large_font)
     {
         SDL_Log("font_initialize_system() failed to initialize large font -Error:");
@@ -68,10 +68,11 @@ void font_close_system()
     message_list = NULL;
 }
 
-Message *font_load_message(char *message, int r, int g, int b, int size)
+Message *font_load_message(const char *message, Uint8 r, Uint8 g, Uint8 b, int size)
 {
     int i;
     SDL_Surface *temp_surface = NULL;
+    SDL_Color text_color = {r, g, b};
 
     if(!message_list)
     {
@@ -79,7 +80,7 @@ Message *font_load_message(char *message, int r, int g, int b, int size)
         return NULL;
     }
 
-    //first search to see if the requested sprite image is already loaded
+    //First search to see if the requested sprite image is already loaded
     for(i = 0; i < MESSAGE_MAX; i++)
     {
         if(message_list[i].ref == 0)
@@ -94,7 +95,7 @@ Message *font_load_message(char *message, int r, int g, int b, int size)
         }
     }
 
-    //make sure there's enough room for a new font message
+    //Make sure there's enough room for a new font message
     if(message_count + 1 >= MESSAGE_MAX)
     {
         SDL_Log("font_load_message() maximum message reached -Error:");
@@ -109,8 +110,6 @@ Message *font_load_message(char *message, int r, int g, int b, int size)
             break;
         }
     }
-
-    SDL_Color text_color = {static_cast<Uint8>(r), static_cast<Uint8>(g), static_cast<Uint8>(b)};
 
     switch(size)
     {
@@ -142,11 +141,11 @@ Message *font_load_message(char *message, int r, int g, int b, int size)
     return &message_list[i];
 }
 
-void font_draw_text(Message *message, int x, int y)
+void font_draw_text(Message *message, int x, int y, int padding)
 {
     SDL_Rect dest;
-    dest.x = x + 50;
-    dest.y = y + 50;
+    dest.x = x + padding;
+    dest.y = y + padding;
     dest.w = message->width;
     dest.h = message->height;
 
