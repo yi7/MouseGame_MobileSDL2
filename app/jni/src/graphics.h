@@ -15,8 +15,8 @@ typedef struct
     float map_height; /**<the height of map*/
     float screen_width; /**<the phone screen width*/
     float screen_height; /**<the phone screen height*/
-    float tile_padding; /**<the tile dimension*/
-    float wall_padding; /**<the map wall's width*/
+    int tile_padding; /**<the tile dimension*/
+    int wall_padding; /**<the map wall's width*/
     float button_width; /**<default button width*/
     float button_height; /**<default button height*/
     float button_padding; /**<default padding for button text*/

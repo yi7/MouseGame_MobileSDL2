@@ -96,6 +96,7 @@ void map_load_entities(int map_id)
 {
     Map_Detail *map_detail = NULL;
     map_detail = file_get_map(map_id);
+    float tile_frame_size = graphics_reference.tile_padding;
 
     int wall_x = 0;
     int wall_y = 0;
@@ -105,20 +106,20 @@ void map_load_entities(int map_id)
     for(int i = 0; i < (sizeof(map_detail->map) / sizeof(map_detail->map[0])); i++)
     {
         if(strcmp(map_detail->map[i], "11") == 0) {
-            wall_initialize(wall_x, wall_y, 0, graphics_reference.tile_padding, 90, WALL);
+            wall_initialize(wall_x, wall_y, 0, tile_frame_size, 90, WALL);
 
-            wall_x += graphics_reference.tile_padding;
+            wall_x += tile_frame_size;
             next_row_count++;
         }
         else if(strcmp(map_detail->map[i], "14") == 0) {
-            wall_x += graphics_reference.tile_padding;
+            wall_x += tile_frame_size;
             next_row_count++;
         }
 
         if(next_row_count >= 10)
         {
             wall_x = 0;
-            wall_y += graphics_reference.tile_padding;
+            wall_y += tile_frame_size;
             next_row_count = 0;
         }
     }
@@ -132,19 +133,19 @@ void map_load_entities(int map_id)
     {
         if(strcmp(map_detail->map[i], "12") == 0) {
             //SDL_Log("%d, %d", wall_x, wall_y);
-            wall_initialize(wall_x, wall_y, 0, graphics_reference.tile_padding, 0, WALL);
-            wall_x += graphics_reference.tile_padding;
+            wall_initialize(wall_x, wall_y, 0, tile_frame_size, 0, WALL);
+            wall_x += tile_frame_size;
             next_row_count++;
         }
         else if(strcmp(map_detail->map[i], "15") == 0) {
-            wall_x += graphics_reference.tile_padding;
+            wall_x += tile_frame_size;
             next_row_count++;
         }
 
         if(next_row_count >= 9)
         {
             wall_x = 0;
-            wall_y += graphics_reference.tile_padding;
+            wall_y += tile_frame_size;
             next_row_count = 0;
         }
 
@@ -152,17 +153,17 @@ void map_load_entities(int map_id)
 
     //This loop adds all animal entities
     //0-9 Mouse, 10-19 Cat
-    /*for(int i = 0; i < map_detail->entity_count; i++)
+    for(int i = 0; i < map_detail->entity_count; i++)
     {
         switch(map_detail->entities[i].type)
         {
             case 0:
-                mouse_initialize(TILE_FRAME * map_detail->entities[i].x, TILE_FRAME * map_detail->entities[i].y, TILE_FRAME, map_detail->entities[i].angle, SDL_FLIP_NONE);
+                mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE);
                 break;
             default:
                 break;
         }
-    }*/
+    }
 }
 
 void map_draw_base_tile()
@@ -176,14 +177,6 @@ void map_draw_base_tile()
 void map_draw_entity_tile(Entity *self)
 {
     entity_draw(self, self->position.x, self->position.y, self->angle);
-}
-
-void map_touch_entity_tile(Entity *self, Entity *other)
-{
-    if(other->type == TILE)
-    {
-        entity_free(&other);
-    }
 }
 
 void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
@@ -258,7 +251,7 @@ void map_place_tile(int x, int y, int angle)
 
     tile->free = map_free_entity_tile;
     tile->draw = map_draw_entity_tile;
-    tile->touch = map_touch_entity_tile;
+    tile->touch = NULL;
     tile->update = NULL;
     tile->think = NULL;
 }
@@ -274,10 +267,39 @@ void map_remove_tile(float x, float y)
     touch->position.y = y;
     touch->frame_size.w = 0;
     touch->frame_size.h = 0;
+    touch->touch = map_touch_tile;
 
     //Call touch function of entity touched
     entity_touch_all(touch);
 
     //Free temp entity, don't need it anymore
     entity_free(&touch);
+}
+
+void map_touch_tile(Entity *self, Entity *other)
+{
+    if(other->type == TILE)
+    {
+        entity_free(&other);
+    }
+}
+
+void map_play()
+{
+    map_state = PLAY;
+    entity_update_all_active_state(MOVE);
+}
+
+void map_stop()
+{
+    map_state = PAUSE;
+    entity_update_all_active_state(STOP);
+}
+
+void map_reset()
+{
+    map_free_all();
+    map_state = PLAN;
+    map_initialize_base(map_active);
+    map_load_entities(map_active);
 }

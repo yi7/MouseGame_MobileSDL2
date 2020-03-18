@@ -19,4 +19,10 @@ void wall_free(Entity *entity);
  */
 void wall_draw(Entity *entity);
 
+void wall_touch(Entity *self, Entity *other);
+
+void wall_think(Entity *self);
+
+void wall_get_off(Entity *self, Entity *other);
+
 #endif //MOUSEGAME_WALL_H

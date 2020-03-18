@@ -5,6 +5,11 @@
 #include "sprite.h"
 #include "vector.h"
 
+#define RIGHT 0
+#define UP -90
+#define LEFT 180
+#define DOWN 90
+
 enum Entity_State
 {
     MOVE,
@@ -32,7 +37,6 @@ typedef struct Entity_S
     enum Entity_State state;
     enum Entity_Type type;
     Sprite *sprite;
-
 
     void (*free)(struct Entity_S *self);
     void (*draw)(struct Entity_S *self);
@@ -95,30 +99,17 @@ void entity_draw_all_active();
  */
 bool entity_intersect(Entity *a, Entity *b);
 
+bool entity_intersect_all_filter_by_type(Entity *self, Entity_Type type);
+
 void entity_touch_all(Entity *self);
 
 float entity_intersect_percentage(Entity *a, Entity *b);
 
 /**
- * @brief updates the entity
- * @param self the entity to update
- */
-void entity_update(Entity *self);
-
-/**
- * @brief calls all update functions of entities on the entity system
- */
-void entity_update_all();
-
-/**
- * @brief think function that runs every frame
- * @param self the thinking entity
- */
-void entity_think(Entity *self);
-
-/**
  * @brief calls all think functions of entities on the entity system
  */
 void entity_think_all();
+
+void entity_update_all_active_state(Entity_State state);
 
 #endif //MOUSEGAME_ENTITY_H

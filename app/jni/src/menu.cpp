@@ -409,13 +409,13 @@ void menu_update_map_side_window(Window *self, int button_id)
     switch(button_id)
     {
         case 0:
-            //map_play();
+            map_play();
             break;
         case 1:
-            //map_stop();
+            map_stop();
             break;
         case 2:
-            //map_reset();
+            map_reset();
             break;
         case 3:
             map_free_all();

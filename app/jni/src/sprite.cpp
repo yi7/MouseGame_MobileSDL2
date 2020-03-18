@@ -37,7 +37,7 @@ void sprite_close_system()
     sprite_list = NULL;
 }
 
-Sprite *sprite_load(const  char *filename, int frame_width, int frame_height, int fpl)
+Sprite *sprite_load(const char *filename, int frame_width, int frame_height, int fpl)
 {
     int i;
     SDL_Surface *sprite_temp;

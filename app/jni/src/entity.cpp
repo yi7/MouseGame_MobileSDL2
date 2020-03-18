@@ -157,9 +157,42 @@ bool entity_intersect(Entity *a, Entity *b)
     return vector_rectangle_intersect(a_box, b_box);
 }
 
-void entity_touch_all(Entity *self)
+bool entity_intersect_all_filter_by_type(Entity *self, Entity_Type type)
 {
     if(!self)
+    {
+        return false;
+    }
+
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(self == &entity_list[i])
+        {
+            continue;
+        }
+
+        if(entity_list[i].type != type)
+        {
+            continue;
+        }
+
+        if(entity_intersect(self, &entity_list[i]))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void entity_touch_all(Entity *self)
+{
+    if(!self->touch)
     {
         return;
     }
@@ -176,14 +209,10 @@ void entity_touch_all(Entity *self)
             continue;
         }
 
-        if(!entity_list[i].touch)
-        {
-            continue;
-        }
-
         if(entity_intersect(self, &entity_list[i]))
         {
-            entity_list[i].touch(self, &entity_list[i]);
+            self->touch(self, &entity_list[i]);
+            //entity_list[i].touch(self, &entity_list[i]);
         }
     }
 }
@@ -193,12 +222,7 @@ float entity_intersect_percentage(Entity *a, Entity *b)
     return 0;
 }
 
-void entity_update(Entity *self)
-{
-
-}
-
-void entity_update_all()
+void entity_think_all()
 {
     for(int i = 0; i < ENTITY_MAX; i++)
     {
@@ -207,28 +231,32 @@ void entity_update_all()
             continue;
         }
 
-        if(!entity_list[i].update)
+        if(entity_list[i].state == STOP)
         {
             continue;
         }
 
-        if(entity_list[i].state == FREE)
+        if(!entity_list[i].think)
         {
-            entity_list[i].free(&entity_list[i]);
             continue;
         }
 
-        entity_list[i].update(&entity_list[i]);
+        entity_list[i].think(&entity_list[i]);
     }
 }
 
-void entity_think(Entity *self)
+void entity_update_all_active_state(Entity_State state)
 {
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
 
+        if(entity_list[i].active)
+        {
+            entity_list[i].state = state;
+        }
+    }
 }
-
-void entity_think_all()
-{
-
-}
-
