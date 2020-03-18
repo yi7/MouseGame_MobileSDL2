@@ -8,10 +8,8 @@
 #include "sprite.h"
 #include "menu.h"
 #include "file.h"
-//#include "entity.h"
-//#include "menu.h"
-//#include "map.h"
-//#include "map_parser.h"
+#include "entity.h"
+#include "map.h"
 
 void main_initialize_system();
 void main_close_system();
@@ -21,20 +19,20 @@ void main_initialize_system()
     graphics_initialize_system("Game");
     font_initialize_system();
     sprite_initialize_system();
-    menu_initialize_system();
     file_initialize_system();
-    //entity_initialize_system();
-    //map_initialize_system();
+    menu_initialize_system();
+    entity_initialize_system();
+    map_initialize_system();
     atexit(main_close_system);
 }
 
 void main_close_system()
 {
     //Quit SDL subsystems
-    //map_close_system();
-    //entity_close_system();
-    file_close_system();
+    map_close_system();
+    entity_close_system();
     menu_close_system();
+    file_close_system();
     sprite_close_system();
     font_close_system();
     graphics_close_system();
@@ -124,9 +122,9 @@ int SDL_main( int argc, char* args[] )
         SDL_RenderClear(graphics_renderer);
 
         menu_draw_all_window();
-        /*map_draw_tiles();
+        map_draw_tiles();
         entity_draw_all();
-        entity_think_all();*/
+        //entity_think_all();
 
         SDL_RenderPresent(graphics_renderer);
     }

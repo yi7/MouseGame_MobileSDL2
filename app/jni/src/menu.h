@@ -5,10 +5,11 @@
 #include "sprite.h"
 #include "vector.h"
 #include "font.h"
+#include "file.h"
+#include "map.h"
 
 #define WINDOW_BUTTON_MAX 64
 #define WINDOW_MAX 32
-#define BUTTON_TEXT_MAX 80
 
 typedef struct
 {
@@ -140,11 +141,11 @@ void menu_initialize_map_list_window(char *filename);
  */
 void menu_update_map_list_window(Window *self, int button_id);
 
-/*
-void menu_initialize_map_window(int button_id);
 
-void menu_update_map_window(Window *self, int button_id);
-*/
+void menu_initialize_map_side_window(int button_id);
+
+void menu_update_map_side_window(Window *self, int button_id);
+
 
 
 
