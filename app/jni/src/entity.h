@@ -22,13 +22,14 @@ enum Entity_Type
     MOUSE,
     CAT,
     WALL,
-    TILE
+    TILE_ARROW
 };
 
 typedef struct Entity_S
 {
     bool inuse;
     bool active;
+    bool stuck;
     Point2D position;
     Rectangle2D frame_size;
     int velocity;

@@ -28,6 +28,7 @@ void wall_initialize(int x, int y, int frame, int frame_size, int angle, Entity_
     }
 
     wall->active = false;
+    wall->stuck = false;
     wall->velocity = 0;
     wall->angle = 0;
     wall->frame = frame;

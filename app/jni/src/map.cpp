@@ -238,6 +238,7 @@ void map_place_tile(int x, int y, int angle)
     Sprite* arrow_tile = sprite_load("images/tiles.png", 64, 64, 6);
 
     tile->active = false;
+    tile->stuck = false;
     tile->position.x = x;
     tile->position.y = y;
     tile->frame_size.w = graphics_reference.tile_padding;
@@ -246,7 +247,7 @@ void map_place_tile(int x, int y, int angle)
     tile->angle = angle;
     tile->frame = 7;
     tile->state = STOP;
-    tile->type = TILE;
+    tile->type = TILE_ARROW;
     tile->sprite = arrow_tile;
 
     tile->free = map_free_entity_tile;
@@ -278,7 +279,7 @@ void map_remove_tile(float x, float y)
 
 void map_touch_tile(Entity *self, Entity *other)
 {
-    if(other->type == TILE)
+    if(other->type == TILE_ARROW)
     {
         entity_free(&other);
     }

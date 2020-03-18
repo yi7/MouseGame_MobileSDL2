@@ -6,11 +6,12 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
 
     Entity *mouse = entity_new();
     mouse->active = true;
+    mouse->stuck = false;
     mouse->position.x = x + (graphics_reference.wall_padding / 2);
     mouse->position.y = y + (graphics_reference.wall_padding / 2);
     mouse->frame_size.w = frame_size - graphics_reference.wall_padding;
     mouse->frame_size.h = frame_size - graphics_reference.wall_padding;
-    mouse->velocity = 16;
+    mouse->velocity = 8;
     mouse->angle = angle;
     mouse->frame = 8;
     mouse->state = STOP;
@@ -42,12 +43,21 @@ void mouse_touch(Entity *self, Entity *other)
             mouse_step_off(self, other);
             mouse_find_path(self);
             break;
-        case TILE:
-            if(entity_intersect_percentage(self, other) > 85)
+        case TILE_ARROW:
+            if(!self->stuck)
             {
-                self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
-                self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
-                self->angle = other->angle;
+                if(entity_intersect_percentage(self, other) > 85)
+                {
+                    self->stuck = true;
+                    self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
+                    self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
+                    self->angle = other->angle;
+                }
+            }
+
+            if(entity_intersect_percentage(self, other) <= 85)
+            {
+                self->stuck = false;
             }
 
             break;
