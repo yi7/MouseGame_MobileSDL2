@@ -219,7 +219,20 @@ void entity_touch_all(Entity *self)
 
 float entity_intersect_percentage(Entity *a, Entity *b)
 {
-    return 0;
+    SDL_Rect a_box;
+    SDL_Rect b_box;
+
+    a_box.x = a->position.x;
+    a_box.y = a->position.y;
+    a_box.w = a->frame_size.w;
+    a_box.h = a->frame_size.h;
+
+    b_box.x = b->position.x;
+    b_box.y = b->position.y;
+    b_box.w = b->frame_size.w;
+    b_box.h = b->frame_size.h;
+
+    return vector_square_intersect_percentage(a_box, b_box);
 }
 
 void entity_think_all()

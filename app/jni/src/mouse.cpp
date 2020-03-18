@@ -41,6 +41,16 @@ void mouse_touch(Entity *self, Entity *other)
         case WALL:
             mouse_step_off(self, other);
             mouse_find_path(self);
+            break;
+        case TILE:
+            if(entity_intersect_percentage(self, other) > 85)
+            {
+                self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
+                self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
+                self->angle = other->angle;
+            }
+
+            break;
         default:
             return;
     }

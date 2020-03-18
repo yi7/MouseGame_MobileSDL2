@@ -12,7 +12,7 @@ bool vector_rectangle_intersect(SDL_Rect a, SDL_Rect b)
     return false;
 }
 
-double vector_square_intersect_percentage(SDL_Rect a, SDL_Rect b)
+float vector_square_intersect_percentage(SDL_Rect a, SDL_Rect b)
 {
     int x_overlap = MAX(0, MIN(a.x + a.w, b.x + b.w)) - MAX(a.x, b.x);
     int y_overlap = MAX(0, MIN(a.y + a.h, b.y + b.h)) - MAX(a.y, b.y);

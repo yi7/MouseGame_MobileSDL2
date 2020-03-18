@@ -28,7 +28,7 @@ bool vector_rectangle_intersect(SDL_Rect a, SDL_Rect b);
  * @param b second rectangle to compare
  * @return percentage of intersection
  */
-double vector_square_intersect_percentage(SDL_Rect a, SDL_Rect b);
+float vector_square_intersect_percentage(SDL_Rect a, SDL_Rect b);
 
 #define ZERO 0
 #define MAX(a,b) (a > b ? a:b)
