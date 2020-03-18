@@ -16,6 +16,7 @@ void main_close_system();
 
 void main_initialize_system()
 {
+    //Initialize SDL subsystems
     graphics_initialize_system("Game");
     font_initialize_system();
     sprite_initialize_system();
@@ -28,7 +29,7 @@ void main_initialize_system()
 
 void main_close_system()
 {
-    //Quit SDL subsystems
+    //Close SDL subsystems
     map_close_system();
     entity_close_system();
     menu_close_system();

@@ -5,6 +5,15 @@
 #include "sprite.h"
 #include "entity.h"
 
+/**
+ * @brief initializes the wall entity
+ * @param x x position of wall
+ * @param y y position of wall
+ * @param frame frame of wall
+ * @param frame_size frame size of wall
+ * @param angle angle of wall
+ * @param type type of wall
+ */
 void wall_initialize(int x, int y, int frame, int frame_size, int angle, Entity_Type type);
 
 /**
@@ -18,11 +27,5 @@ void wall_free(Entity *entity);
  * @param entity the entity to be drawn
  */
 void wall_draw(Entity *entity);
-
-void wall_touch(Entity *self, Entity *other);
-
-void wall_think(Entity *self);
-
-void wall_get_off(Entity *self, Entity *other);
 
 #endif //MOUSEGAME_WALL_H

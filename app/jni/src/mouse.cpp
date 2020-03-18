@@ -94,27 +94,6 @@ void mouse_think(Entity *self)
     entity_touch_all(self);
 }
 
-void mouse_rotate(Entity *self)
-{
-    switch(self->angle)
-    {
-        case UP:
-            self->angle = RIGHT;
-            break;
-        case RIGHT:
-            self->angle = DOWN;
-            break;
-        case DOWN:
-            self->angle = LEFT;
-            break;
-        case LEFT:
-            self->angle = UP;
-            break;
-        default:
-            return;
-    }
-}
-
 void mouse_step_off(Entity *self, Entity *other)
 {
     switch(self->angle)

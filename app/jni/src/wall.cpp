@@ -36,7 +36,7 @@ void wall_initialize(int x, int y, int frame, int frame_size, int angle, Entity_
     wall->type = type;
     wall->free = wall_free;
     wall->draw = wall_draw;
-    wall->touch = wall_touch;
+    wall->touch = NULL;
     wall->update = NULL;
     wall->think = NULL;
 }
@@ -49,42 +49,4 @@ void wall_free(Entity *entity)
 void wall_draw(Entity *entity)
 {
     entity_draw(entity, entity->position.x, entity->position.y, entity->angle);
-}
-
-void wall_touch(Entity *self, Entity *other)
-{
-    switch(other->type)
-    {
-        case MOUSE:
-            //wall_get_off(self, other);
-            break;
-        default:
-            return;
-    }
-}
-
-void wall_think(Entity *self)
-{
-    entity_touch_all(self);
-}
-
-void wall_get_off(Entity *self, Entity *other)
-{
-    switch(self->angle)
-    {
-        case UP:
-            other->position.y = self->position.y + self->frame_size.h;
-            break;
-        case RIGHT:
-            other->position.x = self->position.x - self->frame_size.w;
-            break;
-        case DOWN:
-            other->position.y = self->position.y - self->frame_size.h;
-            break;
-        case LEFT:
-            other->position.x = self->position.x + self->frame_size.w;
-            break;
-        default:
-            return;
-    }
 }

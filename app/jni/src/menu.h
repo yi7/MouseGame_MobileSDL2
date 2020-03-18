@@ -141,9 +141,17 @@ void menu_initialize_map_list_window(char *filename);
  */
 void menu_update_map_list_window(Window *self, int button_id);
 
-
+/**
+ * @brief initializes the map side window
+ * @param button_id id of button pressed
+ */
 void menu_initialize_map_side_window(int button_id);
 
+/**
+ * @brief update function of map side window
+ * @param self current window
+ * @param button_id id of button pressed
+ */
 void menu_update_map_side_window(Window *self, int button_id);
 
 
