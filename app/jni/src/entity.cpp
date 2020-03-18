@@ -19,7 +19,7 @@ void entity_initialize_system()
 void entity_close_system()
 {
     entity_free_all();
-    free(entity_list);
+    free(&entity_list);
 }
 
 Entity *entity_new()
@@ -141,12 +141,51 @@ void entity_draw_all_active()
 
 bool entity_intersect(Entity *a, Entity *b)
 {
-    return false;
+    SDL_Rect a_box;
+    SDL_Rect b_box;
+
+    a_box.x = a->position.x;
+    a_box.y = a->position.y;
+    a_box.w = a->frame_size.w;
+    a_box.h = a->frame_size.h;
+
+    b_box.x = b->position.x;
+    b_box.y = b->position.y;
+    b_box.w = b->frame_size.w;
+    b_box.h = b->frame_size.h;
+
+    return vector_rectangle_intersect(a_box, b_box);
 }
 
-Entity *entity_intersect_all(Entity *self)
+void entity_touch_all(Entity *self)
 {
-    return NULL;
+    if(!self)
+    {
+        return;
+    }
+
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(self == &entity_list[i])
+        {
+            continue;
+        }
+
+        if(!entity_list[i].touch)
+        {
+            continue;
+        }
+
+        if(entity_intersect(self, &entity_list[i]))
+        {
+            entity_list[i].touch(self, &entity_list[i]);
+        }
+    }
 }
 
 float entity_intersect_percentage(Entity *a, Entity *b)
@@ -161,7 +200,26 @@ void entity_update(Entity *self)
 
 void entity_update_all()
 {
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
 
+        if(!entity_list[i].update)
+        {
+            continue;
+        }
+
+        if(entity_list[i].state == FREE)
+        {
+            entity_list[i].free(&entity_list[i]);
+            continue;
+        }
+
+        entity_list[i].update(&entity_list[i]);
+    }
 }
 
 void entity_think(Entity *self)

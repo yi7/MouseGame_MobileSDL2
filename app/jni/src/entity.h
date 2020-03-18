@@ -95,12 +95,7 @@ void entity_draw_all_active();
  */
 bool entity_intersect(Entity *a, Entity *b);
 
-/**
- * @brief checks whether the passed entity intersects with any entity on the entity system
- * @param self the entity to check
- * @return the entity that it collided with
- */
-Entity *entity_intersect_all(Entity *self);
+void entity_touch_all(Entity *self);
 
 float entity_intersect_percentage(Entity *a, Entity *b);
 

@@ -30,10 +30,22 @@ void map_close_system();
 
 void map_free_all();
 
+void map_free_entity_tile(Entity *self);
+
 void map_initialize_base(int map_id);
 
 void map_load_entities(int map_id);
 
-void map_draw_tiles();
+void map_draw_base_tile();
+
+void map_draw_entity_tile(Entity *self);
+
+void map_touch_entity_tile(Entity *self, Entity *other);
+
+void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y);
+
+void map_place_tile(int x, int y, int angle);
+
+void map_remove_tile(float x, float y);
 
 #endif //MOUSEGAME_MAP_H

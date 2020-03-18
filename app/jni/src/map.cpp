@@ -38,6 +38,11 @@ void map_free_all()
     memset(tile_list, 0, sizeof(Tile) * TILE_MAX);
 }
 
+void map_free_entity_tile(Entity *self)
+{
+    entity_free(&self);
+}
+
 void map_initialize_base(int map_id)
 {
 
@@ -160,7 +165,7 @@ void map_load_entities(int map_id)
     }*/
 }
 
-void map_draw_tiles()
+void map_draw_base_tile()
 {
     for(int i = 0; i < TILE_MAX; i++)
     {
@@ -168,3 +173,111 @@ void map_draw_tiles()
     }
 }
 
+void map_draw_entity_tile(Entity *self)
+{
+    entity_draw(self, self->position.x, self->position.y, self->angle);
+}
+
+void map_touch_entity_tile(Entity *self, Entity *other)
+{
+    if(other->type == TILE)
+    {
+        entity_free(&other);
+    }
+}
+
+void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
+{
+    if(map_state != PLAN)
+    {
+        return;
+    }
+
+    if(touch_x < graphics_reference.map_width && touch_y < graphics_reference.map_height)
+    {
+        int map_x = touch_x / graphics_reference.tile_padding;
+        int map_y = touch_y / graphics_reference.tile_padding;
+        int tile_position = (graphics_reference.tpl * map_y) + map_x;
+
+        if(!tile_list[tile_position].occupied)
+        {
+            if(arrow_count < arrow_max)
+            {
+                arrow_count++;
+                tile_list[tile_position].occupied = true;
+                if(abs(touch_x - untouch_x) > abs(touch_y - untouch_y))
+                {
+                    if(touch_x < untouch_x)
+                    {
+                        map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, 0);
+                    }
+                    else
+                    {
+                        map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, 180);
+                    }
+                }
+                else
+                {
+                    if(touch_y < untouch_y)
+                    {
+                        map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, 90);
+                    }
+                    else
+                    {
+                        map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, -90);
+                    }
+                }
+            }
+        }
+        else
+        {
+            arrow_count--;
+            tile_list[tile_position].occupied = false;
+            map_remove_tile(touch_x, touch_y);
+        }
+    }
+}
+
+void map_place_tile(int x, int y, int angle)
+{
+    Entity *tile;
+    tile = entity_new();
+    Sprite* arrow_tile = sprite_load("images/tiles.png", 64, 64, 6);
+
+    tile->active = false;
+    tile->position.x = x;
+    tile->position.y = y;
+    tile->frame_size.w = graphics_reference.tile_padding;
+    tile->frame_size.h = graphics_reference.tile_padding;
+    tile->velocity = 0;
+    tile->angle = angle;
+    tile->frame = 7;
+    tile->state = STOP;
+    tile->type = TILE;
+    tile->sprite = arrow_tile;
+
+    tile->free = map_free_entity_tile;
+    tile->draw = map_draw_entity_tile;
+    tile->touch = map_touch_entity_tile;
+    tile->update = NULL;
+    tile->think = NULL;
+}
+
+void map_remove_tile(float x, float y)
+{
+    //Create a temporary entity that stores touch location
+    Entity *touch;
+    touch = entity_new();
+
+    memset(touch, 0, sizeof(Entity));
+    touch->position.x = x;
+    touch->position.y = y;
+    touch->frame_size.w = 0;
+    touch->frame_size.h = 0;
+
+    //Call touch function of entity touched
+    entity_touch_all(touch);
+
+    //Free temp entity, don't need it anymore
+    entity_free(&touch);
+}

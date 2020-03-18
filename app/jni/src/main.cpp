@@ -68,50 +68,7 @@ int SDL_main( int argc, char* args[] )
                     untouch_location.x = e.tfinger.x * graphics_reference.screen_width;
                     untouch_location.y = e.tfinger.y * graphics_reference.screen_height;
 
-
-                    /*if(map_check_plan_state() && touch_location.x < TILE_FRAME * MAP_TILE_COLUMNS && touch_location.y < TILE_FRAME * MAP_TILE_ROWS)
-                    {
-                        int map_x = touch_location.x / TILE_FRAME;
-                        int map_y = touch_location.y / TILE_FRAME;
-                        int tile_position = (TPL * map_y) + map_x;
-
-                        if(!tile_list[tile_position].occupied)
-                        {
-                            if(map_get_arrow_count() < ARROW_LIMIT)
-                            {
-                                map_increment_arrow_count();
-                                tile_list[tile_position].occupied = true;
-                                if(abs(touch_location.x - untouch_location.x) > abs(touch_location.y - untouch_location.y))
-                                {
-                                    if(touch_location.x < untouch_location.x)
-                                    {
-                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 0, SDL_FLIP_NONE);
-                                    }
-                                    else
-                                    {
-                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 180, SDL_FLIP_NONE);
-                                    }
-                                }
-                                else
-                                {
-                                    if(touch_location.y < untouch_location.y)
-                                    {
-                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, 90, SDL_FLIP_NONE);
-                                    }
-                                    else
-                                    {
-                                        tile_new_entity(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE_FRAME, -90, SDL_FLIP_NONE);
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            map_decrement_arrow_count();
-                            tile_list[tile_position].occupied = false;
-                            entity_free_specific(tile_list[tile_position].point.x, tile_list[tile_position].point.y, TILE);
-                        }
-                    }*/
+                    map_update(touch_location.x, touch_location.y, untouch_location.x, untouch_location.y);
                     menu_update_top_window(untouch_location.x, untouch_location.y);
                     break;
                 default:
@@ -122,7 +79,7 @@ int SDL_main( int argc, char* args[] )
         SDL_RenderClear(graphics_renderer);
 
         menu_draw_all_window();
-        map_draw_tiles();
+        map_draw_base_tile();
         entity_draw_all();
         //entity_think_all();
 
