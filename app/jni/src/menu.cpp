@@ -86,6 +86,7 @@ void menu_initialize_base_window()
 
     menu_set_button(main_menu_window, 0, 0, "PLAY", SMALL, button_padding, main_menu_buttons, button_x, button_y, button_width, button_height);
     menu_set_button(main_menu_window, 1, 2, "HELP", SMALL, button_padding, main_menu_buttons, button_x, button_y * 3, button_width, button_height);
+    menu_set_button(main_menu_window, 2, 2, "EDIT", SMALL, button_padding, main_menu_buttons, button_x, button_y * 5, button_width, button_height);
 }
 
 void menu_update_base_window(Window *self, int button_id)
@@ -97,6 +98,12 @@ void menu_update_base_window(Window *self, int button_id)
             break;
         case 1:
             SDL_Log("Help");
+            break;
+        case 2:
+            menu_initialize_editor_side_window();
+            editor_load();
+            map_initialize_base(1);
+            map_load_entities(1);
             break;
         default:
             break;
@@ -365,6 +372,7 @@ void menu_update_map_list_window(Window *self, int button_id)
 {
     if(button_id == 20)
     {
+        file_free_all();
         menu_pop_window(self->handle);
     }
     else
@@ -377,8 +385,8 @@ void menu_update_map_list_window(Window *self, int button_id)
 
 void menu_initialize_map_side_window(int button_id)
 {
-    Map_Detail *level = NULL;
-    level = file_get_map(button_id);
+    Map_Detail *map_detail = NULL;
+    map_detail = file_get_map(button_id);
 
     Window *map_window = NULL;
     map_window = menu_push_window();
@@ -419,6 +427,64 @@ void menu_update_map_side_window(Window *self, int button_id)
             break;
         case 3:
             map_free_all();
+            menu_pop_window(self->handle);
+            break;
+        default:
+            break;
+    }
+}
+
+void menu_initialize_editor_side_window()
+{
+    Map_Detail *map_detail = NULL;
+    map_detail = file_new();
+
+    Window *editor_window = NULL;
+    editor_window = menu_push_window();
+
+    Sprite *map_side_menu_background = sprite_load("images/side_menu_background.png", 192, 448, 1);
+    Sprite *map_side_menu_buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
+
+    editor_window->window_frame.x = graphics_reference.map_width;
+    editor_window->window_frame.y = 0;
+    editor_window->window_frame.w = graphics_reference.screen_width - graphics_reference.map_width;
+    editor_window->window_frame.h = graphics_reference.screen_height;
+    editor_window->background = map_side_menu_background;
+    editor_window->draw = menu_draw_window;
+    editor_window->update = menu_update_editor_side_window;
+
+    float tile_frame = graphics_reference.tile_padding;
+    float menu_padding = graphics_reference.tile_padding / 2;
+    float inbetween_padding = menu_padding / 2;
+    float button_padding = graphics_reference.wall_padding;
+
+    menu_set_button(editor_window, 0, 0, "PLAY", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + menu_padding, tile_frame, tile_frame);
+    menu_set_button(editor_window, 1, 0, "PAUSE", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + menu_padding, tile_frame, tile_frame);
+    menu_set_button(editor_window, 2, 0, "RESET", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 3) + inbetween_padding, tile_frame, tile_frame);
+    menu_set_button(editor_window, 3, 0, "CLEAR", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + (menu_padding * 3) + inbetween_padding, tile_frame, tile_frame);
+    menu_set_button(editor_window, 4, 0, "MOUSE", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 6), tile_frame, tile_frame);
+    menu_set_button(editor_window, 5, 0, "CAT", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + (menu_padding * 6), tile_frame, tile_frame);
+    menu_set_button(editor_window, 6, 0, "WALL", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 8) + inbetween_padding, tile_frame, tile_frame);
+    menu_set_button(editor_window, 7, 0, "TILE", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + (menu_padding * 8) + inbetween_padding, tile_frame, tile_frame);
+    menu_set_button(editor_window, 8, 0, "BACK", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
+}
+
+void menu_update_editor_side_window(Window *self, int button_id)
+{
+    switch(button_id)
+    {
+        case 0:
+            //map_play();
+            break;
+        case 1:
+            //map_stop();
+            break;
+        case 2:
+            //map_reset();
+            break;
+        case 8:
+            map_free_all();
+            file_free_all();
             menu_pop_window(self->handle);
             break;
         default:

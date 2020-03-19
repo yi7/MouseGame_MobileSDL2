@@ -7,6 +7,7 @@
 #include "font.h"
 #include "file.h"
 #include "map.h"
+#include "editor.h"
 
 #define WINDOW_BUTTON_MAX 64
 #define WINDOW_MAX 32
@@ -154,7 +155,8 @@ void menu_initialize_map_side_window(int button_id);
  */
 void menu_update_map_side_window(Window *self, int button_id);
 
+void menu_initialize_editor_side_window();
 
-
+void menu_update_editor_side_window(Window *self, int button_id);
 
 #endif //MOUSEGAME_MENU_H

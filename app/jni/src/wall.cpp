@@ -6,7 +6,6 @@ void wall_initialize(int x, int y, int frame, int frame_size, int angle, Entity_
     Sprite *wall_horizontal = sprite_load("images/walls_horizontal.png", 64, 4, 1);
     Entity *wall = entity_new();
 
-
     switch(angle)
     {
         case 0:
