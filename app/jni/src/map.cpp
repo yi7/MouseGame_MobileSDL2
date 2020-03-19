@@ -265,6 +265,11 @@ void map_place_tile(int x, int y, int angle)
     tile->touch = NULL;
     tile->update = NULL;
     tile->think = NULL;
+
+    if(entity_intersect_all_filter_by_type(tile, TILE_HOME))
+    {
+        entity_free(&tile);
+    }
 }
 
 void map_remove_tile(float x, float y)

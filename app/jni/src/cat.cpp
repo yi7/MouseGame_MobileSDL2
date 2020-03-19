@@ -53,6 +53,7 @@ void cat_touch(Entity *self, Entity *other)
 
                 if(other->life > 0)
                 {
+                    other->position.x = other->position.x +
                     other->life--;
                 }
                 else
