@@ -14,6 +14,7 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     mouse->velocity = 10;
     mouse->angle = angle;
     mouse->frame = 8;
+    mouse->life = 1;
     mouse->state = STOP;
     mouse->type = type;
     mouse->sprite = animals;
@@ -46,7 +47,7 @@ void mouse_touch(Entity *self, Entity *other)
         case TILE_ARROW:
             if(!self->stuck)
             {
-                if(entity_intersect_percentage(self, other) > 85)
+                if(entity_intersect_percentage(self, other) > 95)
                 {
                     self->stuck = true;
                     self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
@@ -55,7 +56,7 @@ void mouse_touch(Entity *self, Entity *other)
                 }
             }
 
-            if(entity_intersect_percentage(self, other) <= 85)
+            if(entity_intersect_percentage(self, other) <= 90)
             {
                 self->stuck = false;
             }

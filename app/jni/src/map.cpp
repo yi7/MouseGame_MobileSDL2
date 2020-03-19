@@ -255,6 +255,7 @@ void map_place_tile(int x, int y, int angle)
     tile->velocity = 0;
     tile->angle = angle;
     tile->frame = 7;
+    tile->life = 1;
     tile->state = STOP;
     tile->type = TILE_ARROW;
     tile->sprite = arrow_tile;
@@ -329,6 +330,7 @@ void map_initialize_home_tile(int x, int y, int angle)
     home_tile->velocity = 0;
     home_tile->angle = angle;
     home_tile->frame = 5;
+    home_tile->life = 1;
     home_tile->state = STOP;
     home_tile->type = TILE_HOME;
     home_tile->sprite = temp_tiles;

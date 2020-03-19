@@ -36,6 +36,7 @@ typedef struct Entity_S
     int velocity; /**<velocity of entity*/
     int angle; /**<angle of entity*/
     int frame; /**<frame of entity*/
+    int life;
     enum Entity_State state; /**<state of entity*/
     enum Entity_Type type; /**<type of entity*/
     Sprite *sprite; /**<sprite associated with entity*/

@@ -23,7 +23,7 @@ typedef struct
 bool vector_rectangle_intersect(SDL_Rect a, SDL_Rect b);
 
 /**
- * @brief checks percentage of intersection based on largest rectangle passed
+ * @brief checks percentage of intersection based on smallest rectangle passed
  * @param a first rectangle to compare
  * @param b second rectangle to compare
  * @return percentage of intersection

@@ -14,6 +14,7 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     cat->velocity = 16;
     cat->angle = angle;
     cat->frame = 0;
+    cat->life = 1;
     cat->state = STOP;
     cat->type = type;
     cat->sprite = animals;
@@ -44,13 +45,18 @@ void cat_touch(Entity *self, Entity *other)
             cat_find_path(self);
             break;
         case TILE_ARROW:
-            if(!self->stuck)
+            if(entity_intersect_percentage(self, other) > 95)
             {
-                if(entity_intersect_percentage(self, other) > 85)
+                self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
+                self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
+                self->angle = other->angle;
+
+                if(other->life > 0)
                 {
-                    self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
-                    self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
-                    self->angle = other->angle;
+                    other->life--;
+                }
+                else
+                {
                     entity_free(&other);
                 }
             }

@@ -32,6 +32,7 @@ void wall_initialize(int x, int y, int frame, int frame_size, int angle, Entity_
     wall->velocity = 0;
     wall->angle = 0;
     wall->frame = frame;
+    wall->life = 1;
     wall->state = STOP;
     wall->type = type;
     wall->free = wall_free;
