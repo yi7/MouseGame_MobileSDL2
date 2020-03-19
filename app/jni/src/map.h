@@ -8,13 +8,15 @@
 #include "file.h"
 #include "wall.h"
 #include "mouse.h"
-
+#include "cat.h"
 enum Map_State
 {
     PLAY,
     PAUSE,
     PLAN,
-    INACTIVE
+    INACTIVE,
+    LOSE,
+    WIN
 };
 
 typedef struct
@@ -114,5 +116,9 @@ void map_stop();
  * @brief frees all entity on map and places them back to their initial placement
  */
 void map_reset();
+
+void map_initialize_home_tile(int x, int y, int angle);
+
+void map_update_home_tile(Entity *self);
 
 #endif //MOUSEGAME_MAP_H

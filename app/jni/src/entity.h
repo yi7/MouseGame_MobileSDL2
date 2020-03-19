@@ -22,7 +22,8 @@ enum Entity_Type
     MOUSE,
     CAT,
     WALL,
-    TILE_ARROW
+    TILE_ARROW,
+    TILE_HOME
 };
 
 typedef struct Entity_S

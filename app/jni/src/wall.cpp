@@ -16,7 +16,7 @@ void wall_initialize(int x, int y, int frame, int frame_size, int angle, Entity_
             wall->frame_size.h = graphics_reference.wall_padding;
             wall->sprite = wall_horizontal;
             break;
-        case 90:
+        case -90:
             wall->position.x = x - (graphics_reference.wall_padding / 2);
             wall->position.y = y;
             wall->frame_size.w = graphics_reference.wall_padding;

@@ -4,6 +4,8 @@ Tile *tile_list = NULL;
 const int TILE_MAX = 63;
 int arrow_max;
 int arrow_count;
+int mouse_max;
+int mouse_count;
 Map_State map_state;
 int map_active;
 Sprite *tiles;
@@ -34,6 +36,7 @@ void map_free_all()
 {
     map_state = INACTIVE;
     arrow_count = 0;
+    mouse_count = 0;
     entity_free_all();
     memset(tile_list, 0, sizeof(Tile) * TILE_MAX);
 }
@@ -53,6 +56,7 @@ void map_initialize_base(int map_id)
     arrow_count = 0;
     map_state = PLAN;
     map_active = map_id;
+    mouse_count = 0;
 
     int tile_x = 0;
     int tile_y = 0;
@@ -102,12 +106,11 @@ void map_load_entities(int map_id)
     int wall_y = 0;
     int next_row_count = 0;
 
-    //This loop adds all horizontal walls
+    //This loop adds all vertical walls
     for(int i = 0; i < (sizeof(map_detail->map) / sizeof(map_detail->map[0])); i++)
     {
         if(strcmp(map_detail->map[i], "11") == 0) {
-            wall_initialize(wall_x, wall_y, 0, tile_frame_size, 90, WALL);
-
+            wall_initialize(wall_x, wall_y, 0, tile_frame_size, -90, WALL);
             wall_x += tile_frame_size;
             next_row_count++;
         }
@@ -128,11 +131,10 @@ void map_load_entities(int map_id)
     wall_y = 0;
     next_row_count = 0;
 
-    //This loop adds all vertical walls
+    //This loop adds all horizontal walls
     for(int i = 0; i < (sizeof(map_detail->map) / sizeof(map_detail->map[0])); i++)
     {
         if(strcmp(map_detail->map[i], "12") == 0) {
-            //SDL_Log("%d, %d", wall_x, wall_y);
             wall_initialize(wall_x, wall_y, 0, tile_frame_size, 0, WALL);
             wall_x += tile_frame_size;
             next_row_count++;
@@ -152,13 +154,20 @@ void map_load_entities(int map_id)
     }
 
     //This loop adds all animal entities
-    //0-9 Mouse, 10-19 Cat
+    //0-9 Mouse, 10-19 Cat, 20-29 Tiles
     for(int i = 0; i < map_detail->entity_count; i++)
     {
         switch(map_detail->entities[i].type)
         {
             case 0:
+                mouse_max++;
                 mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE);
+                break;
+            case 10:
+                cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT);
+                break;
+            case 20:
+                map_initialize_home_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle);
                 break;
             default:
                 break;
@@ -303,4 +312,44 @@ void map_reset()
     map_state = PLAN;
     map_initialize_base(map_active);
     map_load_entities(map_active);
+}
+
+void map_initialize_home_tile(int x, int y, int angle)
+{
+    Entity *home_tile;
+    home_tile = entity_new();
+    Sprite* temp_tiles = sprite_load("images/tiles.png", 64, 64, 6);
+
+    home_tile->active = false;
+    home_tile->stuck = false;
+    home_tile->position.x = x;
+    home_tile->position.y = y;
+    home_tile->frame_size.w = graphics_reference.tile_padding;
+    home_tile->frame_size.h = graphics_reference.tile_padding;
+    home_tile->velocity = 0;
+    home_tile->angle = angle;
+    home_tile->frame = 5;
+    home_tile->state = STOP;
+    home_tile->type = TILE_HOME;
+    home_tile->sprite = temp_tiles;
+
+    home_tile->free = map_free_entity_tile;
+    home_tile->draw = map_draw_entity_tile;
+    home_tile->touch = NULL;
+    home_tile->update = map_update_home_tile;
+    home_tile->think = NULL;
+}
+
+void map_update_home_tile(Entity *self)
+{
+    if(mouse_count - 1 >= 0)
+    {
+        mouse_count--;
+    }
+
+    if(mouse_count == 0)
+    {
+        map_state = PAUSE;
+        entity_update_all_active_state(STOP);
+    }
 }

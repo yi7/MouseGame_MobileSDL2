@@ -1,71 +1,72 @@
-#include "mouse.h"
+#include "cat.h"
 
-void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
+void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
 {
     Sprite *animals = sprite_load("images/animals_test.png", 64, 64, 8);
 
-    Entity *mouse = entity_new();
-    mouse->active = true;
-    mouse->stuck = false;
-    mouse->position.x = x + (graphics_reference.wall_padding / 2);
-    mouse->position.y = y + (graphics_reference.wall_padding / 2);
-    mouse->frame_size.w = frame_size - graphics_reference.wall_padding;
-    mouse->frame_size.h = frame_size - graphics_reference.wall_padding;
-    mouse->velocity = 10;
-    mouse->angle = angle;
-    mouse->frame = 8;
-    mouse->state = STOP;
-    mouse->type = type;
-    mouse->sprite = animals;
+    Entity *cat = entity_new();
+    cat->active = true;
+    cat->stuck = false;
+    cat->position.x = x + (graphics_reference.wall_padding / 2);
+    cat->position.y = y + (graphics_reference.wall_padding / 2);
+    cat->frame_size.w = frame_size - graphics_reference.wall_padding;
+    cat->frame_size.h = frame_size - graphics_reference.wall_padding;
+    cat->velocity = 16;
+    cat->angle = angle;
+    cat->frame = 0;
+    cat->state = STOP;
+    cat->type = type;
+    cat->sprite = animals;
 
-    mouse->free = mouse_free;
-    mouse->draw = mouse_draw;
-    mouse->touch = mouse_touch;
-    mouse->update = mouse_update;
-    mouse->think = mouse_think;
+    cat->free = cat_free;
+    cat->draw = cat_draw;
+    cat->touch = cat_touch;
+    cat->update = cat_update;
+    cat->think = cat_think;
 }
 
-void mouse_free(Entity *entity)
+void cat_free(Entity *entity)
 {
     entity_free(&entity);
 }
 
-void mouse_draw(Entity *entity)
+void cat_draw(Entity *entity)
 {
     entity_draw(entity, entity->position.x, entity->position.y, entity->angle);
 }
 
-void mouse_touch(Entity *self, Entity *other)
+void cat_touch(Entity *self, Entity *other)
 {
     switch(other->type)
     {
         case WALL:
-            mouse_step_off(self, other);
-            mouse_find_path(self);
+            cat_step_off(self, other);
+            cat_find_path(self);
             break;
         case TILE_ARROW:
             if(!self->stuck)
             {
                 if(entity_intersect_percentage(self, other) > 85)
                 {
-                    self->stuck = true;
                     self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
                     self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
                     self->angle = other->angle;
+                    entity_free(&other);
                 }
             }
 
-            if(entity_intersect_percentage(self, other) <= 85)
+            break;
+        case MOUSE:
+            if(entity_intersect_percentage(self, other) > 50)
             {
-                self->stuck = false;
+                entity_free(&other);
+                entity_update_all_active_state(STOP);
             }
-
             break;
         case TILE_HOME:
             if(entity_intersect_percentage(self, other) > 85)
             {
-                other->update(other);
-                entity_free(&self);
+                entity_update_all_active_state(STOP);
             }
             break;
         default:
@@ -73,12 +74,12 @@ void mouse_touch(Entity *self, Entity *other)
     }
 }
 
-void mouse_update(Entity *self)
+void cat_update(Entity *self)
 {
     return;
 }
 
-void mouse_think(Entity *self)
+void cat_think(Entity *self)
 {
     switch(self->angle)
     {
@@ -101,7 +102,7 @@ void mouse_think(Entity *self)
     entity_touch_all(self);
 }
 
-void mouse_step_off(Entity *self, Entity *other)
+void cat_step_off(Entity *self, Entity *other)
 {
     switch(self->angle)
     {
@@ -122,7 +123,7 @@ void mouse_step_off(Entity *self, Entity *other)
     }
 }
 
-void mouse_find_path(Entity *self)
+void cat_find_path(Entity *self)
 {
     Entity *temp_up_hitbox;
     Entity *temp_right_hitbox;
@@ -221,3 +222,4 @@ void mouse_find_path(Entity *self)
     entity_free(&temp_down_hitbox);
     entity_free(&temp_left_hitbox);
 }
+
