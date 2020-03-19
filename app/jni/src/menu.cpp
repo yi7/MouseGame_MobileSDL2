@@ -102,7 +102,7 @@ void menu_update_base_window(Window *self, int button_id)
         case 2:
             menu_initialize_editor_side_window();
             editor_load();
-            map_initialize_base(1);
+            map_initialize_base(1, EDIT);
             map_load_entities(1);
             break;
         default:
@@ -378,7 +378,7 @@ void menu_update_map_list_window(Window *self, int button_id)
     else
     {
         menu_initialize_map_side_window(button_id);
-        map_initialize_base(button_id);
+        map_initialize_base(button_id, PLAN);
         map_load_entities(button_id);
     }
 }
@@ -462,10 +462,10 @@ void menu_initialize_editor_side_window()
     menu_set_button(editor_window, 1, 0, "PAUSE", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + menu_padding, tile_frame, tile_frame);
     menu_set_button(editor_window, 2, 0, "RESET", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 3) + inbetween_padding, tile_frame, tile_frame);
     menu_set_button(editor_window, 3, 0, "CLEAR", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + (menu_padding * 3) + inbetween_padding, tile_frame, tile_frame);
-    menu_set_button(editor_window, 4, 0, "MOUSE", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 6), tile_frame, tile_frame);
-    menu_set_button(editor_window, 5, 0, "CAT", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + (menu_padding * 6), tile_frame, tile_frame);
+    menu_set_button(editor_window, 4, 6, "MOUSE", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 6), tile_frame, tile_frame);
+    menu_set_button(editor_window, 5, 9, "CAT", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + (menu_padding * 6), tile_frame, tile_frame);
     menu_set_button(editor_window, 6, 0, "WALL", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 8) + inbetween_padding, tile_frame, tile_frame);
-    menu_set_button(editor_window, 7, 0, "TILE", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + (menu_padding * 8) + inbetween_padding, tile_frame, tile_frame);
+    menu_set_button(editor_window, 7, 3, "TILE", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + (menu_padding * 4), editor_window->window_frame.y + (menu_padding * 8) + inbetween_padding, tile_frame, tile_frame);
     menu_set_button(editor_window, 8, 0, "BACK", SMALL, button_padding, map_side_menu_buttons, editor_window->window_frame.x + menu_padding, editor_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
 }
 

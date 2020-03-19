@@ -9,6 +9,7 @@
 #include "wall.h"
 #include "mouse.h"
 #include "cat.h"
+
 enum Map_State
 {
     PLAY,
@@ -16,7 +17,8 @@ enum Map_State
     PLAN,
     INACTIVE,
     LOSE,
-    WIN
+    WIN,
+    EDIT
 };
 
 typedef struct
@@ -52,7 +54,7 @@ void map_free_entity_tile(Entity *self);
  * @brief initializes the base tiles, you cannot interact with these
  * @param map_id id of map
  */
-void map_initialize_base(int map_id);
+void map_initialize_base(int map_id, Map_State state);
 
 /**
  * @brief loads all entities onto the map
