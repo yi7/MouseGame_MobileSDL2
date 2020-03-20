@@ -29,6 +29,6 @@ void editor_load()
     editor->entity_count = 0;
     editor->map_name = (char *)malloc(10);
     strcpy(editor->map_name, "Editor");
-    editor->map_id = 1;
+    editor->map_id = 0;
 }
 

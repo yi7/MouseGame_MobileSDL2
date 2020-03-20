@@ -19,6 +19,8 @@ typedef struct
     int frame; /**<frame of the button*/
     int button_id; /**<id of button*/
     int padding; /**<padding of button*/
+    bool has_text;
+    bool selected;
     Message *message; /**<message associated with button*/
 } Button;
 
@@ -158,5 +160,9 @@ void menu_update_map_side_window(Window *self, int button_id);
 void menu_initialize_editor_side_window();
 
 void menu_update_editor_side_window(Window *self, int button_id);
+
+void menu_initialize_selection_window(int button_id);
+
+void menu_update_selection_window(Window *self, int button_id);
 
 #endif //MOUSEGAME_MENU_H

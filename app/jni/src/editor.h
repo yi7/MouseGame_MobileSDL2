@@ -11,4 +11,6 @@ void editor_close_system();
 
 void editor_load();
 
+
+
 #endif //MOUSEGAME_EDITOR_H

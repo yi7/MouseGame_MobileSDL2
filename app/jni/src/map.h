@@ -21,6 +21,12 @@ enum Map_State
     EDIT
 };
 
+enum Edit_Type
+{
+    ETILE_HOME,
+    ETILE_HOLE
+};
+
 typedef struct
 {
     Point2D point;

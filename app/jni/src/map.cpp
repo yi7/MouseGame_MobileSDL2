@@ -190,50 +190,60 @@ void map_draw_entity_tile(Entity *self)
 
 void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
 {
+    if(map_state != PLAN && map_state != EDIT)
+    {
+        return;
+    }
+
+    if(!(touch_x < graphics_reference.map_width && touch_y < graphics_reference.map_height))
+    {
+        return;
+    }
+
+    int map_x = touch_x / graphics_reference.tile_padding;
+    int map_y = touch_y / graphics_reference.tile_padding;
+    int tile_position = (graphics_reference.tpl * map_y) + map_x;
+    int angle;
+
+    if(abs(touch_x - untouch_x) > abs(touch_y - untouch_y))
+    {
+        if(touch_x < untouch_x)
+        {
+            angle = RIGHT;
+        }
+        else
+        {
+            angle = LEFT;
+        }
+    }
+    else
+    {
+        if(touch_y < untouch_y)
+        {
+            angle = DOWN;
+        }
+        else
+        {
+            angle = UP;
+        }
+    }
+
     if(map_state == PLAN)
     {
-        if(touch_x < graphics_reference.map_width && touch_y < graphics_reference.map_height)
+        if(!tile_list[tile_position].occupied)
         {
-            int map_x = touch_x / graphics_reference.tile_padding;
-            int map_y = touch_y / graphics_reference.tile_padding;
-            int tile_position = (graphics_reference.tpl * map_y) + map_x;
-
-            if(!tile_list[tile_position].occupied)
+            if(arrow_count < arrow_max)
             {
-                if(arrow_count < arrow_max)
-                {
-                    arrow_count++;
-                    tile_list[tile_position].occupied = true;
-                    if(abs(touch_x - untouch_x) > abs(touch_y - untouch_y))
-                    {
-                        if(touch_x < untouch_x)
-                        {
-                            map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, 0);
-                        }
-                        else
-                        {
-                            map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, 180);
-                        }
-                    }
-                    else
-                    {
-                        if(touch_y < untouch_y)
-                        {
-                            map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, 90);
-                        }
-                        else
-                        {
-                            map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, -90);
-                        }
-                    }
-                }
+                arrow_count++;
+                tile_list[tile_position].occupied = true;
+                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle);
             }
-            else
-            {
-                arrow_count--;
-                tile_list[tile_position].occupied = false;
-                map_remove_tile(touch_x, touch_y);
-            }
+        }
+        else
+        {
+            arrow_count--;
+            tile_list[tile_position].occupied = false;
+            map_remove_tile(touch_x, touch_y);
         }
     }
 }

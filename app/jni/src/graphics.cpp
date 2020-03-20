@@ -1,3 +1,4 @@
+#include <SDL_blendmode.h>
 #include "graphics.h"
 
 SDL_Window *graphics_window = NULL;
@@ -39,8 +40,9 @@ void graphics_initialize_system(char const *window_name)
         graphics_close_system();
         return;
     }
+    //SDL_SetRenderDrawBlendMode(graphics_renderer, SDL_BLENDMODE_BLEND);
+    //SDL_SetRenderDrawColor(graphics_renderer, 128, 128, 128, 255);
 
-    //SDL_SetRenderDrawColor(graphics_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_SetRenderDrawColor(graphics_renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
