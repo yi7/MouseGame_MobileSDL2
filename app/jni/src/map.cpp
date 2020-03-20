@@ -253,13 +253,40 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
         switch(map_edit_type)
         {
             case ETILE_HOLE:
-                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, BLACK_TILE);
+                if(!tile_list[tile_position].occupied)
+                {
+                    map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, BLACK_TILE);
+                    tile_list[tile_position].occupied = true;
+                }
                 break;
             case ETILE_HOME:
-                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, HOME_TILE);
+                if(!tile_list[tile_position].occupied)
+                {
+                    map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, HOME_TILE);
+                    tile_list[tile_position].occupied = true;
+                }
                 break;
             case ETILE_REMOVE:
-                map_remove_tile(touch_x, touch_y);
+                if(tile_list[tile_position].occupied)
+                {
+                    map_remove_tile(touch_x, touch_y);
+                    tile_list[tile_position].occupied = false;
+                }
+                break;
+            case EMOUSE_NORMAL:
+                if(!tile_list[tile_position].occupied)
+                {
+                    mouse_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, MOUSE);
+                    tile_list[tile_position].occupied = true;
+                }
+                break;
+            case EMOUSE_REMOVE:
+                if(tile_list[tile_position].occupied)
+                {
+                    map_remove_mouse(touch_x, touch_y);
+                    tile_list[tile_position].occupied = false;
+                }
+                break;
             default:
                 return;
         }
@@ -353,6 +380,46 @@ void map_touch_tile(Entity *self, Entity *other)
                     break;
                 default:
                     return;
+            }
+            break;
+        default:
+            return;
+    }
+}
+
+void map_remove_mouse(float x, float y)
+{
+    //Create a temporary entity that stores touch location
+    Entity *touch;
+    touch = entity_new();
+
+    memset(touch, 0, sizeof(Entity));
+    touch->position.x = x;
+    touch->position.y = y;
+    touch->frame_size.w = 0;
+    touch->frame_size.h = 0;
+    touch->touch = map_touch_mouse;
+
+    //Call touch function of entity touched
+    entity_touch_all(touch);
+
+    //Free temp entity, don't need it anymore
+    entity_free(&touch);
+}
+
+void map_touch_mouse(Entity *self, Entity *other)
+{
+    if(map_state != EDIT)
+    {
+        return;
+    }
+
+    switch(map_edit_type)
+    {
+        case EMOUSE_REMOVE:
+            if(other->type == MOUSE)
+            {
+                entity_free(&other);
             }
             break;
         default:

@@ -32,7 +32,9 @@ enum Edit_Type
     NONE,
     ETILE_HOME,
     ETILE_HOLE,
-    ETILE_REMOVE
+    ETILE_REMOVE,
+    EMOUSE_NORMAL,
+    EMOUSE_REMOVE
 };
 
 typedef struct
@@ -117,6 +119,10 @@ void map_remove_tile(float x, float y);
  * @param other arrow tile to be removed
  */
 void map_touch_tile(Entity *self, Entity *other);
+
+void map_remove_mouse(float x, float y);
+
+void map_touch_mouse(Entity *self, Entity *other);
 
 /**
  * @brief changes entity state to move
