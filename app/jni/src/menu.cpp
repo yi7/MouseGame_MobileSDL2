@@ -306,6 +306,7 @@ void menu_update_top_window(float touch_x, float touch_y)
             if(vector_rectangle_intersect(WIN_TOP->buttons[i].box, touch))
             {
                 WIN_TOP->update(WIN_TOP, i);
+                break;
             }
         }
     }
