@@ -7,7 +7,6 @@
 #include "font.h"
 #include "file.h"
 #include "map.h"
-#include "editor.h"
 
 #define WINDOW_BUTTON_MAX 64
 #define WINDOW_MAX 32
@@ -107,6 +106,8 @@ void menu_draw_window(Window *self);
  */
 void menu_set_button(Window *window, int button_id, int frame, const char *text, int size, int padding, Sprite *sprite, int x, int y, int w, int h);
 
+void menu_update_button_selection(Window *window, int button_id);
+
 /**
  * @brief draws all window on stack
  */
@@ -161,8 +162,20 @@ void menu_initialize_editor_side_window();
 
 void menu_update_editor_side_window(Window *self, int button_id);
 
-void menu_initialize_selection_window(int button_id);
+void menu_initialize_mouse_select_window();
 
-void menu_update_selection_window(Window *self, int button_id);
+void menu_update_mouse_select_window(Window *self, int button_id);
+
+void menu_initialize_cat_select_window();
+
+void menu_update_cat_select_window(Window *self, int button_id);
+
+void menu_initialize_tile_select_window();
+
+void menu_update_tile_select_window(Window *self, int button_id);
+
+void menu_initialize_wall_select_window();
+
+void menu_update_wall_select_window(Window *self, int button_id);
 
 #endif //MOUSEGAME_MENU_H

@@ -10,6 +10,12 @@
 #include "mouse.h"
 #include "cat.h"
 
+#define WHITE_TILE 2
+#define GREY_TILE 3
+#define BLACK_TILE 4
+#define HOME_TILE 5
+#define ARROW_TILE 7
+
 enum Map_State
 {
     PLAY,
@@ -23,8 +29,10 @@ enum Map_State
 
 enum Edit_Type
 {
+    NONE,
     ETILE_HOME,
-    ETILE_HOLE
+    ETILE_HOLE,
+    ETILE_REMOVE
 };
 
 typedef struct
@@ -94,7 +102,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y);
  * @param y y position of arrow tile
  * @param angle angle of arrow tile
  */
-void map_place_tile(int x, int y, int angle);
+void map_place_tile(int x, int y, int angle, int frame);
 
 /**
  * @brief frees arrow tile on specific tile
@@ -124,6 +132,8 @@ void map_stop();
  * @brief frees all entity on map and places them back to their initial placement
  */
 void map_reset();
+
+void map_change_edit_type(Edit_Type type);
 
 void map_initialize_home_tile(int x, int y, int angle);
 

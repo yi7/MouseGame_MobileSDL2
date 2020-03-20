@@ -23,7 +23,8 @@ enum Entity_Type
     CAT,
     WALL,
     TILE_ARROW,
-    TILE_HOME
+    TILE_HOME,
+    TILE_HOLE
 };
 
 typedef struct Entity_S

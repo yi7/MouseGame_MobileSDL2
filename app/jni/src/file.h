@@ -47,6 +47,8 @@ void file_free_all();
  */
 Map_Detail *file_new();
 
+void file_load_editor();
+
 /**
  * @brief gets the map from the list
  * @param map_id id of map to get

@@ -7,6 +7,7 @@ int arrow_count;
 int mouse_max;
 int mouse_count;
 Map_State map_state;
+Edit_Type map_edit_type;
 int map_active;
 Sprite *tiles;
 
@@ -55,6 +56,7 @@ void map_initialize_base(int map_id, Map_State state)
     arrow_max = map_detail->arrow_count;
     arrow_count = 0;
     map_state = state;
+    map_edit_type = NONE;
     map_active = map_id;
     mouse_count = 0;
 
@@ -236,7 +238,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             {
                 arrow_count++;
                 tile_list[tile_position].occupied = true;
-                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle);
+                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, ARROW_TILE);
             }
         }
         else
@@ -246,9 +248,25 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             map_remove_tile(touch_x, touch_y);
         }
     }
+    else if(map_state == EDIT)
+    {
+        switch(map_edit_type)
+        {
+            case ETILE_HOLE:
+                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, BLACK_TILE);
+                break;
+            case ETILE_HOME:
+                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, HOME_TILE);
+                break;
+            case ETILE_REMOVE:
+                map_remove_tile(touch_x, touch_y);
+            default:
+                return;
+        }
+    }
 }
 
-void map_place_tile(int x, int y, int angle)
+void map_place_tile(int x, int y, int angle, int frame)
 {
     Entity *tile;
     tile = entity_new();
@@ -262,19 +280,32 @@ void map_place_tile(int x, int y, int angle)
     tile->frame_size.h = graphics_reference.tile_padding;
     tile->velocity = 0;
     tile->angle = angle;
-    tile->frame = 7;
+    tile->frame = frame;
     tile->life = 1;
     tile->state = STOP;
-    tile->type = TILE_ARROW;
+    switch(frame)
+    {
+        case ARROW_TILE:
+            tile->type = TILE_ARROW;
+            break;
+        case BLACK_TILE:
+            tile->type = TILE_HOLE;
+            break;
+        case HOME_TILE:
+            tile->type = TILE_HOME;
+            break;
+        default:
+            return;
+    }
     tile->sprite = arrow_tile;
-
     tile->free = map_free_entity_tile;
     tile->draw = map_draw_entity_tile;
     tile->touch = NULL;
     tile->update = NULL;
     tile->think = NULL;
 
-    if(entity_intersect_all_filter_by_type(tile, TILE_HOME))
+    if(entity_intersect_all_filter_by_type(tile, TILE_HOME) ||
+       entity_intersect_all_filter_by_type(tile, TILE_HOLE))
     {
         entity_free(&tile);
     }
@@ -302,9 +333,30 @@ void map_remove_tile(float x, float y)
 
 void map_touch_tile(Entity *self, Entity *other)
 {
-    if(other->type == TILE_ARROW)
+    switch(map_state)
     {
-        entity_free(&other);
+        case PLAN:
+            if(other->type == TILE_ARROW)
+            {
+                entity_free(&other);
+            }
+            break;
+        case EDIT:
+            switch(map_edit_type)
+            {
+                case ETILE_REMOVE:
+                    if(other->type == TILE_HOLE ||
+                       other->type == TILE_HOME)
+                    {
+                        entity_free(&other);
+                    }
+                    break;
+                default:
+                    return;
+            }
+            break;
+        default:
+            return;
     }
 }
 
@@ -325,6 +377,11 @@ void map_reset()
     map_free_all();
     map_initialize_base(map_active, PLAN);
     map_load_entities(map_active);
+}
+
+void map_change_edit_type(Edit_Type type)
+{
+    map_edit_type = type;
 }
 
 void map_initialize_home_tile(int x, int y, int angle)

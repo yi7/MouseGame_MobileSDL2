@@ -101,7 +101,7 @@ void menu_update_base_window(Window *self, int button_id)
             break;
         case 2:
             menu_initialize_editor_side_window();
-            editor_load();
+            file_load_editor();
             map_initialize_base(0, EDIT);
             map_load_entities(0);
             break;
@@ -214,7 +214,14 @@ void menu_draw_window(Window *self)
 
     for(int i = 0; i < self->button_count; i++)
     {
-        sprite_draw(self->buttons[i].button, self->buttons[i].frame, self->buttons[i].box.x, self->buttons[i].box.y, self->buttons[i].box.w, self->buttons[i].box.h, 0, SDL_FLIP_NONE);
+        if(self->buttons[i].selected)
+        {
+            sprite_draw(self->buttons[i].button, self->buttons[i].frame + 1, self->buttons[i].box.x, self->buttons[i].box.y, self->buttons[i].box.w, self->buttons[i].box.h, 0, SDL_FLIP_NONE);
+        }
+        else
+        {
+            sprite_draw(self->buttons[i].button, self->buttons[i].frame, self->buttons[i].box.x, self->buttons[i].box.y, self->buttons[i].box.w, self->buttons[i].box.h, 0, SDL_FLIP_NONE);
+        }
 
         if(self->buttons[i].has_text)
         {
@@ -253,7 +260,21 @@ void menu_set_button(Window *window, int button_id, int frame, const char *text,
         message = font_load_message(text, r, g, b, size);
         button->message = message;
     }
+}
 
+void menu_update_button_selection(Window *window, int button_id)
+{
+    for(int i = 0; i < window->button_count; i++)
+    {
+        if(i == button_id)
+        {
+            window->buttons[i].selected = true;
+        }
+        else
+        {
+            window->buttons[i].selected = false;
+        }
+    }
 }
 
 void menu_draw_all_window()
@@ -489,10 +510,12 @@ void menu_update_editor_side_window(Window *self, int button_id)
             //map_stop();
             break;
         case 2:
+            break;
         case 3:
+            break;
         case 4:
+            menu_initialize_tile_select_window();
         case 5:
-            menu_initialize_selection_window(button_id);
             break;
         case 6:
             map_free_all();
@@ -504,56 +527,50 @@ void menu_update_editor_side_window(Window *self, int button_id)
     }
 }
 
-void menu_initialize_selection_window(int button_id)
+void menu_initialize_tile_select_window()
 {
     Window *select_window = NULL;
     select_window = menu_push_window();
 
-    Sprite *select_window_background = sprite_load("images/side_menu_background.png", 192, 448, 1);
+    Sprite *select_background = sprite_load("images/side_menu_test.png", 192, 448, 1);
     Sprite *select_buttons = sprite_load("images/small_buttons.png", 64, 64, 8);
 
-    select_window->window_frame.x = 0;
+    select_window->window_frame.x = graphics_reference.map_width;
     select_window->window_frame.y = 0;
-    select_window->window_frame.w = graphics_reference.screen_width;
+    select_window->window_frame.w = graphics_reference.screen_width - graphics_reference.map_width;
     select_window->window_frame.h = graphics_reference.screen_height;
-    select_window->background = select_window_background;
+    select_window->background = select_background;
     select_window->draw = menu_draw_window;
-    select_window->update = menu_update_selection_window;
+    select_window->update = menu_update_tile_select_window;
 
     float tile_frame = graphics_reference.tile_padding;
     float menu_padding = graphics_reference.tile_padding / 2;
     float inbetween_padding = menu_padding / 2;
     float button_padding = graphics_reference.wall_padding;
 
-    switch(button_id)
-    {
-        case 2:
-            menu_set_button(select_window, 0, 48, "", SMALL, 0, select_buttons, select_window->window_frame.x + menu_padding, select_window->window_frame.y + menu_padding, tile_frame, tile_frame);
-            menu_set_button(select_window, 1, 50, "", SMALL, 0, select_buttons, select_window->window_frame.x + (menu_padding * 4), select_window->window_frame.y + menu_padding, tile_frame, tile_frame);
-            menu_set_button(select_window, 2, 0, "BACK", SMALL, button_padding, select_buttons, select_window->window_frame.x + (menu_padding * 4), select_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-        case 5:
-            break;
-        default:
-            return;
-    }
+    menu_set_button(select_window, 0, 48, "", SMALL, button_padding, select_buttons, select_window->window_frame.x + menu_padding, select_window->window_frame.y + menu_padding, tile_frame, tile_frame);
+    menu_set_button(select_window, 1, 50, "", SMALL, button_padding, select_buttons, select_window->window_frame.x + (menu_padding * 4), select_window->window_frame.y + menu_padding, tile_frame, tile_frame);
+    menu_set_button(select_window, 2, 8, "REMOVE", SMALL, button_padding, select_buttons, select_window->window_frame.x + menu_padding, select_window->window_frame.y + (menu_padding * 3) + inbetween_padding, tile_frame, tile_frame);
+    menu_set_button(select_window, 3, 0, "BACK", SMALL, button_padding, select_buttons, select_window->window_frame.x + (menu_padding * 4), select_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
 }
 
-void menu_update_selection_window(Window *self, int button_id)
+void menu_update_tile_select_window(Window *self, int button_id)
 {
     switch(button_id)
     {
         case 0:
-            //map_play();
+            menu_update_button_selection(self, button_id);
+            map_change_edit_type(ETILE_HOLE);
             break;
         case 1:
-            //map_stop();
+            menu_update_button_selection(self, button_id);
+            map_change_edit_type(ETILE_HOME);
             break;
         case 2:
+            menu_update_button_selection(self, button_id);
+            map_change_edit_type(ETILE_REMOVE);
+            break;
+        case 3:
             menu_pop_window(self->handle);
             break;
         default:
