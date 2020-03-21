@@ -35,6 +35,8 @@ enum Edit_Type
     ETILE_REMOVE,
     EMOUSE_NORMAL,
     EMOUSE_REMOVE,
+    ECAT_NORMAL,
+    ECAT_REMOVE,
     EWALL_V,
     EWALL_H,
     EWALL_REMOVE_V,
@@ -124,9 +126,9 @@ void map_remove_tile(float x, float y);
  */
 void map_touch_tile(Entity *self, Entity *other);
 
-void map_remove_mouse(float x, float y);
+void map_remove_active_entity(float x, float y);
 
-void map_touch_mouse(Entity *self, Entity *other);
+void map_touch_active_entity(Entity *self, Entity *other);
 
 void map_remove_wall(float x, float y, Edit_Type type, int tile_index);
 

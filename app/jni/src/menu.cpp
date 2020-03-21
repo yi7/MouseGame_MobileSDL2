@@ -514,6 +514,7 @@ void menu_update_editor_side_window(Window *self, int button_id)
             menu_initialize_mouse_select_window();
             break;
         case 3:
+            menu_initialize_cat_select_window();
             break;
         case 4:
             menu_initialize_tile_select_window();
@@ -568,6 +569,53 @@ void menu_update_mouse_select_window(Window *self, int button_id)
         case 1:
             menu_update_button_selection(self, button_id);
             map_change_edit_type(EMOUSE_REMOVE);
+            break;
+        case 2:
+            map_change_edit_type(NONE);
+            menu_pop_window(self->handle);
+            break;
+        default:
+            break;
+    }
+}
+
+void menu_initialize_cat_select_window()
+{
+    Window *select_window = NULL;
+    select_window = menu_push_window();
+
+    Sprite *select_background = sprite_load("images/side_menu_test.png", 192, 448, 1);
+    Sprite *select_buttons = sprite_load("images/small_buttons.png", 64, 64, 8);
+
+    select_window->window_frame.x = graphics_reference.map_width;
+    select_window->window_frame.y = 0;
+    select_window->window_frame.w = graphics_reference.screen_width - graphics_reference.map_width;
+    select_window->window_frame.h = graphics_reference.screen_height;
+    select_window->background = select_background;
+    select_window->draw = menu_draw_window;
+    select_window->update = menu_update_cat_select_window;
+
+    float tile_frame = graphics_reference.tile_padding;
+    float menu_padding = graphics_reference.tile_padding / 2;
+    float inbetween_padding = menu_padding / 2;
+    float button_padding = graphics_reference.wall_padding;
+
+    menu_set_button(select_window, 0, 32, "", SMALL, button_padding, select_buttons, select_window->window_frame.x + menu_padding, select_window->window_frame.y + menu_padding, tile_frame, tile_frame);
+    menu_set_button(select_window, 1, 8, "REMOVE", SMALL, button_padding, select_buttons, select_window->window_frame.x + menu_padding, select_window->window_frame.y + (menu_padding * 8) + inbetween_padding, tile_frame, tile_frame);
+    menu_set_button(select_window, 2, 0, "BACK", SMALL, button_padding, select_buttons, select_window->window_frame.x + (menu_padding * 4), select_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
+}
+
+void menu_update_cat_select_window(Window *self, int button_id)
+{
+    switch(button_id)
+    {
+        case 0:
+            menu_update_button_selection(self, button_id);
+            map_change_edit_type(ECAT_NORMAL);
+            break;
+        case 1:
+            menu_update_button_selection(self, button_id);
+            map_change_edit_type(ECAT_REMOVE);
             break;
         case 2:
             map_change_edit_type(NONE);

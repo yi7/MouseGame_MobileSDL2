@@ -379,7 +379,21 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case EMOUSE_REMOVE:
                 if(tile_list[tile_position].occupied)
                 {
-                    map_remove_mouse(touch_x, touch_y);
+                    map_remove_active_entity(touch_x, touch_y);
+                    tile_list[tile_position].occupied = false;
+                }
+                break;
+            case ECAT_NORMAL:
+                if(!tile_list[tile_position].occupied)
+                {
+                    cat_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, CAT);
+                    tile_list[tile_position].occupied = true;
+                }
+                break;
+            case ECAT_REMOVE:
+                if(tile_list[tile_position].occupied)
+                {
+                    map_remove_active_entity(touch_x, touch_y);
                     tile_list[tile_position].occupied = false;
                 }
                 break;
@@ -515,7 +529,7 @@ void map_touch_tile(Entity *self, Entity *other)
     }
 }
 
-void map_remove_mouse(float x, float y)
+void map_remove_active_entity(float x, float y)
 {
     //Create a temporary entity that stores touch location
     Entity *touch;
@@ -526,7 +540,7 @@ void map_remove_mouse(float x, float y)
     touch->position.y = y;
     touch->frame_size.w = 0;
     touch->frame_size.h = 0;
-    touch->touch = map_touch_mouse;
+    touch->touch = map_touch_active_entity;
 
     //Call touch function of entity touched
     entity_touch_all(touch);
@@ -535,7 +549,7 @@ void map_remove_mouse(float x, float y)
     entity_free(&touch);
 }
 
-void map_touch_mouse(Entity *self, Entity *other)
+void map_touch_active_entity(Entity *self, Entity *other)
 {
     if(map_state != EDIT)
     {
@@ -546,6 +560,12 @@ void map_touch_mouse(Entity *self, Entity *other)
     {
         case EMOUSE_REMOVE:
             if(other->type == MOUSE)
+            {
+                entity_free(&other);
+            }
+            break;
+        case ECAT_REMOVE:
+            if(other->type == CAT)
             {
                 entity_free(&other);
             }
