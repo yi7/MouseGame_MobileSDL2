@@ -34,7 +34,11 @@ enum Edit_Type
     ETILE_HOLE,
     ETILE_REMOVE,
     EMOUSE_NORMAL,
-    EMOUSE_REMOVE
+    EMOUSE_REMOVE,
+    EWALL_V,
+    EWALL_H,
+    EWALL_REMOVE_V,
+    EWALL_REMOVE_H
 };
 
 typedef struct
@@ -123,6 +127,12 @@ void map_touch_tile(Entity *self, Entity *other);
 void map_remove_mouse(float x, float y);
 
 void map_touch_mouse(Entity *self, Entity *other);
+
+void map_remove_wall(float x, float y, Edit_Type type, int tile_index);
+
+void map_touch_wall(Entity *self, Entity *other);
+
+int map_check_wall_edit_hitbox(float touch_x, float touch_y, Edit_Type type);
 
 /**
  * @brief changes entity state to move

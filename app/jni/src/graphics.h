@@ -18,6 +18,7 @@ typedef struct
     int tile_padding; /**<the tile dimension*/
     int tile_padding_2;
     int tile_padding_4;
+    int tile_padding_8;
     int wall_padding; /**<the map wall's width*/
     float button_width; /**<default button width*/
     float button_height; /**<default button height*/

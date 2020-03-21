@@ -55,6 +55,7 @@ void graphics_initialize_system(char const *window_name)
     graphics_reference.tile_padding = graphics_reference.screen_height / graphics_reference.map_rows;
     graphics_reference.tile_padding_2 = graphics_reference.tile_padding / 2;
     graphics_reference.tile_padding_4 = graphics_reference.tile_padding / 4;
+    graphics_reference.tile_padding_8 = graphics_reference.tile_padding / 8;
     graphics_reference.map_width = graphics_reference.tile_padding * graphics_reference.map_columns;
     graphics_reference.wall_padding = graphics_reference.tile_padding * 4 / 64; //4, 64 is pixel width, height of wall
     graphics_reference.tpl = graphics_reference.map_columns;

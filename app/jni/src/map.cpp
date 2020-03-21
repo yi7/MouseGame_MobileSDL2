@@ -1,5 +1,14 @@
 #include "map.h"
 
+//BEG This block is only used for the editor
+Tile *wall_h_list = NULL;
+const int WALL_H_MAX = 54;
+const int HTPL = 9; //Horizontal tiles per line
+Tile *wall_v_list = NULL;
+const int WALL_V_MAX = 56;
+const int VTPL = 8; //Vertical tiles per line
+//END This block is only used for the editor
+
 Tile *tile_list = NULL;
 const int TILE_MAX = 63;
 int arrow_max;
@@ -17,10 +26,26 @@ void map_initialize_system()
     tile_list = (Tile *)malloc(sizeof(Tile) * TILE_MAX);
     if(!tile_list)
     {
-        SDL_Log("map_initialize_system() failed to allocate entity system -Error:");
+        SDL_Log("map_initialize_system() failed to allocate tile list -Error:");
         return;
     }
     memset(tile_list, 0, sizeof(Tile) * TILE_MAX);
+
+    wall_h_list = (Tile *)malloc(sizeof(Tile) * WALL_H_MAX);
+    if(!wall_h_list)
+    {
+        SDL_Log("map_initialize_system() failed to allocate tile list -Error:");
+        return;
+    }
+    memset(wall_h_list, 0, sizeof(Tile) * WALL_H_MAX);
+
+    wall_v_list = (Tile *)malloc(sizeof(Tile) * WALL_V_MAX);
+    if(!wall_v_list)
+    {
+        SDL_Log("map_initialize_system() failed to allocate tile list -Error:");
+        return;
+    }
+    memset(wall_v_list, 0, sizeof(Tile) * WALL_V_MAX);
 
     tiles = sprite_load("images/tiles.png", 64, 64, 6);
 
@@ -31,6 +56,8 @@ void map_close_system()
 {
     entity_free_all();
     free(tile_list);
+    free(wall_h_list);
+    free(wall_v_list);
 }
 
 void map_free_all()
@@ -40,6 +67,8 @@ void map_free_all()
     mouse_count = 0;
     entity_free_all();
     memset(tile_list, 0, sizeof(Tile) * TILE_MAX);
+    memset(wall_h_list, 0, sizeof(Tile) * WALL_H_MAX);
+    memset(wall_v_list, 0, sizeof(Tile) * WALL_V_MAX);
 }
 
 void map_free_entity_tile(Entity *self)
@@ -96,6 +125,63 @@ void map_initialize_base(int map_id, Map_State state)
             next_row_count = 0;
         }
     }
+
+    if(state == EDIT)
+    {
+        //This initializes the hitbox for vertical walls when editing
+        tile_x = graphics_reference.tile_padding_2;
+        tile_y = 0;
+        next_row_count = 0;
+        tile_index = 0;
+
+        for(int i = 0; i < WALL_V_MAX; i++)
+        {
+            wall_v_list[tile_index].frame = frame;
+            wall_v_list[tile_index].point.x = tile_x;
+            wall_v_list[tile_index].point.y = tile_y;
+            wall_v_list[tile_index].frame_size.w = graphics_reference.tile_padding;
+            wall_v_list[tile_index].frame_size.h = graphics_reference.tile_padding;
+            wall_v_list[tile_index].occupied = false;
+            tile_index++;
+
+            tile_x += graphics_reference.tile_padding;
+            next_row_count++;
+
+            if(next_row_count >= VTPL)
+            {
+                tile_x = graphics_reference.tile_padding_2;
+                tile_y += graphics_reference.tile_padding;
+                next_row_count = 0;
+            }
+        }
+
+        //This initializes the hitbox for horizontal walls when editing
+        tile_x = 0;
+        tile_y = graphics_reference.tile_padding_2;
+        next_row_count = 0;
+        tile_index = 0;
+
+        for(int i = 0; i < WALL_H_MAX; i++)
+        {
+            wall_h_list[tile_index].frame = frame;
+            wall_h_list[tile_index].point.x = tile_x;
+            wall_h_list[tile_index].point.y = tile_y;
+            wall_h_list[tile_index].frame_size.w = graphics_reference.tile_padding;
+            wall_h_list[tile_index].frame_size.h = graphics_reference.tile_padding;
+            wall_h_list[tile_index].occupied = false;
+            tile_index++;
+
+            tile_x += graphics_reference.tile_padding;
+            next_row_count++;
+
+            if(next_row_count >= HTPL)
+            {
+                tile_x = 0;
+                tile_y += graphics_reference.tile_padding;
+                next_row_count = 0;
+            }
+        }
+    }
 }
 
 void map_load_entities(int map_id)
@@ -117,6 +203,11 @@ void map_load_entities(int map_id)
             next_row_count++;
         }
         else if(strcmp(map_detail->map[i], "14") == 0) {
+            if(map_state == EDIT)
+            {
+                //cat_initialize(wall_x - graphics_reference.tile_padding_4, wall_y + graphics_reference.tile_padding_4, graphics_reference.tile_padding_2, 0, CAT);
+            }
+
             wall_x += tile_frame_size;
             next_row_count++;
         }
@@ -142,6 +233,11 @@ void map_load_entities(int map_id)
             next_row_count++;
         }
         else if(strcmp(map_detail->map[i], "15") == 0) {
+            if(map_state == EDIT)
+            {
+                //cat_initialize(wall_x + graphics_reference.tile_padding_4, wall_y - graphics_reference.tile_padding_4, graphics_reference.tile_padding_2, 0, CAT);
+            }
+
             wall_x += tile_frame_size;
             next_row_count++;
         }
@@ -287,6 +383,38 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                     tile_list[tile_position].occupied = false;
                 }
                 break;
+            case EWALL_V:
+                if(map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_V) != -1)
+                {
+                    int index = map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_V);
+                    wall_initialize(wall_v_list[index].point.x + graphics_reference.tile_padding_2, wall_v_list[index].point.y, 0, wall_v_list[index].frame_size.w, -90, WALL);
+                    wall_v_list[index].occupied = true;
+                }
+                break;
+            case EWALL_H:
+                if(map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_H) != -1)
+                {
+                    int index = map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_H);
+                    wall_initialize(wall_h_list[index].point.x, wall_h_list[index].point.y + graphics_reference.tile_padding_2, 0, wall_h_list[index].frame_size.w, 0, WALL);
+                    wall_h_list[index].occupied = true;
+                }
+                break;
+            case EWALL_REMOVE_V:
+                if(map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_V) != -1)
+                {
+                    int index = map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_V);
+                    map_remove_wall(touch_x, touch_y, EWALL_REMOVE_V, index);
+                    wall_v_list[index].occupied = false;
+                }
+                break;
+            case EWALL_REMOVE_H:
+                if(map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_H) != -1)
+                {
+                    int index = map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_H);
+                    map_remove_wall(touch_x, touch_y, EWALL_REMOVE_H, index);
+                    wall_v_list[index].occupied = false;
+                }
+                break;
             default:
                 return;
         }
@@ -425,6 +553,112 @@ void map_touch_mouse(Entity *self, Entity *other)
         default:
             return;
     }
+}
+
+void map_remove_wall(float x, float y, Edit_Type type, int tile_index)
+{
+    //Create a temporary entity that stores touch location
+    Entity *touch;
+    touch = entity_new();
+
+    memset(touch, 0, sizeof(Entity));
+    if(type == EWALL_REMOVE_V)
+    {
+        //SDL_Log("index: %f, %f, %f, %f", wall_v_list[tile_index].point.x, wall_v_list[tile_index].point.y, wall_v_list[tile_index].frame_size.w, wall_v_list[tile_index].frame_size.h);
+        touch->position.x = wall_v_list[tile_index].point.x + graphics_reference.tile_padding_2 - graphics_reference.wall_padding;
+        touch->position.y = wall_v_list[tile_index].point.y + graphics_reference.tile_padding_4;
+    }
+    else
+    {
+        //SDL_Log("index: %f, %f, %f, %f", wall_h_list[tile_index].point.x, wall_h_list[tile_index].point.y, wall_h_list[tile_index].frame_size.w, wall_h_list[tile_index].frame_size.h);
+        touch->position.x = wall_h_list[tile_index].point.x +graphics_reference.tile_padding_4;
+        touch->position.y = wall_h_list[tile_index].point.y + graphics_reference.tile_padding_2 - graphics_reference.wall_padding;
+    }
+    touch->frame_size.w = graphics_reference.wall_padding;
+    touch->frame_size.h = graphics_reference.wall_padding;
+    touch->touch = map_touch_wall;
+
+    //SDL_Log("touch: %f, %f, %f, %f", touch->position.x, touch->position.y, touch->frame_size.w, touch->frame_size.h);
+
+    //Call touch function of entity touched
+    entity_touch_all(touch);
+
+    //Free temp entity, don't need it anymore
+    entity_free(&touch);
+}
+
+void map_touch_wall(Entity *self, Entity *other)
+{
+    if(map_state != EDIT)
+    {
+        return;
+    }
+
+    switch(map_edit_type)
+    {
+        case EWALL_REMOVE_V:
+        case EWALL_REMOVE_H:
+            if(other->type == WALL)
+            {
+                entity_free(&other);
+            }
+            break;
+        default:
+            return;
+    }
+}
+
+int map_check_wall_edit_hitbox(float touch_x, float touch_y, Edit_Type type)
+{
+    switch(type)
+    {
+        case EWALL_H:
+            for(int i = 0; i < WALL_H_MAX; i++)
+            {
+                SDL_Rect a, b;
+
+                a.x = wall_h_list[i].point.x;
+                a.y = wall_h_list[i].point.y;
+                a.w = wall_h_list[i].frame_size.w;
+                a.h = wall_h_list[i].frame_size.h;
+
+                b.x = touch_x;
+                b.y = touch_y;
+                b.w = 0;
+                b.h = 0;
+
+                if(vector_rectangle_intersect(a, b))
+                {
+                    return i;
+                }
+            }
+            break;
+        case EWALL_V:
+            for(int i = 0; i < WALL_V_MAX; i++)
+            {
+                SDL_Rect a, b;
+
+                a.x = wall_v_list[i].point.x;
+                a.y = wall_v_list[i].point.y;
+                a.w = wall_v_list[i].frame_size.w;
+                a.h = wall_v_list[i].frame_size.h;
+
+                b.x = touch_x;
+                b.y = touch_y;
+                b.w = 0;
+                b.h = 0;
+
+                if(vector_rectangle_intersect(a, b))
+                {
+                    return i;
+                }
+            }
+            break;
+        default:
+            break;
+    }
+
+    return -1;
 }
 
 void map_play()
