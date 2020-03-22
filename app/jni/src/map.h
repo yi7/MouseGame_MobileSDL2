@@ -164,6 +164,8 @@ void map_change_state(Map_State state);
 
 int map_get_state();
 
+void map_set_state(Map_State state);
+
 void map_save_edit();
 
 void map_reset_edit();

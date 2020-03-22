@@ -68,7 +68,7 @@ int SDL_main( int argc, char* args[] )
                 case SDL_FINGERUP:
                     untouch_location.x = e.tfinger.x * graphics_reference.screen_width;
                     untouch_location.y = e.tfinger.y * graphics_reference.screen_height;
-
+                    //SDL_Log("%d", map_get_state());
                     map_update(touch_location.x, touch_location.y, untouch_location.x, untouch_location.y);
                     menu_update_top_window(untouch_location.x, untouch_location.y);
                     break;

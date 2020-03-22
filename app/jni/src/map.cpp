@@ -7,6 +7,7 @@ const int HTPL = 9; //Horizontal tiles per line
 Tile *wall_v_list = NULL;
 const int WALL_V_MAX = 56;
 const int VTPL = 8; //Vertical tiles per line
+int entity_count = 0;
 //END This block is only used for the editor
 
 Tile *tile_list = NULL;
@@ -189,7 +190,7 @@ void map_load_entities(int map_id)
     Map_Detail *map_detail = NULL;
     map_detail = file_get_map(map_id);
     float tile_frame_size = graphics_reference.tile_padding;
-    SDL_Log("TEST: %s", map_detail->map[0]);
+
     int wall_x = 0;
     int wall_y = 0;
     int next_row_count = 0;
@@ -353,6 +354,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                 {
                     map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, BLACK_TILE);
                     tile_list[tile_position].occupied = true;
+                    entity_count++;
                 }
                 break;
             case ETILE_HOME:
@@ -360,6 +362,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                 {
                     map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, HOME_TILE);
                     tile_list[tile_position].occupied = true;
+                    entity_count++;
                 }
                 break;
             case ETILE_REMOVE:
@@ -367,6 +370,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                 {
                     map_remove_tile(touch_x, touch_y);
                     tile_list[tile_position].occupied = false;
+                    entity_count--;
                 }
                 break;
             case EMOUSE_NORMAL:
@@ -374,6 +378,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                 {
                     mouse_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, MOUSE);
                     tile_list[tile_position].occupied = true;
+                    entity_count++;
                 }
                 break;
             case EMOUSE_REMOVE:
@@ -381,6 +386,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                 {
                     map_remove_active_entity(touch_x, touch_y);
                     tile_list[tile_position].occupied = false;
+                    entity_count--;
                 }
                 break;
             case ECAT_NORMAL:
@@ -388,6 +394,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                 {
                     cat_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, CAT);
                     tile_list[tile_position].occupied = true;
+                    entity_count++;
                 }
                 break;
             case ECAT_REMOVE:
@@ -395,6 +402,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                 {
                     map_remove_active_entity(touch_x, touch_y);
                     tile_list[tile_position].occupied = false;
+                    entity_count--;
                 }
                 break;
             case EWALL_V:
@@ -762,6 +770,11 @@ int map_get_state()
     return map_state;
 }
 
+void map_set_state(Map_State state)
+{
+    map_state = state;
+}
+
 void map_save_edit()
 {
 
@@ -823,7 +836,52 @@ void map_save_edit()
         }
     }
 
+    Entity *check_hitbox = entity_new();
+    Entity *check;
+    Entity_Placement entity_list[entity_count];
+    int entity_index = 0;
+    check_hitbox->frame_size.w = graphics_reference.tile_padding_2;
+    check_hitbox->frame_size.h = graphics_reference.tile_padding_2;
 
+    for(int i = 0; i < TILE_MAX; i++)
+    {
+        check_hitbox->position.x = tile_list[i].point.x + graphics_reference.tile_padding_4;
+        check_hitbox->position.y = tile_list[i].point.y + graphics_reference.tile_padding_4;
+        check = entity_intersect_all_find_one(check_hitbox);
+        if(check)
+        {
+            int x = check->position.x / graphics_reference.tile_padding;
+            int y = check->position.y / graphics_reference.tile_padding;
+
+            entity_list[entity_index].x = x;
+            entity_list[entity_index].y = y;
+            entity_list[entity_index].angle = check->angle;
+            switch(check->type)
+            {
+                case MOUSE:
+                    entity_list[entity_index].type = 0;
+                    break;
+                case CAT:
+                    entity_list[entity_index].type = 10;
+                    break;
+                case TILE_HOME:
+                    entity_list[entity_index].type = 20;
+                    break;
+                case TILE_HOLE:
+                    break;
+                default:
+                    break;
+            }
+
+            entity_index++;
+        }
+    }
+
+    save->entity_count = entity_count;
+    for(int i = 0; i < entity_count; i++)
+    {
+        save->entities[i] = entity_list[i];
+    }
 }
 
 void map_reset_edit()

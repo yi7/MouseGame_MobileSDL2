@@ -504,6 +504,7 @@ void menu_update_editor_side_window(Window *self, int button_id)
         case 0:
             menu_initialize_editor_test_window();
             map_save_edit();
+            map_set_state(PLAN);
             //map_play();
             break;
         case 1:
@@ -572,10 +573,14 @@ void menu_update_editor_test_window(Window *self, int button_id)
         case 2:
             map_reset_edit();
             map_load_entities(1);
+            map_set_state(PLAN);
             break;
         case 3:
             //map_free_all();
+            map_reset_edit();
+            map_load_entities(1);
             menu_pop_window(self->handle);
+            map_set_state(EDIT);
             break;
         default:
             break;

@@ -190,6 +190,29 @@ bool entity_intersect_all_filter_by_type(Entity *self, Entity_Type type)
     return false;
 }
 
+Entity *entity_intersect_all_find_one(Entity *self)
+{
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(self == &entity_list[i])
+        {
+            continue;
+        }
+
+        if(entity_intersect(self, &entity_list[i]))
+        {
+            return &entity_list[i];
+        }
+    }
+
+    return NULL;
+}
+
 void entity_touch_all(Entity *self)
 {
     if(!self->touch)

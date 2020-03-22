@@ -116,6 +116,8 @@ bool entity_intersect(Entity *a, Entity *b);
  */
 bool entity_intersect_all_filter_by_type(Entity *self, Entity_Type type);
 
+Entity *entity_intersect_all_find_one(Entity *self);
+
 /**
  * @brief runs touch function against all entities collided with
  * @param self entity to check collision
