@@ -21,6 +21,7 @@ enum Map_State
     PLAY,
     PAUSE,
     PLAN,
+    TEST,
     INACTIVE,
     LOSE,
     WIN,
@@ -151,10 +152,20 @@ void map_stop();
  */
 void map_reset();
 
+void map_test();
+
 void map_change_edit_type(Edit_Type type);
 
 void map_initialize_home_tile(int x, int y, int angle);
 
 void map_update_home_tile(Entity *self);
+
+void map_change_state(Map_State state);
+
+int map_get_state();
+
+void map_save_edit();
+
+void map_reset_edit();
 
 #endif //MOUSEGAME_MAP_H

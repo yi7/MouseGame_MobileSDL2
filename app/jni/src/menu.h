@@ -149,7 +149,7 @@ void menu_update_map_list_window(Window *self, int button_id);
  * @brief initializes the map side window
  * @param button_id id of button pressed
  */
-void menu_initialize_map_side_window(int button_id);
+void menu_initialize_map_side_window();
 
 /**
  * @brief update function of map side window
@@ -161,6 +161,10 @@ void menu_update_map_side_window(Window *self, int button_id);
 void menu_initialize_editor_side_window();
 
 void menu_update_editor_side_window(Window *self, int button_id);
+
+void menu_initialize_editor_test_window();
+
+void menu_update_editor_test_window(Window *self, int button_id);
 
 void menu_initialize_mouse_select_window();
 

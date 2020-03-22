@@ -189,7 +189,7 @@ void map_load_entities(int map_id)
     Map_Detail *map_detail = NULL;
     map_detail = file_get_map(map_id);
     float tile_frame_size = graphics_reference.tile_padding;
-
+    SDL_Log("TEST: %s", map_detail->map[0]);
     int wall_x = 0;
     int wall_y = 0;
     int next_row_count = 0;
@@ -372,7 +372,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case EMOUSE_NORMAL:
                 if(!tile_list[tile_position].occupied)
                 {
-                    mouse_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, MOUSE);
+                    mouse_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, MOUSE);
                     tile_list[tile_position].occupied = true;
                 }
                 break;
@@ -386,7 +386,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case ECAT_NORMAL:
                 if(!tile_list[tile_position].occupied)
                 {
-                    cat_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, CAT);
+                    cat_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, CAT);
                     tile_list[tile_position].occupied = true;
                 }
                 break;
@@ -700,6 +700,12 @@ void map_reset()
     map_load_entities(map_active);
 }
 
+void map_test()
+{
+    map_state = TEST;
+    entity_update_all_active_state(MOVE);
+}
+
 void map_change_edit_type(Edit_Type type)
 {
     map_edit_type = type;
@@ -744,4 +750,83 @@ void map_update_home_tile(Entity *self)
         map_state = PAUSE;
         entity_update_all_active_state(STOP);
     }
+}
+
+void map_change_state(Map_State state)
+{
+    map_state = state;
+}
+
+int map_get_state()
+{
+    return map_state;
+}
+
+void map_save_edit()
+{
+
+    Map_Detail *save;
+
+    save = file_get_map(1);
+    if(!save)
+    {
+        save = file_new();
+    }
+    char map[285][3] = {"13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13",
+                        "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
+                        "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                        "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
+                        "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                        "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
+                        "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                        "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
+                        "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                        "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
+                        "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                        "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
+                        "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13", "15", "13",
+                        "11", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "14", "00", "11",
+                        "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13"};
+
+    for(int i = 0; i < (sizeof(save->map) / sizeof(save->map[0])); i++)
+    {
+        strcpy(save->map[i], map[i]);
+    }
+    save->map_id = 1;
+    int v_index = 0;
+    int h_index = 0;
+
+    for(int i = 0; i < (sizeof(save->map) / sizeof(save->map[0])); i++)
+    {
+        if(strcmp(save->map[i], "14") == 0)
+        {
+            if(v_index < WALL_V_MAX)
+            {
+                if(wall_v_list[v_index].occupied)
+                {
+                    strcpy(save->map[i], "11");
+                }
+            }
+            v_index++;
+        }
+
+        if(strcmp(save->map[i], "15") == 0)
+        {
+            if(h_index < WALL_H_MAX)
+            {
+                if(wall_h_list[h_index].occupied)
+                {
+                    strcpy(save->map[i], "12");
+                }
+            }
+            h_index++;
+        }
+    }
+
+
+}
+
+void map_reset_edit()
+{
+    entity_free_all();
 }

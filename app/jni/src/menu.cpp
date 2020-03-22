@@ -413,17 +413,14 @@ void menu_update_map_list_window(Window *self, int button_id)
     }
     else
     {
-        menu_initialize_map_side_window(button_id);
+        menu_initialize_map_side_window();
         map_initialize_base(button_id, PLAN);
         map_load_entities(button_id);
     }
 }
 
-void menu_initialize_map_side_window(int button_id)
+void menu_initialize_map_side_window()
 {
-    Map_Detail *map_detail = NULL;
-    map_detail = file_get_map(button_id);
-
     Window *map_window = NULL;
     map_window = menu_push_window();
 
@@ -505,10 +502,14 @@ void menu_update_editor_side_window(Window *self, int button_id)
     switch(button_id)
     {
         case 0:
+            menu_initialize_editor_test_window();
+            map_save_edit();
             //map_play();
             break;
         case 1:
-            //map_stop();
+            map_free_all();
+            map_initialize_base(0, EDIT);
+            map_load_entities(0);
             break;
         case 2:
             menu_initialize_mouse_select_window();
@@ -525,6 +526,55 @@ void menu_update_editor_side_window(Window *self, int button_id)
         case 6:
             map_free_all();
             file_free_all();
+            menu_pop_window(self->handle);
+            break;
+        default:
+            break;
+    }
+}
+
+void menu_initialize_editor_test_window()
+{
+    Window *map_window = NULL;
+    map_window = menu_push_window();
+
+    Sprite *map_side_menu_background = sprite_load("images/side_menu_background.png", 192, 448, 1);
+    Sprite *map_side_menu_buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
+
+    map_window->window_frame.x = graphics_reference.map_width;
+    map_window->window_frame.y = 0;
+    map_window->window_frame.w = graphics_reference.screen_width - graphics_reference.map_width;
+    map_window->window_frame.h = graphics_reference.screen_height;
+    map_window->background = map_side_menu_background;
+    map_window->draw = menu_draw_window;
+    map_window->update = menu_update_editor_test_window;
+
+    float tile_frame = graphics_reference.tile_padding;
+    float menu_padding = graphics_reference.tile_padding / 2;
+    float button_padding = graphics_reference.wall_padding;
+
+    menu_set_button(map_window, 0, 0, "PLAY", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + menu_padding, map_window->window_frame.y + menu_padding, tile_frame, tile_frame);
+    menu_set_button(map_window, 1, 0, "PAUSE", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + (menu_padding * 4), map_window->window_frame.y + menu_padding, tile_frame, tile_frame);
+    menu_set_button(map_window, 2, 0, "RESET", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + menu_padding, map_window->window_frame.y + (menu_padding * 4), tile_frame, tile_frame);
+    menu_set_button(map_window, 3, 0, "BACK", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + (menu_padding * 4), map_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
+}
+
+void menu_update_editor_test_window(Window *self, int button_id)
+{
+    switch(button_id)
+    {
+        case 0:
+            map_play();
+            break;
+        case 1:
+            map_stop();
+            break;
+        case 2:
+            map_reset_edit();
+            map_load_entities(1);
+            break;
+        case 3:
+            //map_free_all();
             menu_pop_window(self->handle);
             break;
         default:
