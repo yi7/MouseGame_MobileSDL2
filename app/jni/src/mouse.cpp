@@ -65,7 +65,14 @@ void mouse_touch(Entity *self, Entity *other)
         case TILE_HOME:
             if(entity_intersect_percentage(self, other) > 85)
             {
-                other->update(other);
+                //other->update(other);
+                entity_free(&self);
+            }
+            break;
+        case TILE_HOLE:
+            if(entity_intersect_percentage(self, other) > 85)
+            {
+                entity_update_all_active_state(STOP);
                 entity_free(&self);
             }
             break;
@@ -81,6 +88,8 @@ void mouse_update(Entity *self)
 
 void mouse_think(Entity *self)
 {
+    entity_touch_all(self);
+
     switch(self->angle)
     {
         case UP:
@@ -98,8 +107,6 @@ void mouse_think(Entity *self)
         default:
             return;
     }
-
-    entity_touch_all(self);
 }
 
 void mouse_step_off(Entity *self, Entity *other)

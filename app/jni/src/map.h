@@ -156,7 +156,7 @@ void map_test();
 
 void map_change_edit_type(Edit_Type type);
 
-void map_initialize_home_tile(int x, int y, int angle);
+void map_initialize_entity_tile(int x, int y, int angle, int frame);
 
 void map_update_home_tile(Entity *self);
 

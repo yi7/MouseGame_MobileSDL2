@@ -76,6 +76,12 @@ void cat_touch(Entity *self, Entity *other)
                 entity_update_all_active_state(STOP);
             }
             break;
+        case TILE_HOLE:
+            if(entity_intersect_percentage(self, other) > 85)
+            {
+                entity_free(&self);
+            }
+            break;
         default:
             return;
     }
@@ -88,6 +94,8 @@ void cat_update(Entity *self)
 
 void cat_think(Entity *self)
 {
+    entity_touch_all(self);
+
     switch(self->angle)
     {
         case UP:
@@ -105,8 +113,6 @@ void cat_think(Entity *self)
         default:
             return;
     }
-
-    entity_touch_all(self);
 }
 
 void cat_step_off(Entity *self, Entity *other)

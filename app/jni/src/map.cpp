@@ -266,7 +266,10 @@ void map_load_entities(int map_id)
                 cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT);
                 break;
             case 20:
-                map_initialize_home_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle);
+                map_initialize_entity_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, 5);
+                break;
+            case 21:
+                map_initialize_entity_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, 4);
                 break;
             default:
                 break;
@@ -719,7 +722,7 @@ void map_change_edit_type(Edit_Type type)
     map_edit_type = type;
 }
 
-void map_initialize_home_tile(int x, int y, int angle)
+void map_initialize_entity_tile(int x, int y, int angle, int frame)
 {
     Entity *home_tile;
     home_tile = entity_new();
@@ -733,7 +736,7 @@ void map_initialize_home_tile(int x, int y, int angle)
     home_tile->frame_size.h = graphics_reference.tile_padding;
     home_tile->velocity = 0;
     home_tile->angle = angle;
-    home_tile->frame = 5;
+    home_tile->frame = frame;
     home_tile->life = 1;
     home_tile->state = STOP;
     home_tile->type = TILE_HOME;
@@ -748,7 +751,7 @@ void map_initialize_home_tile(int x, int y, int angle)
 
 void map_update_home_tile(Entity *self)
 {
-    if(mouse_count - 1 >= 0)
+    /*if(mouse_count - 1 >= 0)
     {
         mouse_count--;
     }
@@ -757,7 +760,7 @@ void map_update_home_tile(Entity *self)
     {
         map_state = PAUSE;
         entity_update_all_active_state(STOP);
-    }
+    }*/
 }
 
 void map_change_state(Map_State state)
@@ -868,6 +871,7 @@ void map_save_edit()
                     entity_list[entity_index].type = 20;
                     break;
                 case TILE_HOLE:
+                    entity_list[entity_index].type = 21;
                     break;
                 default:
                     break;
@@ -882,6 +886,11 @@ void map_save_edit()
     {
         save->entities[i] = entity_list[i];
     }
+
+    arrow_max = 63;
+    arrow_count = 0;
+    mouse_max = 63;
+    mouse_count = 0;
 }
 
 void map_reset_edit()
