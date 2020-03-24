@@ -9,11 +9,12 @@
  * @brief initializes the mouse entity depending on type
  * @param x x position of mouse
  * @param y y position of mouse
- * @param frame_size frame size of mouse
  * @param angle angle of mouse
  * @param type type of mouse
  */
-void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type);
+void mouse_initialize(int x, int y, int angle, Entity_Type type);
+
+void mouse_initialize_normal(int x, int y, int angle);
 
 /**
  * @brief free function of mouse
@@ -32,7 +33,7 @@ void mouse_draw(Entity *entity);
  * @param self mouse entity
  * @param other some entity it touched
  */
-void mouse_touch(Entity *self, Entity *other);
+void mouse_touch_normal(Entity *self, Entity *other);
 
 /**
  * @brief update function of mouse

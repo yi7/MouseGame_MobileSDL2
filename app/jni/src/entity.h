@@ -19,10 +19,15 @@ enum Entity_State
 
 enum Entity_Type
 {
-    MOUSE,
-    CAT,
+    MOUSE_NORMAL,
+    MOUSE_HOVER,
+    MOUSE_SPEED,
+    CAT_NORMAL,
+    CAT_SWEEP,
     WALL,
-    TILE_ARROW
+    TILE_ARROW,
+    TILE_HOME,
+    TILE_HOLE
 };
 
 typedef struct Entity_S

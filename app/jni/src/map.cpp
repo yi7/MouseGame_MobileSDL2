@@ -158,7 +158,7 @@ void map_load_entities(int map_id)
         switch(map_detail->entities[i].type)
         {
             case 0:
-                mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE);
+                mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, MOUSE_NORMAL);
                 break;
             default:
                 break;

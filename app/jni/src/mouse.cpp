@@ -1,6 +1,23 @@
 #include "mouse.h"
 
-void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
+void mouse_initialize(int x, int y, int angle, Entity_Type type)
+{
+    switch(type)
+    {
+        case MOUSE_NORMAL:
+            mouse_initialize_normal(x, y, angle);
+            break;
+        case MOUSE_HOVER:
+            break;
+        case MOUSE_SPEED:
+            break;
+        default:
+            SDL_Log("mouse_initialize: possibly called the wrong initialize function");
+            return;
+    }
+}
+
+void mouse_initialize_normal(int x, int y, int angle)
 {
     Sprite *animals = sprite_load("images/animals_test.png", 64, 64, 8);
 
@@ -9,18 +26,18 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     mouse->stuck = false;
     mouse->position.x = x + (graphics_reference.wall_padding / 2);
     mouse->position.y = y + (graphics_reference.wall_padding / 2);
-    mouse->frame_size.w = frame_size - graphics_reference.wall_padding;
-    mouse->frame_size.h = frame_size - graphics_reference.wall_padding;
+    mouse->frame_size.w = graphics_reference.tile_padding - graphics_reference.wall_padding;
+    mouse->frame_size.h = graphics_reference.tile_padding - graphics_reference.wall_padding;
     mouse->velocity = 8;
     mouse->angle = angle;
     mouse->frame = 8;
     mouse->state = STOP;
-    mouse->type = type;
+    mouse->type = MOUSE_NORMAL;
     mouse->sprite = animals;
 
     mouse->free = mouse_free;
     mouse->draw = mouse_draw;
-    mouse->touch = mouse_touch;
+    mouse->touch = mouse_touch_normal;
     mouse->update = mouse_update;
     mouse->think = mouse_think;
 }
@@ -35,7 +52,7 @@ void mouse_draw(Entity *entity)
     entity_draw(entity, entity->position.x, entity->position.y, entity->angle);
 }
 
-void mouse_touch(Entity *self, Entity *other)
+void mouse_touch_normal(Entity *self, Entity *other)
 {
     switch(other->type)
     {
@@ -46,7 +63,7 @@ void mouse_touch(Entity *self, Entity *other)
         case TILE_ARROW:
             if(!self->stuck)
             {
-                if(entity_intersect_percentage(self, other) > 85)
+                if(entity_intersect_percentage(self, other) > 95)
                 {
                     self->stuck = true;
                     self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
@@ -59,7 +76,12 @@ void mouse_touch(Entity *self, Entity *other)
             {
                 self->stuck = false;
             }
-
+            break;
+        case TILE_HOLE:
+            if(entity_intersect_percentage(self, other) > 85)
+            {
+                entity_free(&self);
+            }
             break;
         default:
             return;
@@ -206,7 +228,7 @@ void mouse_find_path(Entity *self)
             }
             break;
         default:
-            return;
+            break;
     }
 
     entity_free(&temp_up_hitbox);
