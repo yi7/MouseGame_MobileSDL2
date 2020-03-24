@@ -8,7 +8,7 @@ void file_initialize_system()
     map_list = (Map_Detail *)malloc(sizeof(Map_Detail) * MAP_MAX);
     if(!map_list)
     {
-        //SDL_Log("parser_initialize_system() failed to allocate map list -Error:");
+        SDL_Log("file_initialize_system: Failed to allocate map detail list");
         return;
     }
 
@@ -64,6 +64,11 @@ Map_Detail *file_get_map(int map_id)
 
 void file_parse(const char *filename)
 {
+    if(!filename)
+    {
+        SDL_Log("file_parse: filename not provided");
+    }
+
     SDL_RWops *file = SDL_RWFromFile(filename, "r");
     if(file == NULL)
     {
@@ -92,12 +97,16 @@ void file_parse(const char *filename)
     }
 
     file_content[read_total] = '\0';
-
     file_convert_json(file_content);
 }
 
 void file_convert_json(char *json)
 {
+    if(!json)
+    {
+        SDL_Log("file_convert_json: json not provided");
+    }
+
     int count;
     char delim[] = "|";
     char *ptr = strtok(json, delim);

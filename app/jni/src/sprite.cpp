@@ -9,7 +9,7 @@ void sprite_initialize_system()
     sprite_list = (Sprite *)malloc(sizeof(Sprite) * SPRITE_MAX);
     if(!sprite_list)
     {
-        SDL_Log("sprite_initialize_system() failed to allocate sprite system -Error:");
+        SDL_Log("sprite_initialize_system: Failed to allocate sprite system");
         return;
     }
 
@@ -44,7 +44,7 @@ Sprite *sprite_load(const char *filename, int frame_width, int frame_height, int
 
     if(!sprite_list)
     {
-        SDL_Log("sprite_load() sprite system uninitialized -Error:");
+        SDL_Log("sprite_load: sprite system uninitialized");
         return NULL;
     }
 
@@ -66,7 +66,7 @@ Sprite *sprite_load(const char *filename, int frame_width, int frame_height, int
     //Make sure there's enough room for a new sprite
     if(sprite_count + 1 >= SPRITE_MAX)
     {
-        SDL_Log("sprite_load() maximum sprite reached -Error:");
+        SDL_Log("sprite_load: maximum sprite reached");
         exit(1);
     }
     sprite_count++;
@@ -84,7 +84,7 @@ Sprite *sprite_load(const char *filename, int frame_width, int frame_height, int
     sprite_temp = IMG_Load(filename);
     if(!sprite_temp)
     {
-        SDL_Log("load_sprite() unable to load sprite -Error:");
+        SDL_Log("load_sprite: unable to load sprite");
         exit(0);
     }
 
@@ -131,6 +131,7 @@ void sprite_draw(Sprite *sprite, int frame, int x, int y, int width, int height,
     SDL_Rect src, dest;
     if ((!sprite) || (!graphics_renderer))
     {
+        SDL_Log("sprite_draw: sprite or renderer not initialized");
         return;
     }
 

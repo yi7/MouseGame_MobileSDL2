@@ -1,6 +1,6 @@
 #include "editor.h"
 
-void editor_initialize_button_link()
+void editor_initialize_button_to_base()
 {
     Window *base;
     base = menu_get_window(1);
@@ -42,5 +42,15 @@ void editor_update_base_window(Window *self, int button_id)
         default:
             break;
     }
+}
+
+void editor_initialize_side_window()
+{
+
+}
+
+void editor_update_side_window(Window *self, int button_id)
+{
+    
 }
 

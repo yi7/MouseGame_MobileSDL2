@@ -8,7 +8,7 @@ void entity_initialize_system()
     entity_list = (Entity *)malloc(sizeof(Entity) * ENTITY_MAX);
     if(!entity_list)
     {
-        SDL_Log("entity_initialize_system() failed to allocate entity system -Error:");
+        SDL_Log("entity_initialize_system: Failed to allocate entity system");
         return;
     }
 
@@ -76,12 +76,12 @@ void entity_draw(Entity *entity, int draw_x, int draw_y, int angle)
 {
     if(!entity)
     {
-        SDL_Log("entity_draw() no entity to draw -Error:");
+        SDL_Log("entity_draw: No entity to draw");
     }
 
     if(!entity->sprite)
     {
-        SDL_Log("entity_draw() entity has no sprite -Error:");
+        SDL_Log("entity_draw: Entity has no sprite");
     }
 
     sprite_draw(entity->sprite, entity->frame, draw_x, draw_y, entity->frame_size.w, entity->frame_size.h, angle, SDL_FLIP_NONE);
@@ -141,6 +141,16 @@ void entity_draw_all_active()
 
 bool entity_intersect(Entity *a, Entity *b)
 {
+    if(!a)
+    {
+        SDL_Log("entity_intersect: Entity a not initialized");
+    }
+
+    if(!b)
+    {
+        SDL_Log("entity_intersect: Entity b not initialized");
+    }
+
     SDL_Rect a_box;
     SDL_Rect b_box;
 

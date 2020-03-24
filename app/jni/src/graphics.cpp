@@ -10,7 +10,7 @@ void graphics_initialize_system(char const *window_name)
     //Initialize SDL
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        SDL_Log("graphics_initialize_system() could not initialize -Error: %s\n", SDL_GetError());
+        SDL_Log("graphics_initialize_system: Could not initialize %s\n", SDL_GetError());
         graphics_close_system();
         return;
     }
@@ -27,7 +27,7 @@ void graphics_initialize_system(char const *window_name)
     graphics_window = SDL_CreateWindow(window_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, graphics_screen.w, graphics_screen.h, SDL_WINDOW_FULLSCREEN);
     if(!graphics_window)
     {
-        SDL_Log("graphics_initialize_system() window not created -Error: %s\n", SDL_GetError());
+        SDL_Log("graphics_initialize_system: window not created %s\n", SDL_GetError());
         graphics_close_system();
         return;
     }
@@ -35,7 +35,7 @@ void graphics_initialize_system(char const *window_name)
     graphics_renderer = SDL_CreateRenderer(graphics_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if(!graphics_renderer)
     {
-        SDL_Log("graphics_initialize_system() renderer not created -Error: %s\n", SDL_GetError());
+        SDL_Log("graphics_initialize_system: renderer not created %s\n", SDL_GetError());
         graphics_close_system();
         return;
     }
@@ -59,7 +59,7 @@ void graphics_initialize_system(char const *window_name)
     graphics_reference.button_padding = graphics_reference.wall_padding;
 
     atexit(graphics_close_system);
-    SDL_Log("graphics_initialize_system() graphics initialized");
+    SDL_Log("graphics_initialize_system: graphics initialized");
 }
 
 void graphics_close_system()
