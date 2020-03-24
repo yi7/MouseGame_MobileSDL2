@@ -8,6 +8,10 @@
 #include "file.h"
 #include "map.h"
 
+#define SMALL 0
+#define MEDIUM 1
+#define LARGE 2
+
 #define WINDOW_BUTTON_MAX 64
 #define WINDOW_MAX 32
 

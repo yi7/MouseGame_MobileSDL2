@@ -51,7 +51,6 @@ void map_initialize_base(int map_id)
 
     arrow_max = map_detail->arrow_count;
     arrow_count = 0;
-    map_state = PLAN;
     map_active = map_id;
 
     int tile_x = 0;
@@ -285,6 +284,11 @@ void map_touch_tile(Entity *self, Entity *other)
     }
 }
 
+void map_set_state(Map_State state)
+{
+    map_state = state;
+}
+
 void map_play()
 {
     map_state = PLAY;
@@ -300,7 +304,7 @@ void map_stop()
 void map_reset()
 {
     map_free_all();
-    map_state = PLAN;
     map_initialize_base(map_active);
     map_load_entities(map_active);
 }
+

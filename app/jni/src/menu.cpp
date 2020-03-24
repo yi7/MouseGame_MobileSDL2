@@ -5,10 +5,6 @@ Window window_list[WINDOW_MAX];
 int window_count = 0;
 int window_tag = 0;
 
-#define SMALL 0
-#define MEDIUM 1
-#define LARGE 2
-
 #define WIN_TOP window_stack[window_count - 1]
 
 void menu_initialize_system()
@@ -366,6 +362,7 @@ void menu_update_map_list_window(Window *self, int button_id)
 {
     if(button_id == 20)
     {
+        file_free_all();
         menu_pop_window(self->handle);
     }
     else
@@ -417,6 +414,7 @@ void menu_update_map_side_window(Window *self, int button_id)
             break;
         case 2:
             map_reset();
+            map_set_state(PLAN);
             break;
         case 3:
             map_free_all();

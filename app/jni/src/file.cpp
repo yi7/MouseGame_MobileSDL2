@@ -2,6 +2,7 @@
 
 Map_Detail *map_list = NULL;
 const int MAP_MAX = 20;
+int map_id = 0;
 
 void file_initialize_system()
 {
@@ -24,6 +25,7 @@ void file_close_system()
 
 void file_free_all()
 {
+    map_id = 0;
     memset(map_list, 0, sizeof(Map_Detail) * MAP_MAX);
 }
 
@@ -38,6 +40,7 @@ Map_Detail *file_new()
 
         memset(&map_list[i], 0, sizeof(Map_Detail));
         map_list[i].initialized = true;
+        map_list[i].map_id = map_id++;
         return &map_list[i];
     }
 
@@ -110,7 +113,6 @@ void file_convert_json(char *json)
     int count;
     char delim[] = "|";
     char *ptr = strtok(json, delim);
-    int map_index = 0;
 
     while(ptr != NULL)
     {
@@ -128,7 +130,6 @@ void file_convert_json(char *json)
         }
 
         Map_Detail *map = file_new();
-        map->map_id = map_index++;
 
         for(int i = 1; i < count; i++)
         {

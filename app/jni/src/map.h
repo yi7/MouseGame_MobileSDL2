@@ -14,7 +14,8 @@ enum Map_State
     PLAY,
     PAUSE,
     PLAN,
-    INACTIVE
+    INACTIVE,
+    EDIT
 };
 
 typedef struct
@@ -99,6 +100,8 @@ void map_remove_tile(float x, float y);
  * @param other arrow tile to be removed
  */
 void map_touch_tile(Entity *self, Entity *other);
+
+void map_set_state(Map_State state);
 
 /**
  * @brief changes entity state to move

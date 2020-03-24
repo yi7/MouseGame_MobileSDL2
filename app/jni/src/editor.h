@@ -17,4 +17,6 @@ void editor_initialize_side_window();
 
 void editor_update_side_window(Window *self, int button_id);
 
+void editor_load_empty_map();
+
 #endif //MOUSEGAME_EDITOR_H
