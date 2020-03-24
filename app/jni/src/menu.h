@@ -56,7 +56,7 @@ void menu_initialize_base_window();
  * @param self current window
  * @param button_id id of button pressed on window
  */
-void menu_update_base_window(Window *self, int button_id);
+//void menu_update_base_window(Window *self, int button_id);
 
 /**
  * @brief pops the window from the stack

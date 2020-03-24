@@ -76,7 +76,7 @@ void menu_initialize_base_window()
     main_menu_window->window_frame.h = graphics_reference.screen_height;
     main_menu_window->background = main_menu_background;
     main_menu_window->draw = menu_draw_window;
-    main_menu_window->update = menu_update_base_window;
+    //main_menu_window->update = menu_update_base_window;
 
     float button_width = graphics_reference.button_width;
     float button_height = graphics_reference.button_height;
@@ -88,7 +88,7 @@ void menu_initialize_base_window()
     menu_set_button(main_menu_window, 1, 2, "HELP", SMALL, button_padding, main_menu_buttons, button_x, button_y * 3, button_width, button_height);
 }
 
-void menu_update_base_window(Window *self, int button_id)
+/*void menu_update_base_window(Window *self, int button_id)
 {
     switch(button_id)
     {
@@ -101,7 +101,7 @@ void menu_update_base_window(Window *self, int button_id)
         default:
             break;
     }
-}
+}*/
 
 void menu_pop_window(int handle)
 {
@@ -264,6 +264,7 @@ void menu_update_top_window(float touch_x, float touch_y)
             if(vector_rectangle_intersect(WIN_TOP->buttons[i].box, touch))
             {
                 WIN_TOP->update(WIN_TOP, i);
+                break;
             }
         }
     }

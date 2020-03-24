@@ -73,6 +73,8 @@ void mouse_update(Entity *self)
 
 void mouse_think(Entity *self)
 {
+    entity_touch_all(self);
+
     switch(self->angle)
     {
         case UP:
@@ -90,8 +92,6 @@ void mouse_think(Entity *self)
         default:
             return;
     }
-
-    entity_touch_all(self);
 }
 
 void mouse_step_off(Entity *self, Entity *other)
