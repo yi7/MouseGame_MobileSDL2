@@ -284,9 +284,10 @@ void map_touch_tile(Entity *self, Entity *other)
     }
 }
 
-void map_set_state(Map_State state)
+void map_set_properties(Map_State state, int active_id)
 {
     map_state = state;
+    map_active = active_id;
 }
 
 void map_play()

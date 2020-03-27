@@ -101,7 +101,7 @@ void map_remove_tile(float x, float y);
  */
 void map_touch_tile(Entity *self, Entity *other);
 
-void map_set_state(Map_State state);
+void map_set_properties(Map_State state, int active_id);
 
 /**
  * @brief changes entity state to move
