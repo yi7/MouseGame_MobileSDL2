@@ -72,6 +72,8 @@ void editor_update_base_window(Window *self, int button_id)
             SDL_Log("Help");
             break;
         case 2:
+            map_free_all();
+            file_free_all();
             editor_initialize_side_window();
             editor_load_empty_map();
             map_set_properties(EDIT, 0);
@@ -119,14 +121,13 @@ void editor_update_side_window(Window *self, int button_id)
     {
         case 0:
             editor_initialize_test_window();
-            //map_save_edit();
-            //map_set_state(PLAN);
-            //map_play();
+            map_save_edit();
+            map_set_properties(PLAN, 1);
             break;
         case 1:
-            //map_free_all();
-            //map_initialize_base(0, EDIT);
-            //map_load_entities(0);
+            map_free_all();
+            map_initialize_base(0);
+            map_load_entities(0);
             break;
         case 2:
             editor_initialize_mouse_select_window();

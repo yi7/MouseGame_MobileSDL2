@@ -391,6 +391,7 @@ void menu_update_map_list_window(Window *self, int button_id)
     else
     {
         menu_initialize_map_side_window();
+        map_set_properties(PLAN, button_id);
         map_initialize_base(button_id);
         map_load_entities(button_id);
     }

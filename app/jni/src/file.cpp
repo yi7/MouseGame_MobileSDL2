@@ -25,6 +25,7 @@ void file_close_system()
 
 void file_free_all()
 {
+    map_id = 0;
     memset(map_list, 0, sizeof(Map_Detail) * MAP_MAX);
 }
 

@@ -706,6 +706,7 @@ void map_stop()
 void map_reset()
 {
     map_free_all();
+    map_state = PLAN;
     map_initialize_base(map_active);
     map_load_entities(map_active);
 }
@@ -792,7 +793,6 @@ void map_save_edit()
     {
         strcpy(save->map[i], map[i]);
     }
-    save->map_id = 1;
     int v_index = 0;
     int h_index = 0;
 
