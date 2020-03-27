@@ -77,7 +77,7 @@ void map_free_entity_tile(Entity *self)
     entity_free(&self);
 }
 
-void map_initialize_base(int map_id, Map_State state)
+void map_initialize_base(int map_id)
 {
 
     Map_Detail *map_detail = NULL;
@@ -85,7 +85,6 @@ void map_initialize_base(int map_id, Map_State state)
 
     arrow_max = map_detail->arrow_count;
     arrow_count = 0;
-    map_state = state;
     map_edit_type = NONE;
     map_active = map_id;
     mouse_count = 0;
@@ -127,7 +126,7 @@ void map_initialize_base(int map_id, Map_State state)
         }
     }
 
-    if(state == EDIT)
+    if(map_state == EDIT)
     {
         //This initializes the hitbox for vertical walls when editing
         tile_x = graphics_reference.tile_padding_2;
@@ -707,14 +706,8 @@ void map_stop()
 void map_reset()
 {
     map_free_all();
-    map_initialize_base(map_active, PLAN);
+    map_initialize_base(map_active);
     map_load_entities(map_active);
-}
-
-void map_test()
-{
-    map_state = TEST;
-    entity_update_all_active_state(MOVE);
 }
 
 void map_change_edit_type(Edit_Type type)
@@ -763,19 +756,10 @@ void map_update_home_tile(Entity *self)
     }*/
 }
 
-void map_change_state(Map_State state)
+void map_set_properties(Map_State state, int active_id)
 {
     map_state = state;
-}
-
-int map_get_state()
-{
-    return map_state;
-}
-
-void map_set_state(Map_State state)
-{
-    map_state = state;
+    map_active = active_id;
 }
 
 void map_save_edit()

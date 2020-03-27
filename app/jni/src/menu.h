@@ -11,6 +11,10 @@
 #define WINDOW_BUTTON_MAX 64
 #define WINDOW_MAX 32
 
+#define SMALL 0
+#define MEDIUM 1
+#define LARGE 2
+
 typedef struct
 {
     Sprite *button; /**<sprite associated with button*/
@@ -52,13 +56,6 @@ void menu_close_system();
  * @brief initializes the base window
  */
 void menu_initialize_base_window();
-
-/**
- * @brief update function of the base window
- * @param self current window
- * @param button_id id of button pressed on window
- */
-void menu_update_base_window(Window *self, int button_id);
 
 /**
  * @brief pops the window from the stack
@@ -158,7 +155,7 @@ void menu_initialize_map_side_window();
  */
 void menu_update_map_side_window(Window *self, int button_id);
 
-void menu_initialize_editor_side_window();
+/*void menu_initialize_editor_side_window();
 
 void menu_update_editor_side_window(Window *self, int button_id);
 
@@ -180,6 +177,6 @@ void menu_update_tile_select_window(Window *self, int button_id);
 
 void menu_initialize_wall_select_window();
 
-void menu_update_wall_select_window(Window *self, int button_id);
+void menu_update_wall_select_window(Window *self, int button_id);*/
 
 #endif //MOUSEGAME_MENU_H

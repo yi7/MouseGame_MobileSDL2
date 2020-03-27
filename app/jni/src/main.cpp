@@ -10,6 +10,7 @@
 #include "file.h"
 #include "entity.h"
 #include "map.h"
+#include "editor.h"
 
 void main_initialize_system();
 void main_close_system();
@@ -51,6 +52,7 @@ int SDL_main( int argc, char* args[] )
     SDL_Log("Start Game!");
 
     menu_initialize_base_window();
+    editor_initialize_button_to_base();
 
     while(!quit)
     {

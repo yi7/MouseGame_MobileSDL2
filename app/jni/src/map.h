@@ -77,7 +77,7 @@ void map_free_entity_tile(Entity *self);
  * @brief initializes the base tiles, you cannot interact with these
  * @param map_id id of map
  */
-void map_initialize_base(int map_id, Map_State state);
+void map_initialize_base(int map_id);
 
 /**
  * @brief loads all entities onto the map
@@ -152,19 +152,13 @@ void map_stop();
  */
 void map_reset();
 
-void map_test();
-
 void map_change_edit_type(Edit_Type type);
 
 void map_initialize_entity_tile(int x, int y, int angle, int frame);
 
 void map_update_home_tile(Entity *self);
 
-void map_change_state(Map_State state);
-
-int map_get_state();
-
-void map_set_state(Map_State state);
+void map_set_properties(Map_State state, int active_id);
 
 void map_save_edit();
 
