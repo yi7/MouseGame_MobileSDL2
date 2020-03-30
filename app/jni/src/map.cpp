@@ -474,8 +474,10 @@ void map_place_tile(int x, int y, int angle, int frame)
             tile->type = TILE_HOME;
             break;
         default:
+            entity_free(&tile);
             return;
     }
+
     tile->sprite = arrow_tile;
     tile->free = map_free_entity_tile;
     tile->draw = map_draw_entity_tile;
@@ -718,29 +720,39 @@ void map_change_edit_type(Edit_Type type)
 
 void map_initialize_entity_tile(int x, int y, int angle, int frame)
 {
-    Entity *home_tile;
-    home_tile = entity_new();
+    Entity *tile;
+    tile = entity_new();
     Sprite* temp_tiles = sprite_load("images/tiles.png", 64, 64, 6);
 
-    home_tile->active = false;
-    home_tile->stuck = false;
-    home_tile->position.x = x;
-    home_tile->position.y = y;
-    home_tile->frame_size.w = graphics_reference.tile_padding;
-    home_tile->frame_size.h = graphics_reference.tile_padding;
-    home_tile->velocity = 0;
-    home_tile->angle = angle;
-    home_tile->frame = frame;
-    home_tile->life = 1;
-    home_tile->state = STOP;
-    home_tile->type = TILE_HOME;
-    home_tile->sprite = temp_tiles;
-
-    home_tile->free = map_free_entity_tile;
-    home_tile->draw = map_draw_entity_tile;
-    home_tile->touch = NULL;
-    home_tile->update = map_update_home_tile;
-    home_tile->think = NULL;
+    tile->active = false;
+    tile->stuck = false;
+    tile->position.x = x;
+    tile->position.y = y;
+    tile->frame_size.w = graphics_reference.tile_padding;
+    tile->frame_size.h = graphics_reference.tile_padding;
+    tile->velocity = 0;
+    tile->angle = angle;
+    tile->frame = frame;
+    tile->life = 1;
+    tile->state = STOP;
+    switch(frame)
+    {
+        case 4:
+            tile->type = TILE_HOLE;
+            tile->update = NULL;
+            break;
+        case 5:
+            tile->type = TILE_HOME;
+            tile->update = map_update_home_tile;
+            break;
+        default:
+            break;
+    }
+    tile->sprite = temp_tiles;
+    tile->free = map_free_entity_tile;
+    tile->draw = map_draw_entity_tile;
+    tile->touch = NULL;
+    tile->think = NULL;
 }
 
 void map_update_home_tile(Entity *self)

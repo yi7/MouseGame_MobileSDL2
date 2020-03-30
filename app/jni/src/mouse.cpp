@@ -47,7 +47,7 @@ void mouse_touch(Entity *self, Entity *other)
         case TILE_ARROW:
             if(!self->stuck)
             {
-                if(entity_intersect_percentage(self, other) > 95)
+                if(entity_intersect_percentage(self, other) >= 95)
                 {
                     self->stuck = true;
                     self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
@@ -56,7 +56,7 @@ void mouse_touch(Entity *self, Entity *other)
                 }
             }
 
-            if(entity_intersect_percentage(self, other) <= 90)
+            if(entity_intersect_percentage(self, other) < 95)
             {
                 self->stuck = false;
             }

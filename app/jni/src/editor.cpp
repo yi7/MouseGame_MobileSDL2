@@ -126,6 +126,7 @@ void editor_update_side_window(Window *self, int button_id)
             break;
         case 1:
             map_free_all();
+            map_set_properties(EDIT, 0);
             map_initialize_base(0);
             map_load_entities(0);
             break;
