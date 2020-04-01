@@ -378,7 +378,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case EMOUSE_NORMAL:
                 if(!tile_list[tile_position].occupied)
                 {
-                    mouse_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, MOUSE);
+                    mouse_initialize(tile_list[tile_position].point.x - 1, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, MOUSE);
                     tile_list[tile_position].occupied = true;
                     entity_count++;
                 }
@@ -394,7 +394,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case ECAT_NORMAL:
                 if(!tile_list[tile_position].occupied)
                 {
-                    cat_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, CAT);
+                    cat_initialize(tile_list[tile_position].point.x - 1, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, CAT);
                     tile_list[tile_position].occupied = true;
                     entity_count++;
                 }
@@ -436,7 +436,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
                 {
                     int index = map_check_wall_edit_hitbox(touch_x, touch_y, EWALL_H);
                     map_remove_wall(touch_x, touch_y, EWALL_REMOVE_H, index);
-                    wall_v_list[index].occupied = false;
+                    wall_h_list[index].occupied = false;
                 }
                 break;
             default:
@@ -757,7 +757,7 @@ void map_initialize_entity_tile(int x, int y, int angle, int frame)
 
 void map_update_home_tile(Entity *self)
 {
-    /*if(mouse_count - 1 >= 0)
+    if(mouse_count - 1 >= 0)
     {
         mouse_count--;
     }
@@ -766,7 +766,9 @@ void map_update_home_tile(Entity *self)
     {
         map_state = PAUSE;
         entity_update_all_active_state(STOP);
-    }*/
+    }
+
+    self->frame++;
 }
 
 void map_set_properties(Map_State state, int active_id)
@@ -783,6 +785,7 @@ void map_save_edit()
     save = file_get_map(1);
     if(!save)
     {
+        SDL_Log("NEW");
         save = file_new();
     }
     char map[285][3] = {"13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13", "12", "13",
@@ -805,6 +808,7 @@ void map_save_edit()
     {
         strcpy(save->map[i], map[i]);
     }
+
     int v_index = 0;
     int h_index = 0;
 
@@ -821,8 +825,7 @@ void map_save_edit()
             }
             v_index++;
         }
-
-        if(strcmp(save->map[i], "15") == 0)
+        else if(strcmp(save->map[i], "15") == 0)
         {
             if(h_index < WALL_H_MAX)
             {
