@@ -11,7 +11,7 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     cat->position.y = y + (graphics_reference.wall_padding / 2);
     cat->frame_size.w = frame_size - graphics_reference.wall_padding;
     cat->frame_size.h = frame_size - graphics_reference.wall_padding;
-    cat->velocity = 16;
+    cat->velocity = 12;
     cat->angle = angle;
     cat->frame = 0;
     cat->life = 1;
@@ -45,7 +45,7 @@ void cat_touch(Entity *self, Entity *other)
             cat_find_path(self);
             break;
         case TILE_ARROW:
-            if(entity_intersect_percentage(self, other) > 95)
+            if(entity_intersect_percentage(self, other) >= 98)
             {
                 self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
                 self->position.y = other->position.y + (graphics_reference.wall_padding / 2);

@@ -189,6 +189,7 @@ void map_load_entities(int map_id)
     Map_Detail *map_detail = NULL;
     map_detail = file_get_map(map_id);
     float tile_frame_size = graphics_reference.tile_padding;
+    mouse_max = 0;
 
     int wall_x = 0;
     int wall_y = 0;
@@ -378,7 +379,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case EMOUSE_NORMAL:
                 if(!tile_list[tile_position].occupied)
                 {
-                    mouse_initialize(tile_list[tile_position].point.x - 1, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, MOUSE);
+                    mouse_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, MOUSE);
                     tile_list[tile_position].occupied = true;
                     entity_count++;
                 }
@@ -394,7 +395,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case ECAT_NORMAL:
                 if(!tile_list[tile_position].occupied)
                 {
-                    cat_initialize(tile_list[tile_position].point.x - 1, tile_list[tile_position].point.y - 1, tile_list[tile_position].frame_size.w, angle, CAT);
+                    cat_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, CAT);
                     tile_list[tile_position].occupied = true;
                     entity_count++;
                 }
@@ -757,18 +758,13 @@ void map_initialize_entity_tile(int x, int y, int angle, int frame)
 
 void map_update_home_tile(Entity *self)
 {
-    if(mouse_count - 1 >= 0)
-    {
-        mouse_count--;
-    }
-
-    if(mouse_count == 0)
+    mouse_count++;
+    if(mouse_count == mouse_max)
     {
         map_state = PAUSE;
         entity_update_all_active_state(STOP);
+        self->frame++;
     }
-
-    self->frame++;
 }
 
 void map_set_properties(Map_State state, int active_id)
