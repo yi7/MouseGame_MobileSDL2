@@ -45,23 +45,21 @@ void cat_touch(Entity *self, Entity *other)
             cat_find_path(self);
             break;
         case TILE_ARROW:
-            if(entity_intersect_percentage(self, other) >= 98)
-            {
-                self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
-                self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
-                self->angle = other->angle;
-
-                if(other->life > 0)
+            if (entity_intersect_percentage(self, other) >= 98) {
+                if(other->angle != self->angle)
                 {
+                    self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
+                    self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
+                    self->angle = other->angle;
+                }
+
+                if (other->life > 0) {
                     other->frame = 8;
                     other->life--;
-                }
-                else
-                {
+                } else {
                     entity_free(&other);
                 }
             }
-
             break;
         case MOUSE:
             if(entity_intersect_percentage(self, other) > 50)
