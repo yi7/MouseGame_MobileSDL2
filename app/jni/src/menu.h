@@ -146,7 +146,7 @@ void menu_update_map_list_window(Window *self, int button_id);
  * @brief initializes the map side window
  * @param button_id id of button pressed
  */
-void menu_initialize_map_side_window();
+void menu_initialize_map_side_window(int button_id);
 
 /**
  * @brief update function of map side window
@@ -155,28 +155,10 @@ void menu_initialize_map_side_window();
  */
 void menu_update_map_side_window(Window *self, int button_id);
 
-/*void menu_initialize_editor_side_window();
+void menu_think();
 
-void menu_update_editor_side_window(Window *self, int button_id);
+void menu_initialize_win_window();
 
-void menu_initialize_editor_test_window();
-
-void menu_update_editor_test_window(Window *self, int button_id);
-
-void menu_initialize_mouse_select_window();
-
-void menu_update_mouse_select_window(Window *self, int button_id);
-
-void menu_initialize_cat_select_window();
-
-void menu_update_cat_select_window(Window *self, int button_id);
-
-void menu_initialize_tile_select_window();
-
-void menu_update_tile_select_window(Window *self, int button_id);
-
-void menu_initialize_wall_select_window();
-
-void menu_update_wall_select_window(Window *self, int button_id);*/
+void menu_update_win_window(Window *self, int button_id);
 
 #endif //MOUSEGAME_MENU_H

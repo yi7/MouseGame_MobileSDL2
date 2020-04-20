@@ -12,9 +12,10 @@
 
 #define WHITE_TILE 2
 #define GREY_TILE 3
-#define BLACK_TILE 4
-#define HOME_TILE 5
-#define ARROW_TILE 7
+#define BLACK_TILE 5
+#define HOME 0
+#define ARROW 16
+#define HOLE 36
 
 enum Map_State
 {
@@ -159,6 +160,8 @@ void map_initialize_entity_tile(int x, int y, int angle, int frame);
 void map_update_home_tile(Entity *self);
 
 void map_set_properties(Map_State state, int active_id);
+
+int map_get_state();
 
 void map_save_edit();
 

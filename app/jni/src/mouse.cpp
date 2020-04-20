@@ -1,9 +1,11 @@
 #include "mouse.h"
 
+Uint32 mouse_now;
+
 void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
 {
-    Sprite *animals = sprite_load("images/animals_test.png", 64, 64, 8);
-
+    Sprite *animals = sprite_load("images/si_mouse.png", 64, 64, 8);
+    mouse_now = SDL_GetTicks();
     Entity *mouse = entity_new();
     mouse->active = true;
     mouse->stuck = false;
@@ -13,7 +15,7 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     mouse->frame_size.h = frame_size - graphics_reference.wall_padding;
     mouse->velocity = 14;
     mouse->angle = angle;
-    mouse->frame = 8;
+    mouse->frame = 0;
     mouse->life = 1;
     mouse->state = STOP;
     mouse->type = type;
@@ -33,7 +35,9 @@ void mouse_free(Entity *entity)
 
 void mouse_draw(Entity *entity)
 {
-    entity_draw(entity, entity->position.x, entity->position.y, entity->angle);
+    int frame = ((SDL_GetTicks() - mouse_now) * 7 / 1000) % 8;
+    entity->frame = frame;
+    entity_draw(entity, entity->position.x, entity->position.y, entity->angle - 90);
 }
 
 void mouse_touch(Entity *self, Entity *other)

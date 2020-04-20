@@ -390,20 +390,23 @@ void menu_update_map_list_window(Window *self, int button_id)
     }
     else
     {
-        menu_initialize_map_side_window();
+        menu_initialize_map_side_window(button_id);
         map_set_properties(PLAN, button_id);
         map_initialize_base(button_id);
         map_load_entities(button_id);
     }
 }
 
-void menu_initialize_map_side_window()
+void menu_initialize_map_side_window(int button_id)
 {
     Window *map_window = NULL;
     map_window = menu_push_window();
 
-    Sprite *map_side_menu_background = sprite_load("images/side_menu_background.png", 192, 448, 1);
-    Sprite *map_side_menu_buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
+    Map_Detail *map_detail = file_get_map(button_id);
+
+    Sprite *map_side_menu_background = sprite_load("images/si_side_menu.png", 192, 448, 1);
+    Sprite *map_side_menu_buttons = sprite_load("images/si_tiles.png", 64, 64, 8);
+    Sprite *count = sprite_load("images/tiles.png", 64, 64, 6);
 
     map_window->window_frame.x = graphics_reference.map_width;
     map_window->window_frame.y = 0;
@@ -413,14 +416,21 @@ void menu_initialize_map_side_window()
     map_window->draw = menu_draw_window;
     map_window->update = menu_update_map_side_window;
 
+    int x_pos = map_window->window_frame.x + (map_window->window_frame.w / 2) - (graphics_reference.tile_padding / 2);
+    int y_pos1 = map_window->window_frame.y + graphics_reference.tile_padding + graphics_reference.tile_padding_4 - graphics_reference.wall_padding;
+    int y_pos2 = y_pos1 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
+    int y_pos3 = y_pos2 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
+    int y_pos4 = y_pos3 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
+
     float tile_frame = graphics_reference.tile_padding;
     float menu_padding = graphics_reference.tile_padding / 2;
     float button_padding = graphics_reference.wall_padding;
 
-    menu_set_button(map_window, 0, 0, "PLAY", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + menu_padding, map_window->window_frame.y + menu_padding, tile_frame, tile_frame);
-    menu_set_button(map_window, 1, 0, "PAUSE", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + (menu_padding * 4), map_window->window_frame.y + menu_padding, tile_frame, tile_frame);
-    menu_set_button(map_window, 2, 0, "RESET", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + menu_padding, map_window->window_frame.y + (menu_padding * 4), tile_frame, tile_frame);
-    menu_set_button(map_window, 3, 0, "BACK", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + (menu_padding * 4), map_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
+    menu_set_button(map_window, 0, 32, "", SMALL, button_padding, map_side_menu_buttons, x_pos, y_pos1, tile_frame, tile_frame);
+    menu_set_button(map_window, 1, 33, "", SMALL, button_padding, map_side_menu_buttons, x_pos, y_pos2, tile_frame, tile_frame);
+    menu_set_button(map_window, 2, 34, "", SMALL, button_padding, map_side_menu_buttons, x_pos, y_pos3, tile_frame, tile_frame);
+    menu_set_button(map_window, 3, 35, "", SMALL, button_padding, map_side_menu_buttons, x_pos, y_pos4, tile_frame, tile_frame);
+    menu_set_button(map_window, 4, 34, "BACK", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + (menu_padding * 4), map_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
 }
 
 void menu_update_map_side_window(Window *self, int button_id)
@@ -436,7 +446,7 @@ void menu_update_map_side_window(Window *self, int button_id)
         case 2:
             map_reset();
             break;
-        case 3:
+        case 4:
             map_free_all();
             menu_pop_window(self->handle);
             break;
@@ -445,5 +455,33 @@ void menu_update_map_side_window(Window *self, int button_id)
     }
 }
 
+void menu_think()
+{
+    if(map_get_state() == WIN)
+    {
+        menu_initialize_win_window();
+    }
+}
 
+void menu_initialize_win_window()
+{
+    Window *win_window = NULL;
+    win_window = menu_push_window();
+
+    Sprite *map_side_menu_background = sprite_load("images/side_menu_background.png", 192, 448, 1);
+    Sprite *map_side_menu_buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
+
+    win_window->window_frame.x = graphics_reference.map_width / 4;
+    win_window->window_frame.y = graphics_reference.map_height / 4;
+    win_window->window_frame.w = graphics_reference.map_width / 2;
+    win_window->window_frame.h = graphics_reference.map_height / 2;
+    win_window->background = map_side_menu_background;
+    win_window->draw = menu_draw_window;
+    win_window->update = menu_update_win_window;
+}
+
+void menu_update_win_window(Window *self, int button_id)
+{
+
+}
 

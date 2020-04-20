@@ -20,6 +20,7 @@ Map_State map_state;
 Edit_Type map_edit_type;
 int map_active;
 Sprite *tiles;
+Uint32 tile_now;
 
 void map_initialize_system()
 {
@@ -48,7 +49,7 @@ void map_initialize_system()
     }
     memset(wall_v_list, 0, sizeof(Tile) * WALL_V_MAX);
 
-    tiles = sprite_load("images/tiles.png", 64, 64, 6);
+    tiles = sprite_load("images/si_tiles.png", 64, 64, 8);
 
     atexit(map_close_system);
 }
@@ -92,7 +93,7 @@ void map_initialize_base(int map_id)
     int tile_x = 0;
     int tile_y = 0;
     int next_row_count = 0;
-    int frame = 2;
+    int frame = 37;
     int tile_index = 0;
 
     for(int i = 0; i < (sizeof(map_detail->map) / sizeof(map_detail->map[0])); i++)
@@ -106,13 +107,13 @@ void map_initialize_base(int map_id)
             tile_list[tile_index].occupied = false;
             tile_index++;
 
-            if(frame == 2)
+            if(frame == 37)
             {
-                frame = 3;
+                frame = 38;
             }
             else
             {
-                frame = 2;
+                frame = 37;
             }
             tile_x += graphics_reference.tile_padding;
             next_row_count++;
@@ -266,10 +267,10 @@ void map_load_entities(int map_id)
                 cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT);
                 break;
             case 20:
-                map_initialize_entity_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, 5);
+                map_initialize_entity_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, HOME);
                 break;
             case 21:
-                map_initialize_entity_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, 4);
+                map_initialize_entity_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, HOLE);
                 break;
             default:
                 break;
@@ -287,7 +288,20 @@ void map_draw_base_tile()
 
 void map_draw_entity_tile(Entity *self)
 {
-    entity_draw(self, self->position.x, self->position.y, self->angle);
+    int frame = ((SDL_GetTicks() - tile_now) * 7 / 1000) % 8;
+    if(self->skip_frame >= 0)
+    {
+        self->frame = frame + self->skip_frame;
+    }
+
+    if(self->type == TILE_ARROW)
+    {
+        entity_draw(self, self->position.x, self->position.y, self->angle + 90);
+    }
+    else
+    {
+        entity_draw(self, self->position.x, self->position.y, self->angle);
+    }
 }
 
 void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
@@ -338,7 +352,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             {
                 arrow_count++;
                 tile_list[tile_position].occupied = true;
-                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, ARROW_TILE);
+                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, ARROW);
             }
         }
         else
@@ -355,7 +369,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case ETILE_HOLE:
                 if(!tile_list[tile_position].occupied)
                 {
-                    map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, BLACK_TILE);
+                    map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, HOLE);
                     tile_list[tile_position].occupied = true;
                     entity_count++;
                 }
@@ -363,7 +377,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case ETILE_HOME:
                 if(!tile_list[tile_position].occupied)
                 {
-                    map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, HOME_TILE);
+                    map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, HOME);
                     tile_list[tile_position].occupied = true;
                     entity_count++;
                 }
@@ -450,7 +464,8 @@ void map_place_tile(int x, int y, int angle, int frame)
 {
     Entity *tile;
     tile = entity_new();
-    Sprite* arrow_tile = sprite_load("images/tiles.png", 64, 64, 6);
+    tile_now = SDL_GetTicks();
+    Sprite* arrow_tile = sprite_load("images/si_tiles.png", 64, 64, 8);
 
     tile->active = false;
     tile->stuck = false;
@@ -465,13 +480,15 @@ void map_place_tile(int x, int y, int angle, int frame)
     tile->state = STOP;
     switch(frame)
     {
-        case ARROW_TILE:
+        case ARROW:
+            tile->skip_frame = 16;
             tile->type = TILE_ARROW;
             break;
-        case BLACK_TILE:
+        case HOLE:
             tile->type = TILE_HOLE;
             break;
-        case HOME_TILE:
+        case HOME:
+            tile->skip_frame = 0;
             tile->type = TILE_HOME;
             break;
         default:
@@ -723,7 +740,8 @@ void map_initialize_entity_tile(int x, int y, int angle, int frame)
 {
     Entity *tile;
     tile = entity_new();
-    Sprite* temp_tiles = sprite_load("images/tiles.png", 64, 64, 6);
+    tile_now = SDL_GetTicks();
+    Sprite* temp_tiles = sprite_load("images/si_tiles.png", 64, 64, 8);
 
     tile->active = false;
     tile->stuck = false;
@@ -738,11 +756,13 @@ void map_initialize_entity_tile(int x, int y, int angle, int frame)
     tile->state = STOP;
     switch(frame)
     {
-        case 4:
+        case HOLE:
+            tile->skip_frame = -1;
             tile->type = TILE_HOLE;
             tile->update = NULL;
             break;
-        case 5:
+        case HOME:
+            tile->skip_frame = 0;
             tile->type = TILE_HOME;
             tile->update = map_update_home_tile;
             break;
@@ -771,6 +791,11 @@ void map_set_properties(Map_State state, int active_id)
 {
     map_state = state;
     map_active = active_id;
+}
+
+int map_get_state()
+{
+    return map_state;
 }
 
 void map_save_edit()
