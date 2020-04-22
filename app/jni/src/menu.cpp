@@ -335,8 +335,8 @@ void menu_initialize_map_list_window(char *filename)
     Window *map_menu_window = NULL;
     map_menu_window = menu_push_window();
 
-    Sprite *map_menu_background = sprite_load("images/main_menu_background.png", 768, 441, 1);
-    Sprite *map_menu_buttons = sprite_load("images/menu_buttons.png", 128, 64, 3);
+    Sprite *map_menu_background = sprite_load("images/si_pack_menu.jpg", 768, 448, 1);
+    Sprite *map_menu_buttons = sprite_load("images/si_buttons.png", 128, 64, 5);
 
     file_parse(filename);
 
@@ -348,37 +348,49 @@ void menu_initialize_map_list_window(char *filename)
     map_menu_window->draw = menu_draw_window;
     map_menu_window->update = menu_update_map_list_window;
 
-    float button_width = graphics_reference.button_width;
-    float button_height = graphics_reference.button_height;
-    float button_x = map_menu_window->window_frame.x + (button_width / 2);
-    float button_y = map_menu_window->window_frame.y + (button_height / 1.5);
-    float button_padding = graphics_reference.button_padding;
+    int button_width = graphics_reference.button_width;
+    int button_height = graphics_reference.button_height;
+    int rbutton_width = button_width * 1.5;
+    int rbutton_height = button_height * 1.5;
+    int ref_col = graphics_reference.screen_width / 6;
+    int ref_row = graphics_reference.screen_height / 8;
+    int button_col_1 = ref_col - (button_width / 2) + (button_width / 8);
+    int button_col_2 = button_col_1 + button_width + (button_width / 4);
+    int button_col_3 = button_col_2 + button_width + (button_width / 4);
+    int button_col_4 = button_col_3 + button_width + (button_width / 4);
+    int button_col_5 = button_col_4 + button_width + (button_width / 4);
+    int button_row_1 = ref_row;
+    int button_row_2 = button_row_1 + button_height + (button_height / 6);
+    int button_row_3 = button_row_2 + button_height + (button_height / 6);
+    int button_row_4 = button_row_3 + button_height + (button_height / 6);
+    int button_row_5 = button_row_4 + button_height + (button_height / 2);
+    int rbutton_col_3 = (graphics_reference.screen_width / 2) - (rbutton_width / 2);
 
-    menu_set_button(map_menu_window, 0, 1, "MAP 1", SMALL, button_padding, map_menu_buttons, button_x, button_y, button_width, button_height);
-    menu_set_button(map_menu_window, 1, 1, "MAP 2", SMALL, button_padding, map_menu_buttons, button_x * 4, button_y, button_width, button_height);
-    menu_set_button(map_menu_window, 2, 1, "MAP 3", SMALL, button_padding, map_menu_buttons, button_x * 7, button_y, button_width, button_height);
-    menu_set_button(map_menu_window, 3, 1, "MAP 4", SMALL, button_padding, map_menu_buttons, button_x * 10, button_y, button_width, button_height);
-    menu_set_button(map_menu_window, 4, 1, "MAP 5", SMALL, button_padding, map_menu_buttons, button_x * 13, button_y, button_width, button_height);
+    menu_set_button(map_menu_window, 0, 0, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_height);
+    menu_set_button(map_menu_window, 1, 1, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_1, button_width, button_height);
+    menu_set_button(map_menu_window, 2, 2, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_1, button_width, button_height);
+    menu_set_button(map_menu_window, 3, 3, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_1, button_width, button_height);
+    menu_set_button(map_menu_window, 4, 4, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_1, button_width, button_height);
 
-    menu_set_button(map_menu_window, 5, 1, "MAP 6", SMALL, button_padding, map_menu_buttons, button_x, button_y * 3, button_width, button_height);
-    menu_set_button(map_menu_window, 6, 1, "MAP 7", SMALL, button_padding, map_menu_buttons, button_x * 4, button_y * 3, button_width, button_height);
-    menu_set_button(map_menu_window, 7, 1, "MAP 8", SMALL, button_padding, map_menu_buttons, button_x * 7, button_y * 3, button_width, button_height);
-    menu_set_button(map_menu_window, 8, 1, "MAP 9", SMALL, button_padding, map_menu_buttons, button_x * 10, button_y * 3, button_width, button_height);
-    menu_set_button(map_menu_window, 9, 1, "MAP 10", SMALL, button_padding, map_menu_buttons, button_x * 13, button_y * 3, button_width, button_height);
+    menu_set_button(map_menu_window, 5, 5, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 6, 6, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 7, 7, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 8, 8, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 9, 9, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_2, button_width, button_height);
 
-    menu_set_button(map_menu_window, 10, 1, "MAP 11", SMALL, button_padding, map_menu_buttons, button_x, button_y * 5, button_width, button_height);
-    menu_set_button(map_menu_window, 11, 1, "MAP 12", SMALL, button_padding, map_menu_buttons, button_x * 4, button_y * 5, button_width, button_height);
-    menu_set_button(map_menu_window, 12, 1, "MAP 13", SMALL, button_padding, map_menu_buttons, button_x * 7, button_y * 5, button_width, button_height);
-    menu_set_button(map_menu_window, 13, 1, "MAP 14", SMALL, button_padding, map_menu_buttons, button_x * 10, button_y * 5, button_width, button_height);
-    menu_set_button(map_menu_window, 14, 1, "MAP 15", SMALL, button_padding, map_menu_buttons, button_x * 13, button_y * 5, button_width, button_height);
+    menu_set_button(map_menu_window, 10, 10, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 11, 11, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 12, 12, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 13, 13, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 14, 14, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_3, button_width, button_height);
 
-    menu_set_button(map_menu_window, 15, 1, "MAP 16", SMALL, button_padding, map_menu_buttons, button_x, button_y * 7, button_width, button_height);
-    menu_set_button(map_menu_window, 16, 1, "MAP 17", SMALL, button_padding, map_menu_buttons, button_x * 4, button_y * 7, button_width, button_height);
-    menu_set_button(map_menu_window, 17, 1, "MAP 18", SMALL, button_padding, map_menu_buttons, button_x * 7, button_y * 7, button_width, button_height);
-    menu_set_button(map_menu_window, 18, 1, "MAP 19", SMALL, button_padding, map_menu_buttons, button_x * 10, button_y * 7, button_width, button_height);
-    menu_set_button(map_menu_window, 19, 1, "MAP 20", SMALL, button_padding, map_menu_buttons, button_x * 13, button_y * 7, button_width, button_height);
+    menu_set_button(map_menu_window, 15, 15, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 16, 16, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 17, 17, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 18, 18, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 19, 19, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_4, button_width, button_height);
 
-    menu_set_button(map_menu_window, 20, 2, "BACK", SMALL, button_padding, map_menu_buttons, button_x, button_y * 9, button_width, button_height);
+    menu_set_button(map_menu_window, 20, 20, "", SMALL, 0, map_menu_buttons, rbutton_col_3, button_row_5, rbutton_width, rbutton_height);
 }
 
 void menu_update_map_list_window(Window *self, int button_id)
@@ -406,7 +418,8 @@ void menu_initialize_map_side_window(int button_id)
 
     Sprite *map_side_menu_background = sprite_load("images/si_side_menu.png", 192, 448, 1);
     Sprite *map_side_menu_buttons = sprite_load("images/si_tiles.png", 64, 64, 8);
-    Sprite *count = sprite_load("images/tiles.png", 64, 64, 6);
+    Sprite *map_return_button = sprite_load("images/si_buttons.png", 128, 64, 5);
+    //Sprite *count = sprite_load("images/tiles.png", 64, 64, 6);
 
     map_window->window_frame.x = graphics_reference.map_width;
     map_window->window_frame.y = 0;
@@ -416,21 +429,23 @@ void menu_initialize_map_side_window(int button_id)
     map_window->draw = menu_draw_window;
     map_window->update = menu_update_map_side_window;
 
-    int x_pos = map_window->window_frame.x + (map_window->window_frame.w / 2) - (graphics_reference.tile_padding / 2);
-    int y_pos1 = map_window->window_frame.y + graphics_reference.tile_padding + graphics_reference.tile_padding_4 - graphics_reference.wall_padding;
-    int y_pos2 = y_pos1 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
-    int y_pos3 = y_pos2 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
-    int y_pos4 = y_pos3 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
+    int small_button_width = graphics_reference.tile_padding;
+    int small_button_height = graphics_reference.tile_padding;
+    int rbutton_width = graphics_reference.button_width * 1.3;
+    int rbutton_height = graphics_reference.button_height * 1.3;
+    int button_col_1 = map_window->window_frame.x + (map_window->window_frame.w / 2) - (small_button_width / 2);
+    int rbutton_col_1 = map_window->window_frame.x + (map_window->window_frame.w / 2) - (rbutton_width / 2);
+    int button_row_1 = map_window->window_frame.y + graphics_reference.tile_padding + graphics_reference.tile_padding_4 - graphics_reference.wall_padding;
+    int button_row_2 = button_row_1 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
+    int button_row_3 = button_row_2 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
+    int button_row_4 = button_row_3 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
+    int button_row_5 = button_row_4 + graphics_reference.tile_padding + graphics_reference.tile_padding_4 + graphics_reference.tile_padding_8;
 
-    float tile_frame = graphics_reference.tile_padding;
-    float menu_padding = graphics_reference.tile_padding / 2;
-    float button_padding = graphics_reference.wall_padding;
-
-    menu_set_button(map_window, 0, 32, "", SMALL, button_padding, map_side_menu_buttons, x_pos, y_pos1, tile_frame, tile_frame);
-    menu_set_button(map_window, 1, 33, "", SMALL, button_padding, map_side_menu_buttons, x_pos, y_pos2, tile_frame, tile_frame);
-    menu_set_button(map_window, 2, 34, "", SMALL, button_padding, map_side_menu_buttons, x_pos, y_pos3, tile_frame, tile_frame);
-    menu_set_button(map_window, 3, 35, "", SMALL, button_padding, map_side_menu_buttons, x_pos, y_pos4, tile_frame, tile_frame);
-    menu_set_button(map_window, 4, 34, "BACK", SMALL, button_padding, map_side_menu_buttons, map_window->window_frame.x + (menu_padding * 4), map_window->window_frame.y + (menu_padding * 11), tile_frame, tile_frame);
+    menu_set_button(map_window, 0, 48, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_1, small_button_width, small_button_height);
+    menu_set_button(map_window, 1, 49, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_2, small_button_width, small_button_height);
+    menu_set_button(map_window, 2, 50, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_3, small_button_width, small_button_height);
+    menu_set_button(map_window, 3, 40, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_4, small_button_width, small_button_height);
+    menu_set_button(map_window, 4, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_5, rbutton_width, rbutton_height);
 }
 
 void menu_update_map_side_window(Window *self, int button_id)

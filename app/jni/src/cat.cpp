@@ -1,9 +1,11 @@
 #include "cat.h"
 
+Uint32 cat_now;
+
 void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
 {
-    Sprite *animals = sprite_load("images/animals_test.png", 64, 64, 8);
-
+    Sprite *animals = sprite_load("images/si_cats.png", 64, 64, 8);
+    cat_now = SDL_GetTicks();
     Entity *cat = entity_new();
     cat->active = true;
     cat->stuck = false;
@@ -11,7 +13,7 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     cat->position.y = y + (graphics_reference.wall_padding / 2);
     cat->frame_size.w = frame_size - graphics_reference.wall_padding;
     cat->frame_size.h = frame_size - graphics_reference.wall_padding;
-    cat->velocity = 12;
+    cat->velocity = 360;
     cat->angle = angle;
     cat->frame = 0;
     cat->life = 1;
@@ -33,7 +35,9 @@ void cat_free(Entity *entity)
 
 void cat_draw(Entity *entity)
 {
-    entity_draw(entity, entity->position.x, entity->position.y, entity->angle);
+    int frame = ((SDL_GetTicks() - cat_now) * 7 / 1000) % 8;
+    entity->frame = frame;
+    entity_draw(entity, entity->position.x, entity->position.y, entity->angle - 90);
 }
 
 void cat_touch(Entity *self, Entity *other)
@@ -57,7 +61,7 @@ void cat_touch(Entity *self, Entity *other)
                     }
 
                     if (other->life > 0) {
-                        other->frame = 8;
+                        other->skip_frame += 8;
                         other->life--;
                     } else {
                         entity_free(&other);
@@ -105,16 +109,16 @@ void cat_think(Entity *self)
     switch(self->angle)
     {
         case UP:
-            self->position.y -= self->velocity;
+            self->position.y -= self->velocity * graphics_delta;
             break;
         case RIGHT:
-            self->position.x += self->velocity;
+            self->position.x += self->velocity * graphics_delta;
             break;
         case DOWN:
-            self->position.y += self->velocity;
+            self->position.y += self->velocity * graphics_delta;
             break;
         case LEFT:
-            self->position.x -= self->velocity;
+            self->position.x -= self->velocity * graphics_delta;
             break;
         default:
             return;

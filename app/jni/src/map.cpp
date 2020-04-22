@@ -93,7 +93,7 @@ void map_initialize_base(int map_id)
     int tile_x = 0;
     int tile_y = 0;
     int next_row_count = 0;
-    int frame = 37;
+    int frame = GREY_BASE;
     int tile_index = 0;
 
     for(int i = 0; i < (sizeof(map_detail->map) / sizeof(map_detail->map[0])); i++)
@@ -107,13 +107,13 @@ void map_initialize_base(int map_id)
             tile_list[tile_index].occupied = false;
             tile_index++;
 
-            if(frame == 37)
+            if(frame == GREY_BASE)
             {
-                frame = 38;
+                frame = WHITE_BASE;
             }
             else
             {
-                frame = 37;
+                frame = GREY_BASE;
             }
             tile_x += graphics_reference.tile_padding;
             next_row_count++;

@@ -15,6 +15,8 @@
 void main_initialize_system();
 void main_close_system();
 
+
+
 void main_initialize_system()
 {
     //Initialize SDL subsystems
@@ -54,6 +56,8 @@ int SDL_main( int argc, char* args[] )
     menu_initialize_base_window();
     editor_initialize_button_to_base();
 
+    graphics_restart_time();
+
     while(!quit)
     {
         while(SDL_PollEvent(&e) != 0)
@@ -78,6 +82,8 @@ int SDL_main( int argc, char* args[] )
                     break;
             }
         }
+
+        graphics_update_time();
 
         SDL_RenderClear(graphics_renderer);
 

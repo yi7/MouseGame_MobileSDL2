@@ -5,6 +5,9 @@ SDL_Window *graphics_window = NULL;
 SDL_Renderer *graphics_renderer = NULL;
 SDL_Rect graphics_screen = {0, 0, 320, 240};
 Graphics_Reference graphics_reference;
+Uint64 graphics_now;
+Uint64 graphics_then;
+double graphics_delta;
 
 void graphics_initialize_system(char const *window_name)
 {
@@ -63,6 +66,10 @@ void graphics_initialize_system(char const *window_name)
     graphics_reference.button_height = graphics_reference.screen_height / 8;
     graphics_reference.button_padding = graphics_reference.wall_padding;
 
+    graphics_now = SDL_GetPerformanceCounter();
+    graphics_then = 0;
+    graphics_delta = 0;
+
     atexit(graphics_close_system);
     SDL_Log("graphics_initialize_system() graphics initialized");
 }
@@ -80,4 +87,17 @@ void graphics_close_system()
 
     graphics_window = NULL;
     graphics_renderer = NULL;
+}
+
+void graphics_restart_time()
+{
+    //start_time = SDL_GetTicks();
+}
+
+void graphics_update_time()
+{
+    graphics_then = graphics_now;
+    graphics_now = SDL_GetPerformanceCounter();
+
+    graphics_delta = (double)((graphics_now - graphics_then) / (double)SDL_GetPerformanceFrequency());
 }

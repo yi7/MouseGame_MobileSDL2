@@ -13,7 +13,7 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     mouse->position.y = y + (graphics_reference.wall_padding / 2);
     mouse->frame_size.w = frame_size - graphics_reference.wall_padding;
     mouse->frame_size.h = frame_size - graphics_reference.wall_padding;
-    mouse->velocity = 14;
+    mouse->velocity = 420; //14
     mouse->angle = angle;
     mouse->frame = 0;
     mouse->life = 1;
@@ -98,16 +98,17 @@ void mouse_think(Entity *self)
     switch(self->angle)
     {
         case UP:
-            self->position.y -= self->velocity;
+            self->position.y -= self->velocity * graphics_delta;
+            //SDL_Log("%f", self->velocity * graphics_delta);
             break;
         case RIGHT:
-            self->position.x += self->velocity;
+            self->position.x += self->velocity * graphics_delta;
             break;
         case DOWN:
-            self->position.y += self->velocity;
+            self->position.y += self->velocity * graphics_delta;
             break;
         case LEFT:
-            self->position.x -= self->velocity;
+            self->position.x -= self->velocity * graphics_delta;
             break;
         default:
             return;
