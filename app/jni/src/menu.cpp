@@ -474,6 +474,7 @@ void menu_think()
 {
     if(map_get_state() == WIN)
     {
+        map_set_properties(PAUSE, 0);
         menu_initialize_win_window();
     }
 }
@@ -483,13 +484,13 @@ void menu_initialize_win_window()
     Window *win_window = NULL;
     win_window = menu_push_window();
 
-    Sprite *map_side_menu_background = sprite_load("images/side_menu_background.png", 192, 448, 1);
+    Sprite *map_side_menu_background = sprite_load("images/si_pack_menu.jpg", 768, 448, 1);
     Sprite *map_side_menu_buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
 
-    win_window->window_frame.x = graphics_reference.map_width / 4;
-    win_window->window_frame.y = graphics_reference.map_height / 4;
-    win_window->window_frame.w = graphics_reference.map_width / 2;
-    win_window->window_frame.h = graphics_reference.map_height / 2;
+    win_window->window_frame.x = 0;
+    win_window->window_frame.y = 0;
+    win_window->window_frame.w = graphics_reference.screen_width;
+    win_window->window_frame.h = graphics_reference.screen_height;
     win_window->background = map_side_menu_background;
     win_window->draw = menu_draw_window;
     win_window->update = menu_update_win_window;
@@ -497,6 +498,7 @@ void menu_initialize_win_window()
 
 void menu_update_win_window(Window *self, int button_id)
 {
-
+    //SDL_Log("%d", self->handle);
+    return;
 }
 

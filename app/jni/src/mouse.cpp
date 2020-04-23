@@ -77,7 +77,7 @@ void mouse_touch(Entity *self, Entity *other)
         case TILE_HOLE:
             if(entity_intersect_percentage(self, other) > 85)
             {
-                entity_update_all_active_state(STOP);
+                entity_update_all_active_state(FREEZE);
                 entity_free(&self);
             }
             break;

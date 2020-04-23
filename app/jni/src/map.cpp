@@ -481,7 +481,7 @@ void map_place_tile(int x, int y, int angle, int frame)
     switch(frame)
     {
         case ARROW:
-            tile->skip_frame = 16;
+            tile->skip_frame = 24;
             tile->type = TILE_ARROW;
             break;
         case HOLE:
@@ -713,12 +713,20 @@ int map_check_wall_edit_hitbox(float touch_x, float touch_y, Edit_Type type)
 
 void map_play()
 {
+    if(map_state == WIN)
+    {
+        return;
+    }
     map_state = PLAY;
     entity_update_all_active_state(MOVE);
 }
 
 void map_stop()
 {
+    if(map_state == WIN)
+    {
+        return;
+    }
     map_state = PAUSE;
     entity_update_all_active_state(STOP);
 }
@@ -781,7 +789,7 @@ void map_update_home_tile(Entity *self)
     mouse_count++;
     if(mouse_count == mouse_max)
     {
-        map_state = PAUSE;
+        map_state = WIN;
         entity_update_all_active_state(STOP);
         self->frame++;
     }

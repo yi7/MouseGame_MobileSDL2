@@ -2,8 +2,8 @@
 
 void wall_initialize(int x, int y, int frame, int frame_size, int angle, Entity_Type type)
 {
-    Sprite *wall_vertical = sprite_load("images/walls_vertical.png", 4, 64, 4);
-    Sprite *wall_horizontal = sprite_load("images/walls_horizontal.png", 64, 4, 1);
+    Sprite *wall_vertical = sprite_load("images/si_wallv.PNG", 4, 64, 4);
+    Sprite *wall_horizontal = sprite_load("images/si_wallh.PNG", 64, 4, 1);
     Entity *wall = entity_new();
 
     switch(angle)

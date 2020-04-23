@@ -14,7 +14,8 @@ enum Entity_State
 {
     MOVE,
     STOP,
-    FREE
+    FREE,
+    FREEZE
 };
 
 enum Entity_Type

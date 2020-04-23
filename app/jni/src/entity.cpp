@@ -267,7 +267,7 @@ void entity_think_all()
             continue;
         }
 
-        if(entity_list[i].state == STOP)
+        if(entity_list[i].state == STOP || entity_list[i].state == FREEZE)
         {
             continue;
         }
@@ -292,7 +292,10 @@ void entity_update_all_active_state(Entity_State state)
 
         if(entity_list[i].active)
         {
-            entity_list[i].state = state;
+            if(entity_list[i].state != FREEZE)
+            {
+                entity_list[i].state = state;
+            }
         }
     }
 }
