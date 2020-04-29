@@ -4,6 +4,7 @@ Window *window_stack[WINDOW_MAX];
 Window window_list[WINDOW_MAX];
 int window_count = 0;
 int window_tag = 0;
+int active_button_id;
 
 #define WIN_TOP window_stack[window_count - 1]
 
@@ -46,7 +47,7 @@ void menu_initialize_base_window()
 {
     Window *main_menu_window = NULL;
     Sprite *main_menu_background = NULL;
-    Sprite *main_menu_buttons = NULL;
+    Sprite *main_menu_play_button = NULL;
 
     main_menu_window = menu_push_window();
     if(!main_menu_window)
@@ -54,14 +55,14 @@ void menu_initialize_base_window()
         SDL_Log("menu_initialize_base_window() can't initialize base window -Error:");
     }
 
-    main_menu_background = sprite_load("images/main_menu_background.png", 768, 441, 1);
+    main_menu_background = sprite_load("images/si_main_menu.jpg", 768, 448, 1);
     if(!main_menu_background)
     {
         SDL_Log("menu_initialize_base_window() can't initialize window background -Error:");
     }
 
-    main_menu_buttons = sprite_load("images/menu_buttons.png", 128, 64, 3);
-    if(!main_menu_buttons)
+    main_menu_play_button = sprite_load("images/si_play_button.png", 192, 192, 1);
+    if(!main_menu_play_button)
     {
         SDL_Log("menu_initialize_base_window() can't initialize button sprite -Error:");
     }
@@ -76,15 +77,15 @@ void menu_initialize_base_window()
     //Moved update function to editor source file
     //main_menu_window->update = menu_update_base_window;
 
-    float button_width = graphics_reference.button_width;
-    float button_height = graphics_reference.button_height;
-    float button_x = main_menu_window->window_frame.x + (button_width / 2);
-    float button_y = main_menu_window->window_frame.y + (button_height / 1.5);
-    float button_padding = graphics_reference.button_padding;
+    int play_w = graphics_reference.tile_padding * 3;
+    int play_x = (graphics_reference.screen_width / 2) - (play_w / 2);
+    int play_y = (graphics_reference.screen_height / 2) - (play_w / 2);
 
-    menu_set_button(main_menu_window, 0, 0, "PLAY", SMALL, button_padding, main_menu_buttons, button_x, button_y, button_width, button_height);
-    menu_set_button(main_menu_window, 1, 2, "HELP", SMALL, button_padding, main_menu_buttons, button_x, button_y * 3, button_width, button_height);
-    menu_set_button(main_menu_window, 2, 2, "EDIT", SMALL, button_padding, main_menu_buttons, button_x, button_y * 5, button_width, button_height);
+    //int play_x = (graphics_reference.screen_width / 2) -
+
+    menu_set_button(main_menu_window, 0, 0, "", SMALL, 0, main_menu_play_button, play_x, play_y, play_w, play_w);
+    //menu_set_button(main_menu_window, 1, 2, "HELP", SMALL, button_padding, main_menu_buttons, button_x, button_y * 3, button_width, button_height);
+    //menu_set_button(main_menu_window, 2, 2, "EDIT", SMALL, button_padding, main_menu_buttons, button_x, button_y * 5, button_width, button_height);
 }
 
 void menu_pop_window(int handle)
@@ -289,13 +290,36 @@ void menu_update_top_window(float touch_x, float touch_y)
     }
 }
 
+void menu_draw_top_window()
+{
+    sprite_draw(WIN_TOP->background, 0, WIN_TOP->window_frame.x, WIN_TOP->window_frame.y, WIN_TOP->window_frame.w, WIN_TOP->window_frame.h, 0, SDL_FLIP_NONE);
+
+    for(int i = 0; i < WIN_TOP->button_count; i++)
+    {
+        if(WIN_TOP->buttons[i].selected)
+        {
+            sprite_draw(WIN_TOP->buttons[i].button, WIN_TOP->buttons[i].frame + 1, WIN_TOP->buttons[i].box.x, WIN_TOP->buttons[i].box.y, WIN_TOP->buttons[i].box.w, WIN_TOP->buttons[i].box.h, 0, SDL_FLIP_NONE);
+        }
+        else
+        {
+            sprite_draw(WIN_TOP->buttons[i].button, WIN_TOP->buttons[i].frame, WIN_TOP->buttons[i].box.x, WIN_TOP->buttons[i].box.y, WIN_TOP->buttons[i].box.w, WIN_TOP->buttons[i].box.h, 0, SDL_FLIP_NONE);
+        }
+
+        if(WIN_TOP->buttons[i].has_text)
+        {
+            font_draw_text(WIN_TOP->buttons[i].message, WIN_TOP->buttons[i].box.x, WIN_TOP->buttons[i].box.y, WIN_TOP->buttons[i].padding);
+        }
+    }
+}
+
 void menu_initialize_pack_list_window()
 {
     Window *pack_menu_window = NULL;
     pack_menu_window = menu_push_window();
 
-    Sprite *pack_menu_background = sprite_load("images/main_menu_background.png", 768, 441, 1);
-    Sprite *pack_menu_buttons = sprite_load("images/menu_buttons.png", 128, 64, 3);
+    Sprite *pack_menu_background = sprite_load("images/si_screen_select.png", 768, 448, 1);
+    Sprite *pack_menu_buttons = sprite_load("images/si_pack_buttons.png", 128, 256, 5);
+    Sprite *return_button = sprite_load("images/si_buttons.png", 128, 64, 5);
 
     pack_menu_window->window_frame.x = 0;
     pack_menu_window->window_frame.y = 0;
@@ -305,14 +329,26 @@ void menu_initialize_pack_list_window()
     pack_menu_window->draw = menu_draw_window;
     pack_menu_window->update = menu_update_pack_list_window;
 
-    float button_width = graphics_reference.button_width;
-    float button_height = graphics_reference.button_height;
-    float button_x = pack_menu_window->window_frame.x + (button_width / 2);
-    float button_y = pack_menu_window->window_frame.y + (button_height / 1.5);
-    float button_padding = graphics_reference.button_padding;
+    int button_width = graphics_reference.tile_padding * 2;
+    int button_height = graphics_reference.tile_padding * 4;
+    int pack1_x = graphics_reference.tile_padding + graphics_reference.tile_padding_8;
+    //int pack2_x = pack1_x + button_width + graphics_reference.tile_padding_8;
+    //int pack3_x = pack2_x + button_width + graphics_reference.tile_padding_8;
+    //int pack4_x = pack3_x + button_width + graphics_reference.tile_padding_8;
+    //int pack5_x = pack4_x + button_width + graphics_reference.tile_padding_8;
+    int button_y = graphics_reference.screen_height / 6;
 
-    menu_set_button(pack_menu_window, 0, 1, "PACK 1", SMALL, button_padding, pack_menu_buttons, button_x, button_y, button_width, button_height);
-    menu_set_button(pack_menu_window, 1, 2, "BACK", SMALL, button_padding, pack_menu_buttons, button_x, button_y * 9, button_width, button_height);
+    float rbutton_width = graphics_reference.button_width * 1.3;
+    float rbutton_height = graphics_reference.button_height * 1.3;
+    float rbutton_x = (graphics_reference.screen_width / 2) - (rbutton_width / 2);
+    float rbutton_y = button_y + button_height + graphics_reference.tile_padding_4;
+
+    menu_set_button(pack_menu_window, 0, 0, "", SMALL, 0, pack_menu_buttons, pack1_x, button_y, button_width, button_height);
+    //menu_set_button(pack_menu_window, 0, 1, "", SMALL, 0, pack_menu_buttons, pack2_x, button_y, button_width, button_height);
+    //menu_set_button(pack_menu_window, 0, 2, "", SMALL, 0, pack_menu_buttons, pack3_x, button_y, button_width, button_height);
+    //menu_set_button(pack_menu_window, 0, 3, "", SMALL, 0, pack_menu_buttons, pack4_x, button_y, button_width, button_height);
+    //menu_set_button(pack_menu_window, 0, 4, "", SMALL, 0, pack_menu_buttons, pack5_x, button_y, button_width, button_height);
+    menu_set_button(pack_menu_window, 1, 20, "", SMALL, 0, return_button, rbutton_x, rbutton_y, rbutton_width, rbutton_height);
 }
 
 void menu_update_pack_list_window(Window *self, int button_id)
@@ -335,7 +371,7 @@ void menu_initialize_map_list_window(char *filename)
     Window *map_menu_window = NULL;
     map_menu_window = menu_push_window();
 
-    Sprite *map_menu_background = sprite_load("images/si_pack_menu.jpg", 768, 448, 1);
+    Sprite *map_menu_background = sprite_load("images/si_screen_select.png", 768, 448, 1);
     Sprite *map_menu_buttons = sprite_load("images/si_buttons.png", 128, 64, 5);
 
     file_parse(filename);
@@ -350,10 +386,10 @@ void menu_initialize_map_list_window(char *filename)
 
     int button_width = graphics_reference.button_width;
     int button_height = graphics_reference.button_height;
-    int rbutton_width = button_width * 1.5;
-    int rbutton_height = button_height * 1.5;
+    int rbutton_width = button_width * 1.3;
+    int rbutton_height = button_height * 1.3;
     int ref_col = graphics_reference.screen_width / 6;
-    int ref_row = graphics_reference.screen_height / 8;
+    int ref_row = graphics_reference.screen_height / 6;
     int button_col_1 = ref_col - (button_width / 2) + (button_width / 8);
     int button_col_2 = button_col_1 + button_width + (button_width / 4);
     int button_col_3 = button_col_2 + button_width + (button_width / 4);
@@ -363,7 +399,8 @@ void menu_initialize_map_list_window(char *filename)
     int button_row_2 = button_row_1 + button_height + (button_height / 6);
     int button_row_3 = button_row_2 + button_height + (button_height / 6);
     int button_row_4 = button_row_3 + button_height + (button_height / 6);
-    int button_row_5 = button_row_4 + button_height + (button_height / 2);
+    int button_row_5 = button_row_4 + button_height + (button_height / 3
+            );
     int rbutton_col_3 = (graphics_reference.screen_width / 2) - (rbutton_width / 2);
 
     menu_set_button(map_menu_window, 0, 0, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_height);
@@ -402,6 +439,7 @@ void menu_update_map_list_window(Window *self, int button_id)
     }
     else
     {
+        active_button_id = button_id;
         menu_initialize_map_side_window(button_id);
         map_set_properties(PLAN, button_id);
         map_initialize_base(button_id);
@@ -474,7 +512,6 @@ void menu_think()
 {
     if(map_get_state() == WIN)
     {
-        map_set_properties(PAUSE, 0);
         menu_initialize_win_window();
     }
 }
@@ -484,8 +521,8 @@ void menu_initialize_win_window()
     Window *win_window = NULL;
     win_window = menu_push_window();
 
-    Sprite *map_side_menu_background = sprite_load("images/si_pack_menu.jpg", 768, 448, 1);
-    Sprite *map_side_menu_buttons = sprite_load("images/map_buttons.png", 64, 64, 3);
+    Sprite *map_side_menu_background = sprite_load("images/faded.png", 768, 448, 1);
+    Sprite *map_menu_buttons = sprite_load("images/si_buttons.png", 128, 64, 5);
 
     win_window->window_frame.x = 0;
     win_window->window_frame.y = 0;
@@ -494,11 +531,51 @@ void menu_initialize_win_window()
     win_window->background = map_side_menu_background;
     win_window->draw = menu_draw_window;
     win_window->update = menu_update_win_window;
+
+    int button_width = graphics_reference.button_width;
+    int button_height = graphics_reference.button_height;
+    int ref_col = graphics_reference.screen_width / 6;
+    int ref_row = graphics_reference.screen_height / 8;
+    int button_col_1 = ref_col - (button_width / 2) + (button_width / 8);
+    int button_col_2 = button_col_1 + button_width + (button_width / 4);
+    int button_row_1 = ref_row;
+
+    menu_set_button(win_window, 0, 0, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_height);
+    menu_set_button(win_window, 1, 1, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_1, button_width, button_height);
 }
 
 void menu_update_win_window(Window *self, int button_id)
 {
-    //SDL_Log("%d", self->handle);
-    return;
+
+    switch(button_id)
+    {
+        case 0:
+            if(active_button_id + 1 < 20)
+            {
+                active_button_id++;
+                menu_pop_window(self->handle);
+                map_free_all();
+                menu_pop_window(WIN_TOP->handle);
+                menu_initialize_map_side_window(active_button_id);
+                map_set_properties(PLAN, active_button_id);
+                map_initialize_base(active_button_id);
+                map_load_entities(active_button_id);
+            }
+            else
+            {
+                menu_pop_window(self->handle);
+                map_free_all();
+                menu_pop_window(WIN_TOP->handle);
+            }
+
+            break;
+        case 1:
+            menu_pop_window(self->handle);
+            map_free_all();
+            menu_pop_window(WIN_TOP->handle);
+            break;
+        default:
+            break;
+    }
 }
 

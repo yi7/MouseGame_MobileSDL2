@@ -99,7 +99,7 @@ void mouse_think(Entity *self)
     {
         case UP:
             self->position.y -= self->velocity * graphics_delta;
-            //SDL_Log("%f", self->velocity * graphics_delta);
+            //SDL_Log("%d", graphics_reference.tile_padding / 7);
             break;
         case RIGHT:
             self->position.x += self->velocity * graphics_delta;

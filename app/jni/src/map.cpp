@@ -791,7 +791,6 @@ void map_update_home_tile(Entity *self)
     {
         map_state = WIN;
         entity_update_all_active_state(STOP);
-        self->frame++;
     }
 }
 

@@ -87,11 +87,22 @@ int SDL_main( int argc, char* args[] )
 
         SDL_RenderClear(graphics_renderer);
 
-        menu_draw_all_window();
-        map_draw_base_tile();
-        entity_draw_all();
-        entity_think_all();
-        //menu_think();
+        switch(map_get_state())
+        {
+            case WIN:
+                menu_draw_all_window();
+                map_draw_base_tile();
+                entity_draw_all();
+                menu_draw_top_window();
+                break;
+            default:
+                menu_draw_all_window();
+                map_draw_base_tile();
+                entity_draw_all();
+                entity_think_all();
+                menu_think();
+                break;
+        }
 
         SDL_RenderPresent(graphics_renderer);
     }

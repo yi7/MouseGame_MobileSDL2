@@ -117,6 +117,8 @@ void menu_draw_all_window();
  */
 void menu_update_top_window(float touch_x, float touch_y);
 
+void menu_draw_top_window();
+
 /**
  * @brief initializes pack list window
  */
@@ -156,6 +158,8 @@ void menu_initialize_map_side_window(int button_id);
 void menu_update_map_side_window(Window *self, int button_id);
 
 void menu_think();
+
+void menu_draw_win_window(Window *self);
 
 void menu_initialize_win_window();
 

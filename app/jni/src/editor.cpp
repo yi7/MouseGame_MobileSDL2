@@ -22,7 +22,7 @@ void editor_initialize_button_to_base()
     float button_y = base->window_frame.y + (button_height / 1.5);
     float button_padding = graphics_reference.button_padding;
 
-    menu_set_button(base, 2, 2, "EDIT", SMALL, button_padding, main_menu_buttons, button_x, button_y * 5, button_width, button_height);
+    //menu_set_button(base, 2, 2, "EDIT", SMALL, button_padding, main_menu_buttons, button_x, button_y * 5, button_width, button_height);
     base->update = editor_update_base_window;
 }
 
@@ -66,11 +66,12 @@ void editor_update_base_window(Window *self, int button_id)
     switch(button_id)
     {
         case 0:
+            SDL_Log("Play");
             menu_initialize_pack_list_window();
             break;
         case 1:
-            SDL_Log("Help");
-            break;
+            //SDL_Log("Help");
+            //break;
         case 2:
             map_free_all();
             file_free_all();
