@@ -350,9 +350,17 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
         {
             if(arrow_count < arrow_max)
             {
-                arrow_count++;
-                tile_list[tile_position].occupied = true;
-                map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, ARROW);
+                if(map_place_tile(tile_list[tile_position].point.x, tile_list[tile_position].point.y, angle, ARROW))
+                {
+                    arrow_count++;
+                    tile_list[tile_position].occupied = true;
+                    //SDL_Log("Placed");
+                }
+                else
+                {
+                    tile_list[tile_position].occupied = false;
+                    //SDL_Log("Not Placed");
+                }
             }
         }
         else
@@ -460,7 +468,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
     }
 }
 
-void map_place_tile(int x, int y, int angle, int frame)
+bool map_place_tile(int x, int y, int angle, int frame)
 {
     Entity *tile;
     tile = entity_new();
@@ -493,7 +501,6 @@ void map_place_tile(int x, int y, int angle, int frame)
             break;
         default:
             entity_free(&tile);
-            return;
     }
 
     tile->sprite = arrow_tile;
@@ -507,7 +514,10 @@ void map_place_tile(int x, int y, int angle, int frame)
        entity_intersect_all_filter_by_type(tile, TILE_HOLE))
     {
         entity_free(&tile);
+        return false;
     }
+
+    return true;
 }
 
 void map_remove_tile(float x, float y)

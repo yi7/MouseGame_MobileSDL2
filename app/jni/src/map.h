@@ -114,7 +114,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y);
  * @param y y position of arrow tile
  * @param angle angle of arrow tile
  */
-void map_place_tile(int x, int y, int angle, int frame);
+bool map_place_tile(int x, int y, int angle, int frame);
 
 /**
  * @brief frees arrow tile on specific tile

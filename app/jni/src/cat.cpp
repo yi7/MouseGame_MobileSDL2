@@ -13,7 +13,7 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     cat->position.y = y + (graphics_reference.wall_padding / 2);
     cat->frame_size.w = frame_size - graphics_reference.wall_padding;
     cat->frame_size.h = frame_size - graphics_reference.wall_padding;
-    cat->velocity = 360;
+    cat->velocity = 370;
     cat->angle = angle;
     cat->frame = 0;
     cat->life = 1;

@@ -482,7 +482,7 @@ void menu_initialize_map_side_window(int button_id)
     menu_set_button(map_window, 0, 48, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_1, small_button_width, small_button_height);
     menu_set_button(map_window, 1, 49, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_2, small_button_width, small_button_height);
     menu_set_button(map_window, 2, 50, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_3, small_button_width, small_button_height);
-    menu_set_button(map_window, 3, 40, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_4, small_button_width, small_button_height);
+    menu_set_button(map_window, 3, map_detail->arrow_count + 40, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_4, small_button_width, small_button_height);
     menu_set_button(map_window, 4, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_5, rbutton_width, rbutton_height);
 }
 
