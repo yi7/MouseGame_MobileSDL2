@@ -339,10 +339,10 @@ void menu_initialize_pack_list_window()
     //int pack5_x = pack4_x + button_width + graphics_reference.tile_padding_8;
     int button_y = graphics_reference.screen_height / 6;
 
-    float rbutton_width = graphics_reference.button_width * 1.3;
-    float rbutton_height = graphics_reference.button_height * 1.3;
+    float rbutton_width = graphics_reference.button_width;
+    float rbutton_height = graphics_reference.button_height;
     float rbutton_x = (graphics_reference.screen_width / 2) - (rbutton_width / 2);
-    float rbutton_y = button_y + button_height + graphics_reference.tile_padding_4;
+    float rbutton_y = (graphics_reference.tile_padding * 5) + (graphics_reference.tile_padding_4 * 2);
 
     menu_set_button(pack_menu_window, 0, 0, "", SMALL, 0, pack_menu_buttons, pack1_x, button_y, button_width, button_height);
     //menu_set_button(pack_menu_window, 0, 1, "", SMALL, 0, pack_menu_buttons, pack2_x, button_y, button_width, button_height);
@@ -387,21 +387,22 @@ void menu_initialize_map_list_window(char *filename)
 
     int button_width = graphics_reference.button_width;
     int button_height = graphics_reference.button_height;
-    int rbutton_width = button_width * 1.3;
-    int rbutton_height = button_height * 1.3;
-    int ref_col = graphics_reference.screen_width / 6;
-    int ref_row = graphics_reference.screen_height / 6;
-    int button_col_1 = ref_col - (button_width / 2) + (button_width / 8);
-    int button_col_2 = button_col_1 + button_width + (button_width / 4);
-    int button_col_3 = button_col_2 + button_width + (button_width / 4);
-    int button_col_4 = button_col_3 + button_width + (button_width / 4);
-    int button_col_5 = button_col_4 + button_width + (button_width / 4);
+    int rbutton_width = button_width;
+    int rbutton_height = button_height;
+    int ref_col_mid = graphics_reference.screen_width / 2;
+    int ref_row = graphics_reference.tile_padding + graphics_reference.tile_padding_4;
+
+    int button_col_3 = ref_col_mid - (button_width / 2);
+    int button_col_2 = button_col_3 - button_width;
+    int button_col_1 = button_col_2 - button_width;
+    int button_col_4 = button_col_3 + button_width;
+    int button_col_5 = button_col_4 + button_width;
+
     int button_row_1 = ref_row;
-    int button_row_2 = button_row_1 + button_height + (button_height / 6);
-    int button_row_3 = button_row_2 + button_height + (button_height / 6);
-    int button_row_4 = button_row_3 + button_height + (button_height / 6);
-    int button_row_5 = button_row_4 + button_height + (button_height / 3);
-    int rbutton_col_3 = (graphics_reference.screen_width / 2) - (rbutton_width / 2);
+    int button_row_2 = button_row_1 + button_height;
+    int button_row_3 = button_row_2 + button_height;
+    int button_row_4 = button_row_3 + button_height;
+    int button_row_5 = button_row_4 + button_height + graphics_reference.tile_padding_4;
 
     menu_set_button(map_menu_window, 0, 0, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_height);
     menu_set_button(map_menu_window, 1, 1, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_1, button_width, button_height);
@@ -427,7 +428,7 @@ void menu_initialize_map_list_window(char *filename)
     menu_set_button(map_menu_window, 18, 18, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_4, button_width, button_height);
     menu_set_button(map_menu_window, 19, 19, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_4, button_width, button_height);
 
-    menu_set_button(map_menu_window, 20, 20, "", SMALL, 0, map_menu_buttons, rbutton_col_3, button_row_5, rbutton_width, rbutton_height);
+    menu_set_button(map_menu_window, 20, 20, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_5, rbutton_width, rbutton_height);
 }
 
 void menu_update_map_list_window(Window *self, int button_id)
@@ -470,8 +471,8 @@ void menu_initialize_map_side_window(int button_id)
 
     int small_button_width = graphics_reference.tile_padding;
     int small_button_height = graphics_reference.tile_padding;
-    int rbutton_width = graphics_reference.button_width * 1.3;
-    int rbutton_height = graphics_reference.button_height * 1.3;
+    int rbutton_width = graphics_reference.button_width;
+    int rbutton_height = graphics_reference.button_height;
     int button_col_1 = map_window->window_frame.x + (map_window->window_frame.w / 2) - (small_button_width / 2);
     int rbutton_col_1 = map_window->window_frame.x + (map_window->window_frame.w / 2) - (rbutton_width / 2);
     int button_row_1 = map_window->window_frame.y + graphics_reference.tile_padding + graphics_reference.tile_padding_4 - graphics_reference.wall_padding;

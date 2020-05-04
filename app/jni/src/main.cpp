@@ -58,6 +58,8 @@ int SDL_main( int argc, char* args[] )
 
     graphics_restart_time();
 
+    Sprite *test = sprite_load("images/si_main_menu.jpg", 768, 448, 1);
+
     while(!quit)
     {
         while(SDL_PollEvent(&e) != 0)
@@ -82,6 +84,10 @@ int SDL_main( int argc, char* args[] )
                     break;
             }
         }
+
+        /*SDL_RenderClear(graphics_renderer);
+        sprite_draw(test, 0, 0, 0, test->frame_size.w, test->frame_size.h, 0, SDL_FLIP_NONE);
+        SDL_RenderPresent(graphics_renderer);*/
 
         graphics_update_time();
 

@@ -13,7 +13,7 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     cat->position.y = y + (graphics_reference.wall_padding / 2);
     cat->frame_size.w = frame_size - graphics_reference.wall_padding;
     cat->frame_size.h = frame_size - graphics_reference.wall_padding;
-    cat->velocity = 370;
+    cat->velocity = 365;
     cat->angle = angle;
     cat->frame = 0;
     cat->life = 1;
@@ -74,20 +74,21 @@ void cat_touch(Entity *self, Entity *other)
             }
             break;
         case MOUSE:
-            if(entity_intersect_percentage(self, other) > 50)
+            if(entity_intersect_percentage(self, other) >= 50)
             {
+                SDL_Log("%f", entity_intersect_percentage(self, other));
                 entity_free(&other);
                 entity_update_all_active_state(FREEZE);
             }
             break;
         case TILE_HOME:
-            if(entity_intersect_percentage(self, other) > 85)
+            if(entity_intersect_percentage(self, other) >= 85)
             {
                 entity_update_all_active_state(FREEZE);
             }
             break;
         case TILE_HOLE:
-            if(entity_intersect_percentage(self, other) > 85)
+            if(entity_intersect_percentage(self, other) >= 85)
             {
                 entity_free(&self);
             }

@@ -1,6 +1,8 @@
 #ifndef MOUSEGAME_MOUSE_H
 #define MOUSEGAME_MOUSE_H
 
+#include <math.h>
+
 #include "graphics.h"
 #include "sprite.h"
 #include "entity.h"

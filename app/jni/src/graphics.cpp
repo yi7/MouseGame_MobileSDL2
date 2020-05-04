@@ -3,7 +3,7 @@
 
 SDL_Window *graphics_window = NULL;
 SDL_Renderer *graphics_renderer = NULL;
-SDL_Rect graphics_screen = {0, 0, 320, 240};
+SDL_Rect graphics_screen = {0, 0, 768, 448};
 Graphics_Reference graphics_reference;
 Uint64 graphics_now;
 Uint64 graphics_then;
@@ -20,15 +20,15 @@ void graphics_initialize_system(char const *window_name)
     }
 
     //Get device display mode
-    SDL_DisplayMode graphics_display;
+    /*SDL_DisplayMode graphics_display;
     if(SDL_GetCurrentDisplayMode(0, &graphics_display) == 0)
     {
         graphics_screen.w = graphics_display.w;
         graphics_screen.h = graphics_display.h;
-    }
+    }*/
 
     //Create window
-    graphics_window = SDL_CreateWindow(window_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, graphics_screen.w, graphics_screen.h, SDL_WINDOW_FULLSCREEN);
+    graphics_window = SDL_CreateWindow(window_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, graphics_screen.w, graphics_screen.h, SDL_WINDOW_FULLSCREEN_DESKTOP);
     if(!graphics_window)
     {
         SDL_Log("graphics_initialize_system() window not created -Error: %s\n", SDL_GetError());
@@ -48,6 +48,7 @@ void graphics_initialize_system(char const *window_name)
 
     SDL_SetRenderDrawColor(graphics_renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+    SDL_RenderSetLogicalSize(graphics_renderer, 768, 448);
 
     //Defining reference throughout the game
     graphics_reference.map_columns = 9; //fixed columns
@@ -55,16 +56,16 @@ void graphics_initialize_system(char const *window_name)
     graphics_reference.screen_width = graphics_screen.w;
     graphics_reference.screen_height = graphics_screen.h;
     graphics_reference.map_height = graphics_reference.screen_height;
-    graphics_reference.tile_padding = graphics_reference.screen_height / graphics_reference.map_rows;
-    graphics_reference.tile_padding_2 = graphics_reference.tile_padding / 2;
-    graphics_reference.tile_padding_4 = graphics_reference.tile_padding / 4;
-    graphics_reference.tile_padding_8 = graphics_reference.tile_padding / 8;
-    graphics_reference.map_width = graphics_reference.tile_padding * graphics_reference.map_columns;
-    graphics_reference.wall_padding = graphics_reference.tile_padding * 4 / 64; //4, 64 is pixel width, height of wall
+    graphics_reference.tile_padding = 64;
+    graphics_reference.tile_padding_2 = 32;
+    graphics_reference.tile_padding_4 = 16;
+    graphics_reference.tile_padding_8 = 8;
+    graphics_reference.map_width = 576;
+    graphics_reference.wall_padding = 4;
     graphics_reference.tpl = graphics_reference.map_columns;
-    graphics_reference.button_width = graphics_reference.screen_width / 8;
-    graphics_reference.button_height = graphics_reference.screen_height / 8;
-    graphics_reference.button_padding = graphics_reference.wall_padding;
+    graphics_reference.button_width = 128;
+    graphics_reference.button_height = 64;
+    graphics_reference.button_padding = 4;
 
     graphics_now = SDL_GetPerformanceCounter();
     graphics_then = 0;
@@ -100,4 +101,7 @@ void graphics_update_time()
     graphics_now = SDL_GetPerformanceCounter();
 
     graphics_delta = (double)((graphics_now - graphics_then) / (double)SDL_GetPerformanceFrequency());
+
+    //float graphics_delta_ms = graphics_delta * 1000.0f;
+    //SDL_Log("%f", graphics_delta_ms);
 }
