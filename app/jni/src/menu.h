@@ -30,6 +30,7 @@ typedef struct
 typedef struct Window_S
 {
     bool inuse; /**<flag for tracking resource*/
+    bool map_open;
     int handle; /**<id of window*/
     //struct Window_S *parent;
     //struct Window_S *child;

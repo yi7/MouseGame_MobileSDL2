@@ -169,4 +169,8 @@ void map_save_edit();
 
 void map_reset_edit();
 
+int map_get_arrow_count();
+
+int map_get_arrow_max();
+
 #endif //MOUSEGAME_MAP_H

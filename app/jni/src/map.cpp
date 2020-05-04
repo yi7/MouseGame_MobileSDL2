@@ -934,3 +934,13 @@ void map_reset_edit()
 {
     entity_free_all();
 }
+
+int map_get_arrow_count()
+{
+    return arrow_count;
+}
+
+int map_get_arrow_max()
+{
+    return arrow_max;
+}
