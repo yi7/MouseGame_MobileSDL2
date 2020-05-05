@@ -533,6 +533,7 @@ void menu_initialize_win_window()
 
     Sprite *map_side_menu_background = sprite_load("images/si_level_complete.png", 768, 448, 1);
     Sprite *map_menu_buttons = sprite_load("images/si_tiles.png", 64, 64, 8);
+    Sprite *map_return_button = sprite_load("images/si_buttons.png", 128, 64, 5);
 
     win_window->window_frame.x = 0;
     win_window->window_frame.y = 0;
@@ -544,11 +545,14 @@ void menu_initialize_win_window()
 
     float button_width = graphics_reference.tile_padding;
     int button_col_1 = (graphics_reference.screen_width / 2) - (graphics_reference.tile_padding / 2);
+    int rbutton_col_1 = (graphics_reference.screen_width / 2) - (graphics_reference.button_width / 2);
     int button_row_1 = (graphics_reference.screen_height / 2) - (graphics_reference.tile_padding * 2) + graphics_reference.tile_padding_4;
     int button_row_2 = button_row_1 + graphics_reference.tile_padding + graphics_reference.tile_padding_2;
+    int button_row_3 = button_row_2 + graphics_reference.tile_padding + graphics_reference.tile_padding_2;
 
     menu_set_button(win_window, 0, 57, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_width);
     menu_set_button(win_window, 1, 58, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_width);
+    menu_set_button(win_window, 2, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_3, graphics_reference.button_width, graphics_reference.button_height);
 }
 
 void menu_update_win_window(Window *self, int button_id)
@@ -580,6 +584,9 @@ void menu_update_win_window(Window *self, int button_id)
             menu_pop_window(self->handle);
             map_free_all();
             menu_pop_window(WIN_TOP->handle);
+            break;
+        case 2:
+            menu_pop_window(self->handle);
             break;
         default:
             break;

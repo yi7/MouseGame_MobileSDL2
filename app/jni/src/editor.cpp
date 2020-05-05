@@ -9,12 +9,12 @@ void editor_initialize_button_to_base()
         SDL_Log("editor_initialize_button_link() unable to get base window");
     }
 
-    Sprite *main_menu_buttons;
+    /*Sprite *main_menu_buttons;
     main_menu_buttons = sprite_load("images/menu_buttons.png", 128, 64, 3);
     if(!main_menu_buttons)
     {
         SDL_Log("menu_initialize_base_window() can't initialize button sprite -Error:");
-    }
+    }*/
 
     float button_width = graphics_reference.button_width;
     float button_height = graphics_reference.button_height;
@@ -26,7 +26,7 @@ void editor_initialize_button_to_base()
     base->update = editor_update_base_window;
 }
 
-void editor_load_empty_map()
+/*void editor_load_empty_map()
 {
     Map_Detail *editor;
     editor = file_new();
@@ -59,7 +59,7 @@ void editor_load_empty_map()
     editor->entity_count = 0;
     editor->map_name = (char *)malloc(10);
     strcpy(editor->map_name, "Editor");
-}
+}*/
 
 void editor_update_base_window(Window *self, int button_id)
 {
@@ -73,20 +73,20 @@ void editor_update_base_window(Window *self, int button_id)
             //SDL_Log("Help");
             //break;
         case 2:
-            map_free_all();
+            /*map_free_all();
             file_free_all();
             editor_initialize_side_window();
             editor_load_empty_map();
             map_set_properties(EDIT, 0);
             map_initialize_base(0);
-            map_load_entities(0);
+            map_load_entities(0);*/
             break;
         default:
             break;
     }
 }
 
-void editor_initialize_side_window()
+/*void editor_initialize_side_window()
 {
     Window *editor_window = NULL;
     editor_window = menu_push_window();
@@ -407,4 +407,4 @@ void editor_update_wall_select_window(Window *self, int button_id)
         default:
             break;
     }
-}
+}*/

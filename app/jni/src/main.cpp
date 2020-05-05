@@ -58,7 +58,7 @@ int SDL_main( int argc, char* args[] )
 
     graphics_restart_time();
 
-    Sprite *test = sprite_load("images/si_main_menu.jpg", 768, 448, 1);
+    //Sprite *test = sprite_load("images/si_main_menu.jpg", 768, 448, 1);
 
     while(!quit)
     {
