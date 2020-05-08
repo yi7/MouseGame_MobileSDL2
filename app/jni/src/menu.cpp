@@ -458,7 +458,6 @@ void menu_initialize_map_side_window(int button_id)
     Sprite *map_side_menu_background = sprite_load("images/si_side_menu.png", 192, 448, 1);
     Sprite *map_side_menu_buttons = sprite_load("images/si_tiles.png", 64, 64, 8);
     Sprite *map_return_button = sprite_load("images/si_buttons.png", 128, 64, 5);
-    //Sprite *count = sprite_load("images/tiles.png", 64, 64, 6);
 
     map_window->window_frame.x = graphics_reference.map_width;
     map_window->window_frame.y = 0;

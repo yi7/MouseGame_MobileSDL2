@@ -84,7 +84,7 @@ Sprite *sprite_load(const char *filename, int frame_width, int frame_height, int
     sprite_temp = IMG_Load(filename);
     if(!sprite_temp)
     {
-        SDL_Log("load_sprite() unable to load sprite -Error:");
+        SDL_Log("load_sprite() unable to load sprite -Error: %s", filename);
         exit(0);
     }
 
