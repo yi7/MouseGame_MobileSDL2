@@ -44,6 +44,7 @@ void cat_touch(Entity *self, Entity *other)
 {
     switch(other->type)
     {
+        case BOULDER:
         case WALL:
             cat_step_off(self, other);
             cat_find_path(self);

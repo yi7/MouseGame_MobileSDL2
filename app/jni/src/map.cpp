@@ -272,6 +272,9 @@ void map_load_entities(int map_id)
             case 21:
                 map_initialize_entity_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, HOLE);
                 break;
+            case 22:
+                boulder_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size);
+                break;
             default:
                 break;
         }

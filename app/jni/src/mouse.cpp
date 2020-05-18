@@ -60,6 +60,7 @@ void mouse_touch(Entity *self, Entity *other)
 {
     switch(other->type)
     {
+        case BOULDER:
         case WALL:
             mouse_step_off(self, other);
             mouse_find_path(self);

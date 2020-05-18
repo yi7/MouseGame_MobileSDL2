@@ -9,6 +9,7 @@
 #include "wall.h"
 #include "mouse.h"
 #include "cat.h"
+#include "boulder.h"
 
 #define WHITE_TILE 2
 #define GREY_TILE 3
