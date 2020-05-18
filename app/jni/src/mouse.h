@@ -36,6 +36,8 @@ void mouse_draw(Entity *entity);
  */
 void mouse_touch(Entity *self, Entity *other);
 
+void mouse_drill_touch(Entity *self, Entity *other);
+
 /**
  * @brief update function of mouse
  * @param self entity to update

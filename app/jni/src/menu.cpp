@@ -333,7 +333,7 @@ void menu_initialize_pack_list_window()
     int button_width = graphics_reference.tile_padding * 2;
     int button_height = graphics_reference.tile_padding * 4;
     int pack1_x = graphics_reference.tile_padding + graphics_reference.tile_padding_8;
-    //int pack2_x = pack1_x + button_width + graphics_reference.tile_padding_8;
+    int pack2_x = pack1_x + button_width + graphics_reference.tile_padding_8;
     //int pack3_x = pack2_x + button_width + graphics_reference.tile_padding_8;
     //int pack4_x = pack3_x + button_width + graphics_reference.tile_padding_8;
     //int pack5_x = pack4_x + button_width + graphics_reference.tile_padding_8;
@@ -345,11 +345,11 @@ void menu_initialize_pack_list_window()
     float rbutton_y = (graphics_reference.tile_padding * 5) + (graphics_reference.tile_padding_4 * 2);
 
     menu_set_button(pack_menu_window, 0, 0, "", SMALL, 0, pack_menu_buttons, pack1_x, button_y, button_width, button_height);
-    //menu_set_button(pack_menu_window, 0, 1, "", SMALL, 0, pack_menu_buttons, pack2_x, button_y, button_width, button_height);
+    menu_set_button(pack_menu_window, 1, 1, "", SMALL, 0, pack_menu_buttons, pack2_x, button_y, button_width, button_height);
     //menu_set_button(pack_menu_window, 0, 2, "", SMALL, 0, pack_menu_buttons, pack3_x, button_y, button_width, button_height);
     //menu_set_button(pack_menu_window, 0, 3, "", SMALL, 0, pack_menu_buttons, pack4_x, button_y, button_width, button_height);
     //menu_set_button(pack_menu_window, 0, 4, "", SMALL, 0, pack_menu_buttons, pack5_x, button_y, button_width, button_height);
-    menu_set_button(pack_menu_window, 1, 20, "", SMALL, 0, return_button, rbutton_x, rbutton_y, rbutton_width, rbutton_height);
+    menu_set_button(pack_menu_window, 2, 20, "", SMALL, 0, return_button, rbutton_x, rbutton_y, rbutton_width, rbutton_height);
 }
 
 void menu_update_pack_list_window(Window *self, int button_id)
@@ -357,9 +357,12 @@ void menu_update_pack_list_window(Window *self, int button_id)
     switch(button_id)
     {
         case 0:
-            menu_initialize_map_list_window("files/maps.txt");
+            menu_initialize_map_list_window("files/pack1.txt");
             break;
         case 1:
+            menu_initialize_map_list_window("files/pack2.txt");
+            break;
+        case 2:
             menu_pop_window(self->handle);
             break;
         default:

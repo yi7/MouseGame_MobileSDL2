@@ -21,6 +21,7 @@ enum Entity_State
 enum Entity_Type
 {
     MOUSE,
+    MOUSE_DRILL,
     CAT,
     WALL,
     TILE_ARROW,

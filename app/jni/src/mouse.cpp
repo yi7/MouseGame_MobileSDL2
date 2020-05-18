@@ -13,19 +13,35 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     mouse->position.y = y + (graphics_reference.wall_padding / 2);
     mouse->frame_size.w = frame_size - graphics_reference.wall_padding;
     mouse->frame_size.h = frame_size - graphics_reference.wall_padding;
-    mouse->velocity = 420; //14
-    mouse->angle = angle;
+    mouse->state = STOP;
     mouse->frame = 0;
     mouse->life = 1;
-    mouse->state = STOP;
+    mouse->angle = angle;
     mouse->type = type;
     mouse->sprite = animals;
-
     mouse->free = mouse_free;
     mouse->draw = mouse_draw;
-    mouse->touch = mouse_touch;
     mouse->update = mouse_update;
     mouse->think = mouse_think;
+
+    switch(type)
+    {
+        case MOUSE:
+            mouse->skip_frame = 0;
+            mouse->velocity = 420;
+            mouse->touch = mouse_touch;
+            break;
+        case MOUSE_DRILL:
+            mouse->skip_frame = 16;
+            mouse->velocity = 420;
+            mouse->touch = mouse_touch;
+            break;
+        default:
+            mouse->skip_frame = 0;
+            mouse->velocity = 0;
+            mouse->think = NULL;
+            break;
+    }
 }
 
 void mouse_free(Entity *entity)
@@ -41,6 +57,52 @@ void mouse_draw(Entity *entity)
 }
 
 void mouse_touch(Entity *self, Entity *other)
+{
+    switch(other->type)
+    {
+        case WALL:
+            mouse_step_off(self, other);
+            mouse_find_path(self);
+            break;
+        case TILE_ARROW:
+            if(other->angle != self->angle)
+            {
+                if(!self->stuck)
+                {
+                    if(entity_intersect_percentage(self, other) >= 95)
+                    {
+                        self->stuck = true;
+                        self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
+                        self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
+                        self->angle = other->angle;
+                    }
+                }
+                else if(entity_intersect_percentage(self, other) < 95)
+                {
+                    self->stuck = false;
+                }
+            }
+            break;
+        case TILE_HOME:
+            if(entity_intersect_percentage(self, other) > 85)
+            {
+                other->update(other);
+                entity_free(&self);
+            }
+            break;
+        case TILE_HOLE:
+            if(entity_intersect_percentage(self, other) > 85)
+            {
+                entity_update_all_active_state(FREEZE);
+                entity_free(&self);
+            }
+            break;
+        default:
+            return;
+    }
+}
+
+void mouse_drill_touch(Entity *self, Entity *other)
 {
     switch(other->type)
     {
