@@ -4,7 +4,7 @@ void boulder_initialize(int x, int y)
 {
     Sprite *tiles = sprite_load("images/si_tiles.png", 64, 64, 8);
     Entity *boulder = entity_new();
-    boulder->active = true;
+    boulder->active = false;
     boulder->stuck = false;
     boulder->position.x = x;
     boulder->position.y = y;
@@ -33,4 +33,12 @@ void boulder_free(Entity *entity)
 void boulder_draw(Entity *entity)
 {
     entity_draw(entity, entity->position.x, entity->position.y, entity->angle);
+    if(entity->state == FREE)
+    {
+        entity->frame++;
+        if(entity->frame > 38)
+        {
+            boulder_free(entity);
+        }
+    }
 }

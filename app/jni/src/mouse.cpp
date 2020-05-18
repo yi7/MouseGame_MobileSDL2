@@ -32,7 +32,7 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
             mouse->touch = mouse_touch;
             break;
         case MOUSE_DRILL:
-            mouse->skip_frame = 16;
+            mouse->skip_frame = 24;
             mouse->velocity = 420;
             mouse->touch = mouse_touch;
             break;
@@ -52,7 +52,7 @@ void mouse_free(Entity *entity)
 void mouse_draw(Entity *entity)
 {
     int frame = ((SDL_GetTicks() - mouse_now) * 7 / 1000) % 8;
-    entity->frame = frame;
+    entity->frame = frame + entity->skip_frame;
     entity_draw(entity, entity->position.x, entity->position.y, entity->angle - 90);
 }
 
@@ -61,6 +61,11 @@ void mouse_touch(Entity *self, Entity *other)
     switch(other->type)
     {
         case BOULDER:
+            if(self->type == MOUSE_DRILL)
+            {
+                other->state = FREE;
+                break;
+            }
         case WALL:
             mouse_step_off(self, other);
             mouse_find_path(self);
@@ -107,6 +112,7 @@ void mouse_drill_touch(Entity *self, Entity *other)
 {
     switch(other->type)
     {
+        case BOULDER:
         case WALL:
             mouse_step_off(self, other);
             mouse_find_path(self);

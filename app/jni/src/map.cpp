@@ -263,6 +263,10 @@ void map_load_entities(int map_id)
                 mouse_max++;
                 mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE);
                 break;
+            case 1:
+                mouse_max++;
+                mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE_DRILL);
+                break;
             case 10:
                 cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT);
                 break;
@@ -513,8 +517,9 @@ bool map_place_tile(int x, int y, int angle, int frame)
     tile->update = NULL;
     tile->think = NULL;
 
-    if(entity_intersect_all_filter_by_type(tile, TILE_HOME) ||
-       entity_intersect_all_filter_by_type(tile, TILE_HOLE))
+    if( entity_intersect_all_filter_by_type(tile, TILE_HOME) ||
+        entity_intersect_all_filter_by_type(tile, TILE_HOLE) ||
+        entity_intersect_all_filter_by_type(tile, BOULDER) )
     {
         entity_free(&tile);
         return false;

@@ -52,19 +52,24 @@ void cat_touch(Entity *self, Entity *other)
         case TILE_ARROW:
             if(!self->stuck)
             {
-                if (entity_intersect_percentage(self, other) >= 98) {
+                if (entity_intersect_percentage(self, other) >= 98)
+                {
                     self->stuck = true;
 
-                    if (other->angle != self->angle) {
+                    if (other->angle != self->angle)
+                    {
                         self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
                         self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
                         self->angle = other->angle;
                     }
 
-                    if (other->life > 0) {
+                    if (other->life > 0)
+                    {
                         other->skip_frame -= 8;
                         other->life--;
-                    } else {
+                    }
+                    else
+                    {
                         entity_free(&other);
                     }
                 }

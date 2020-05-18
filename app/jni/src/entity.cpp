@@ -232,6 +232,11 @@ void entity_touch_all(Entity *self)
             continue;
         }
 
+        if(self->state == FREE || entity_list[i].state == FREE)
+        {
+            continue;
+        }
+
         if(entity_intersect(self, &entity_list[i]))
         {
             self->touch(self, &entity_list[i]);
