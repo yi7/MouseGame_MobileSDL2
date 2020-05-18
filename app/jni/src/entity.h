@@ -24,6 +24,7 @@ enum Entity_Type
     MOUSE_DRILL,
     CAT,
     WALL,
+    BOULDER,
     TILE_ARROW,
     TILE_HOME,
     TILE_HOLE
