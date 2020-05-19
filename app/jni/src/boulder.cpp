@@ -6,10 +6,10 @@ void boulder_initialize(int x, int y)
     Entity *boulder = entity_new();
     boulder->active = false;
     boulder->stuck = false;
-    boulder->position.x = x;
-    boulder->position.y = y;
-    boulder->frame_size.w = graphics_reference.tile_padding;
-    boulder->frame_size.h = graphics_reference.tile_padding;
+    boulder->position.x = x + (graphics_reference.wall_padding / 2);
+    boulder->position.y = y + (graphics_reference.wall_padding / 2);
+    boulder->frame_size.w = graphics_reference.tile_padding - graphics_reference.wall_padding;
+    boulder->frame_size.h = graphics_reference.tile_padding - graphics_reference.wall_padding;
     boulder->velocity = 0;
     boulder->angle = 0;
     boulder->frame = 32;
