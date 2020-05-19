@@ -63,4 +63,6 @@ void mouse_step_off(Entity *self, Entity *other);
  */
 void mouse_find_path(Entity *self);
 
+void mouse_find_path_2(Entity *self);
+
 #endif //MOUSEGAME_MOUSE_H

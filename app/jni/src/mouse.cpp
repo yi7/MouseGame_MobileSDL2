@@ -186,25 +186,25 @@ void mouse_think(Entity *self)
 
 void mouse_step_off(Entity *self, Entity *other)
 {
-    int test = 0;
+    int wall_padding = 0;
     if(other->type == BOULDER)
     {
-        test = graphics_reference.wall_padding;
+        wall_padding = graphics_reference.wall_padding;
     }
 
     switch(self->angle)
     {
         case UP:
-            self->position.y = other->position.y + other->frame_size.h + test;
+            self->position.y = other->position.y + other->frame_size.h + wall_padding;
             break;
         case RIGHT:
-            self->position.x = other->position.x - self->frame_size.w - test;
+            self->position.x = other->position.x - self->frame_size.w - wall_padding;
             break;
         case DOWN:
-            self->position.y = other->position.y - self->frame_size.h - test;
+            self->position.y = other->position.y - self->frame_size.h - wall_padding;
             break;
         case LEFT:
-            self->position.x = other->position.x + other->frame_size.w + test;
+            self->position.x = other->position.x + other->frame_size.w + wall_padding;
             break;
         default:
             return;
@@ -224,21 +224,21 @@ void mouse_find_path(Entity *self)
     temp_left_hitbox = entity_new();
 
     temp_up_hitbox->position.x = self->position.x;
-    temp_up_hitbox->position.y = self->position.y - graphics_reference.wall_padding;
+    temp_up_hitbox->position.y = self->position.y - graphics_reference.tile_padding_2;
     temp_up_hitbox->frame_size.w = self->frame_size.w;
     temp_up_hitbox->frame_size.h = self->frame_size.h;
 
-    temp_right_hitbox->position.x = self->position.x + graphics_reference.wall_padding;
+    temp_right_hitbox->position.x = self->position.x + graphics_reference.tile_padding_2;
     temp_right_hitbox->position.y = self->position.y;
     temp_right_hitbox->frame_size.w = self->frame_size.w;
     temp_right_hitbox->frame_size.h = self->frame_size.h;
 
     temp_down_hitbox->position.x = self->position.x;
-    temp_down_hitbox->position.y = self->position.y + graphics_reference.wall_padding;
+    temp_down_hitbox->position.y = self->position.y + graphics_reference.tile_padding_2;
     temp_down_hitbox->frame_size.w = self->frame_size.w;
     temp_down_hitbox->frame_size.h = self->frame_size.h;
 
-    temp_left_hitbox->position.x = self->position.x - graphics_reference.wall_padding;
+    temp_left_hitbox->position.x = self->position.x - graphics_reference.tile_padding_2;
     temp_left_hitbox->position.y = self->position.y;
     temp_left_hitbox->frame_size.w = self->frame_size.w;
     temp_left_hitbox->frame_size.h = self->frame_size.h;
@@ -246,57 +246,169 @@ void mouse_find_path(Entity *self)
     switch(self->angle)
     {
         case UP:
-            if( !entity_intersect_all_filter_by_type(temp_right_hitbox, WALL))
+            if( !(entity_intersect_all_filter_by_type(temp_right_hitbox, WALL) ||
+                  entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER)))
             {
                 self->angle = RIGHT;
             }
-            else if(!entity_intersect_all_filter_by_type(temp_left_hitbox, WALL))
+            else if(!(entity_intersect_all_filter_by_type(temp_left_hitbox, WALL) ||
+                      entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER)))
             {
                 self->angle = LEFT;
             }
-            else if(!entity_intersect_all_filter_by_type(temp_down_hitbox, WALL))
+            else if(!(entity_intersect_all_filter_by_type(temp_down_hitbox, WALL) ||
+                      entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER)))
             {
                 self->angle = DOWN;
             }
             break;
         case RIGHT:
-            if(!entity_intersect_all_filter_by_type(temp_down_hitbox, WALL))
+            if(!(entity_intersect_all_filter_by_type(temp_down_hitbox, WALL) ||
+                 entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER)))
             {
                 self->angle = DOWN;
             }
-            else if(!entity_intersect_all_filter_by_type(temp_up_hitbox, WALL))
+            else if(!(entity_intersect_all_filter_by_type(temp_up_hitbox, WALL) ||
+                      entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER)))
             {
                 self->angle = UP;
             }
-            else if(!entity_intersect_all_filter_by_type(temp_left_hitbox, WALL))
+            else if(!(entity_intersect_all_filter_by_type(temp_left_hitbox, WALL) ||
+                      entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER)))
             {
                 self->angle = LEFT;
             }
             break;
         case DOWN:
-            if(!entity_intersect_all_filter_by_type(temp_left_hitbox, WALL))
+            if(!(entity_intersect_all_filter_by_type(temp_left_hitbox, WALL) ||
+                 entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER)))
             {
                 self->angle = LEFT;
             }
-            else if(!entity_intersect_all_filter_by_type(temp_right_hitbox, WALL))
+            else if(!(entity_intersect_all_filter_by_type(temp_right_hitbox, WALL) ||
+                      entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER)))
             {
                 self->angle = RIGHT;
             }
-            else if(!entity_intersect_all_filter_by_type(temp_up_hitbox, WALL))
+            else if(!(entity_intersect_all_filter_by_type(temp_up_hitbox, WALL) ||
+                      entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER)))
             {
                 self->angle = UP;
             }
             break;
         case LEFT:
-            if(!entity_intersect_all_filter_by_type(temp_up_hitbox, WALL))
+            if( !(entity_intersect_all_filter_by_type(temp_up_hitbox, WALL) ||
+                  entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER)))
             {
                 self->angle = UP;
             }
-            else if(!entity_intersect_all_filter_by_type(temp_down_hitbox, WALL))
+            else if(!(entity_intersect_all_filter_by_type(temp_down_hitbox, WALL) ||
+                      entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER)))
             {
                 self->angle = DOWN;
             }
-            else if(!entity_intersect_all_filter_by_type(temp_right_hitbox, WALL))
+            else if(!(entity_intersect_all_filter_by_type(temp_right_hitbox, WALL) ||
+                      entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER)))
+            {
+                self->angle = RIGHT;
+            }
+            break;
+        default:
+            return;
+    }
+
+    entity_free(&temp_up_hitbox);
+    entity_free(&temp_right_hitbox);
+    entity_free(&temp_down_hitbox);
+    entity_free(&temp_left_hitbox);
+}
+
+void mouse_find_path_2(Entity *self)
+{
+    Entity *temp_up_hitbox;
+    Entity *temp_right_hitbox;
+    Entity *temp_down_hitbox;
+    Entity *temp_left_hitbox;
+
+    temp_up_hitbox = entity_new();
+    temp_right_hitbox = entity_new();
+    temp_down_hitbox = entity_new();
+    temp_left_hitbox = entity_new();
+
+    temp_up_hitbox->position.x = self->position.x;
+    temp_up_hitbox->position.y = self->position.y - graphics_reference.tile_padding_2;
+    temp_up_hitbox->frame_size.w = self->frame_size.w;
+    temp_up_hitbox->frame_size.h = self->frame_size.h;
+
+    temp_right_hitbox->position.x = self->position.x + graphics_reference.tile_padding_2;
+    temp_right_hitbox->position.y = self->position.y;
+    temp_right_hitbox->frame_size.w = self->frame_size.w;
+    temp_right_hitbox->frame_size.h = self->frame_size.h;
+
+    temp_down_hitbox->position.x = self->position.x;
+    temp_down_hitbox->position.y = self->position.y + graphics_reference.tile_padding_2;
+    temp_down_hitbox->frame_size.w = self->frame_size.w;
+    temp_down_hitbox->frame_size.h = self->frame_size.h;
+
+    temp_left_hitbox->position.x = self->position.x - graphics_reference.tile_padding_2;
+    temp_left_hitbox->position.y = self->position.y;
+    temp_left_hitbox->frame_size.w = self->frame_size.w;
+    temp_left_hitbox->frame_size.h = self->frame_size.h;
+
+    switch(self->angle)
+    {
+        case UP:
+            if( !entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER))
+            {
+                self->angle = RIGHT;
+            }
+            else if(!entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER))
+            {
+                self->angle = LEFT;
+            }
+            else if(!entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER))
+            {
+                self->angle = DOWN;
+            }
+            break;
+        case RIGHT:
+            if(!entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER))
+            {
+                self->angle = DOWN;
+            }
+            else if(!entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER))
+            {
+                self->angle = UP;
+            }
+            else if(!entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER))
+            {
+                self->angle = LEFT;
+            }
+            break;
+        case DOWN:
+            if(!entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER))
+            {
+                self->angle = LEFT;
+            }
+            else if(!entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER))
+            {
+                self->angle = RIGHT;
+            }
+            else if(!entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER))
+            {
+                self->angle = UP;
+            }
+            break;
+        case LEFT:
+            if( !entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER))
+            {
+                self->angle = UP;
+            }
+            else if(!entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER))
+            {
+                self->angle = DOWN;
+            }
+            else if(!entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER))
             {
                 self->angle = RIGHT;
             }
