@@ -173,21 +173,21 @@ void cat_find_path(Entity *self)
     temp_left_hitbox = entity_new();
 
     temp_up_hitbox->position.x = self->position.x;
-    temp_up_hitbox->position.y = self->position.y - graphics_reference.wall_padding;
+    temp_up_hitbox->position.y = self->position.y - graphics_reference.tile_padding_2;
     temp_up_hitbox->frame_size.w = self->frame_size.w;
     temp_up_hitbox->frame_size.h = self->frame_size.h;
 
-    temp_right_hitbox->position.x = self->position.x + graphics_reference.wall_padding;
+    temp_right_hitbox->position.x = self->position.x + graphics_reference.tile_padding_2;
     temp_right_hitbox->position.y = self->position.y;
     temp_right_hitbox->frame_size.w = self->frame_size.w;
     temp_right_hitbox->frame_size.h = self->frame_size.h;
 
     temp_down_hitbox->position.x = self->position.x;
-    temp_down_hitbox->position.y = self->position.y + graphics_reference.wall_padding;
+    temp_down_hitbox->position.y = self->position.y + graphics_reference.tile_padding_2;
     temp_down_hitbox->frame_size.w = self->frame_size.w;
     temp_down_hitbox->frame_size.h = self->frame_size.h;
 
-    temp_left_hitbox->position.x = self->position.x - graphics_reference.wall_padding;
+    temp_left_hitbox->position.x = self->position.x - graphics_reference.tile_padding_2;
     temp_left_hitbox->position.y = self->position.y;
     temp_left_hitbox->frame_size.w = self->frame_size.w;
     temp_left_hitbox->frame_size.h = self->frame_size.h;

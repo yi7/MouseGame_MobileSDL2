@@ -36,7 +36,7 @@ void boulder_draw(Entity *entity)
     if(entity->state == FREE)
     {
         entity->frame++;
-        if(entity->frame > 38)
+        if(entity->frame > 47)
         {
             boulder_free(entity);
         }

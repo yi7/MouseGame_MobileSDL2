@@ -16,9 +16,9 @@
 #define BLACK_TILE 5
 #define HOME 0
 #define ARROW 16
-#define HOLE 51
-#define GREY_BASE 52
-#define WHITE_BASE 53
+#define HOLE 59
+#define GREY_BASE 60
+#define WHITE_BASE 61
 
 enum Map_State
 {

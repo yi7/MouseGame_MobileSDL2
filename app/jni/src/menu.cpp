@@ -483,10 +483,10 @@ void menu_initialize_map_side_window(int button_id)
     int button_row_4 = button_row_3 + graphics_reference.tile_padding + graphics_reference.tile_padding_8;
     int button_row_5 = button_row_4 + graphics_reference.tile_padding + graphics_reference.tile_padding_4 + graphics_reference.tile_padding_8;
 
-    menu_set_button(map_window, 0, 48, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_1, small_button_width, small_button_height);
-    menu_set_button(map_window, 1, 49, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_2, small_button_width, small_button_height);
-    menu_set_button(map_window, 2, 50, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_3, small_button_width, small_button_height);
-    menu_set_button(map_window, 3, 40, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_4, small_button_width, small_button_height);
+    menu_set_button(map_window, 0, 56, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_1, small_button_width, small_button_height);
+    menu_set_button(map_window, 1, 57, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_2, small_button_width, small_button_height);
+    menu_set_button(map_window, 2, 58, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_3, small_button_width, small_button_height);
+    menu_set_button(map_window, 3, 48, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_4, small_button_width, small_button_height);
     menu_set_button(map_window, 4, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_5, rbutton_width, rbutton_height);
 }
 
@@ -524,7 +524,7 @@ void menu_think()
     if(WIN_TOP->map_open)
     {
         int arrow_placed = map_get_arrow_max() - map_get_arrow_count();
-        WIN_TOP->buttons[3].frame = arrow_placed + 40;
+        WIN_TOP->buttons[3].frame = arrow_placed + 48;
     }
 }
 
@@ -552,8 +552,8 @@ void menu_initialize_win_window()
     int button_row_2 = button_row_1 + graphics_reference.tile_padding + graphics_reference.tile_padding_2;
     int button_row_3 = button_row_2 + graphics_reference.tile_padding + graphics_reference.tile_padding_2;
 
-    menu_set_button(win_window, 0, 57, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_width);
-    menu_set_button(win_window, 1, 58, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_width);
+    menu_set_button(win_window, 0, 65, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_width);
+    menu_set_button(win_window, 1, 66, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_width);
     menu_set_button(win_window, 2, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_3, graphics_reference.button_width, graphics_reference.button_height);
 }
 
