@@ -181,6 +181,11 @@ bool entity_intersect_all_filter_by_type(Entity *self, Entity_Type type)
             continue;
         }
 
+        if(entity_list[i].state == FREE)
+        {
+            continue;
+        }
+
         if(entity_intersect(self, &entity_list[i]))
         {
             return true;

@@ -109,54 +109,6 @@ void mouse_touch(Entity *self, Entity *other)
     }
 }
 
-void mouse_drill_touch(Entity *self, Entity *other)
-{
-    switch(other->type)
-    {
-        case BOULDER:
-        case WALL:
-            mouse_step_off(self, other);
-            mouse_find_path(self);
-            break;
-        case TILE_ARROW:
-
-            if(other->angle != self->angle)
-            {
-                if(!self->stuck)
-                {
-                    if(entity_intersect_percentage(self, other) >= 95)
-                    {
-                        self->stuck = true;
-                        self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
-                        self->position.y = other->position.y + (graphics_reference.wall_padding / 2);
-                        self->angle = other->angle;
-                    }
-                }
-                else if(entity_intersect_percentage(self, other) < 95)
-                {
-                    self->stuck = false;
-                }
-            }
-            break;
-        case TILE_HOME:
-            if(entity_intersect_percentage(self, other) > 85)
-            {
-                other->update(other);
-                entity_free(&self);
-            }
-            break;
-        case TILE_HOLE:
-            if(entity_intersect_percentage(self, other) > 85)
-            {
-                entity_update_all_active_state(FREEZE);
-                entity_free(&self);
-            }
-            break;
-        default:
-            return;
-    }
-}
-
 void mouse_update(Entity *self)
 {
     return;

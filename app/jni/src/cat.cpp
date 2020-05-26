@@ -52,7 +52,7 @@ void cat_touch(Entity *self, Entity *other)
         case TILE_ARROW:
             if(!self->stuck)
             {
-                if (entity_intersect_percentage(self, other) >= 95)
+                if (entity_intersect_percentage(self, other) >= 98)
                 {
                     self->stuck = true;
                     if (other->angle != self->angle)
@@ -73,7 +73,7 @@ void cat_touch(Entity *self, Entity *other)
                     }
                 }
             }
-            else if(entity_intersect_percentage(self, other) < 95)
+            else if(entity_intersect_percentage(self, other) < 98)
             {
                 self->stuck = false;
             }
@@ -82,7 +82,6 @@ void cat_touch(Entity *self, Entity *other)
         case MOUSE_DRILL:
             if(entity_intersect_percentage(self, other) >= 50)
             {
-                SDL_Log("%f", entity_intersect_percentage(self, other));
                 entity_free(&other);
                 entity_update_all_active_state(FREEZE);
             }
