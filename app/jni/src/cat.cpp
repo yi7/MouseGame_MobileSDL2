@@ -13,7 +13,7 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     cat->position.y = y + (graphics_reference.wall_padding / 2);
     cat->frame_size.w = frame_size - graphics_reference.wall_padding;
     cat->frame_size.h = frame_size - graphics_reference.wall_padding;
-    cat->velocity = 365;
+    cat->velocity = 364;
     cat->angle = angle;
     cat->frame = 0;
     cat->life = 1;
@@ -52,10 +52,9 @@ void cat_touch(Entity *self, Entity *other)
         case TILE_ARROW:
             if(!self->stuck)
             {
-                if (entity_intersect_percentage(self, other) >= 98)
+                if (entity_intersect_percentage(self, other) >= 95)
                 {
                     self->stuck = true;
-
                     if (other->angle != self->angle)
                     {
                         self->position.x = other->position.x + (graphics_reference.wall_padding / 2);
@@ -74,7 +73,7 @@ void cat_touch(Entity *self, Entity *other)
                     }
                 }
             }
-            else if(entity_intersect_percentage(self, other) < 98)
+            else if(entity_intersect_percentage(self, other) < 95)
             {
                 self->stuck = false;
             }
@@ -147,10 +146,10 @@ void cat_step_off(Entity *self, Entity *other)
             self->position.y = other->position.y + other->frame_size.h + wall_padding;
             break;
         case RIGHT:
-            self->position.x = other->position.x - self->frame_size.w + wall_padding;
+            self->position.x = other->position.x - self->frame_size.w - wall_padding;
             break;
         case DOWN:
-            self->position.y = other->position.y - self->frame_size.h + wall_padding;
+            self->position.y = other->position.y - self->frame_size.h - wall_padding;
             break;
         case LEFT:
             self->position.x = other->position.x + other->frame_size.w + wall_padding;

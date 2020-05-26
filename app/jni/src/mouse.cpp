@@ -71,6 +71,7 @@ void mouse_touch(Entity *self, Entity *other)
             mouse_find_path(self);
             break;
         case TILE_ARROW:
+            //SDL_Log("%f", entity_intersect_percentage(self, other));
             if(other->angle != self->angle)
             {
                 if(!self->stuck)
@@ -118,6 +119,7 @@ void mouse_drill_touch(Entity *self, Entity *other)
             mouse_find_path(self);
             break;
         case TILE_ARROW:
+
             if(other->angle != self->angle)
             {
                 if(!self->stuck)
