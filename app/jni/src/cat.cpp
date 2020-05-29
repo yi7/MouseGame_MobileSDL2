@@ -13,13 +13,26 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     cat->position.y = y + (graphics_reference.wall_padding / 2);
     cat->frame_size.w = frame_size - graphics_reference.wall_padding;
     cat->frame_size.h = frame_size - graphics_reference.wall_padding;
-    cat->velocity = 364;
     cat->angle = angle;
     cat->frame = 0;
     cat->life = 1;
     cat->state = STOP;
     cat->type = type;
     cat->sprite = animals;
+
+    switch(type)
+    {
+        case CAT:
+            cat->skip_frame = 0;
+            cat->velocity = 7;//364;
+            break;
+        case CAT_DRILL:
+            cat->skip_frame = 16;
+            cat->velocity = 7;//364;
+            break;
+        default:
+            break;
+    }
 
     cat->free = cat_free;
     cat->draw = cat_draw;
@@ -36,7 +49,7 @@ void cat_free(Entity *entity)
 void cat_draw(Entity *entity)
 {
     int frame = ((SDL_GetTicks() - cat_now) * 7 / 1000) % 8;
-    entity->frame = frame;
+    entity->frame = frame + entity->skip_frame;;
     entity_draw(entity, entity->position.x, entity->position.y, entity->angle - 90);
 }
 
@@ -45,6 +58,11 @@ void cat_touch(Entity *self, Entity *other)
     switch(other->type)
     {
         case BOULDER:
+            if(self->type == CAT_DRILL)
+            {
+                other->state = FREE;
+                break;
+            }
         case WALL:
             cat_step_off(self, other);
             cat_find_path(self);
@@ -52,7 +70,7 @@ void cat_touch(Entity *self, Entity *other)
         case TILE_ARROW:
             if(!self->stuck)
             {
-                if (entity_intersect_percentage(self, other) >= 98)
+                if (entity_intersect_percentage(self, other) >= 95)
                 {
                     self->stuck = true;
                     if (other->angle != self->angle)
@@ -73,7 +91,7 @@ void cat_touch(Entity *self, Entity *other)
                     }
                 }
             }
-            else if(entity_intersect_percentage(self, other) < 98)
+            else if(entity_intersect_percentage(self, other) < 95)
             {
                 self->stuck = false;
             }
@@ -115,16 +133,16 @@ void cat_think(Entity *self)
     switch(self->angle)
     {
         case UP:
-            self->position.y -= self->velocity * graphics_delta;
+            self->position.y -= self->velocity;// * graphics_delta;
             break;
         case RIGHT:
-            self->position.x += self->velocity * graphics_delta;
+            self->position.x += self->velocity;// * graphics_delta;
             break;
         case DOWN:
-            self->position.y += self->velocity * graphics_delta;
+            self->position.y += self->velocity;// * graphics_delta;
             break;
         case LEFT:
-            self->position.x -= self->velocity * graphics_delta;
+            self->position.x -= self->velocity;// * graphics_delta;
             break;
         default:
             return;
@@ -194,68 +212,68 @@ void cat_find_path(Entity *self)
     {
         case UP:
             if( !(entity_intersect_all_filter_by_type(temp_right_hitbox, WALL) ||
-                  entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER)))
+                (entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = RIGHT;
             }
             else if(!(entity_intersect_all_filter_by_type(temp_left_hitbox, WALL) ||
-                      entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER)))
+                    (entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = LEFT;
             }
             else if(!(entity_intersect_all_filter_by_type(temp_down_hitbox, WALL) ||
-                      entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER)))
+                    (entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = DOWN;
             }
             break;
         case RIGHT:
             if(!(entity_intersect_all_filter_by_type(temp_down_hitbox, WALL) ||
-                 entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER)))
+                (entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = DOWN;
             }
             else if(!(entity_intersect_all_filter_by_type(temp_up_hitbox, WALL) ||
-                      entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER)))
+                    (entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = UP;
             }
             else if(!(entity_intersect_all_filter_by_type(temp_left_hitbox, WALL) ||
-                      entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER)))
+                    (entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = LEFT;
             }
             break;
         case DOWN:
             if(!(entity_intersect_all_filter_by_type(temp_left_hitbox, WALL) ||
-                 entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER)))
+                (entity_intersect_all_filter_by_type(temp_left_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = LEFT;
             }
             else if(!(entity_intersect_all_filter_by_type(temp_right_hitbox, WALL) ||
-                      entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER)))
+                    (entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = RIGHT;
             }
             else if(!(entity_intersect_all_filter_by_type(temp_up_hitbox, WALL) ||
-                      entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER)))
+                    (entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = UP;
             }
             break;
         case LEFT:
             if( !(entity_intersect_all_filter_by_type(temp_up_hitbox, WALL) ||
-                  entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER)))
+                (entity_intersect_all_filter_by_type(temp_up_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = UP;
             }
             else if(!(entity_intersect_all_filter_by_type(temp_down_hitbox, WALL) ||
-                      entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER)))
+                    (entity_intersect_all_filter_by_type(temp_down_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = DOWN;
             }
             else if(!(entity_intersect_all_filter_by_type(temp_right_hitbox, WALL) ||
-                      entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER)))
+                    (entity_intersect_all_filter_by_type(temp_right_hitbox, BOULDER) && self->type != CAT_DRILL)))
             {
                 self->angle = RIGHT;
             }

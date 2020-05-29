@@ -23,23 +23,21 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     mouse->draw = mouse_draw;
     mouse->update = mouse_update;
     mouse->think = mouse_think;
+    mouse->touch = mouse_touch;
 
     switch(type)
     {
         case MOUSE:
             mouse->skip_frame = 0;
-            mouse->velocity = 420;
-            mouse->touch = mouse_touch;
+            mouse->velocity = 8;//420;
             break;
         case MOUSE_DRILL:
             mouse->skip_frame = 24;
-            mouse->velocity = 420;
-            mouse->touch = mouse_touch;
+            mouse->velocity = 8;//420;
             break;
         default:
             mouse->skip_frame = 0;
             mouse->velocity = 0;
-            mouse->think = NULL;
             break;
     }
 }
@@ -121,17 +119,17 @@ void mouse_think(Entity *self)
     switch(self->angle)
     {
         case UP:
-            self->position.y -= self->velocity * graphics_delta;
+            self->position.y -= self->velocity;// * graphics_delta;
             //SDL_Log("%f", self->velocity * graphics_delta);
             break;
         case RIGHT:
-            self->position.x += self->velocity * graphics_delta;
+            self->position.x += self->velocity;// * graphics_delta;
             break;
         case DOWN:
-            self->position.y += self->velocity * graphics_delta;
+            self->position.y += self->velocity;// * graphics_delta;
             break;
         case LEFT:
-            self->position.x -= self->velocity * graphics_delta;
+            self->position.x -= self->velocity;// * graphics_delta;
             break;
         default:
             return;
