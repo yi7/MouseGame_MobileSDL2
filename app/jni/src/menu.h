@@ -38,6 +38,7 @@ typedef struct Window_S
     Button buttons[WINDOW_BUTTON_MAX]; /**<list of buttons associated with window*/
     int button_count; /**<total of buttons on window*/
     Sprite *background; /**<sprite associated with window*/
+    int frame;
 
     void (*draw)(struct Window_S *self); /**<draw function of window*/
     void (*update)(struct Window_S *self, int button_id); /**<update function of window*/
@@ -165,5 +166,9 @@ void menu_draw_win_window(Window *self);
 void menu_initialize_win_window();
 
 void menu_update_win_window(Window *self, int button_id);
+
+void menu_initialize_help_window();
+
+void menu_update_help_window(Window *self, int button_id);
 
 #endif //MOUSEGAME_MENU_H

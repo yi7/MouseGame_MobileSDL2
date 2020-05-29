@@ -48,6 +48,7 @@ void menu_initialize_base_window()
     Window *main_menu_window = NULL;
     Sprite *main_menu_background = NULL;
     Sprite *main_menu_play_button = NULL;
+    Sprite *main_menu_help_button = NULL;
 
     main_menu_window = menu_push_window();
     if(!main_menu_window)
@@ -67,12 +68,15 @@ void menu_initialize_base_window()
         SDL_Log("menu_initialize_base_window() can't initialize button sprite -Error:");
     }
 
+    main_menu_help_button = sprite_load("images/si_help_button.png", 128, 128, 1);
+
     main_menu_window->window_frame.x = 0;
     main_menu_window->window_frame.y = 0;
     main_menu_window->window_frame.w = graphics_reference.screen_width;
     main_menu_window->window_frame.h = graphics_reference.screen_height;
     main_menu_window->background = main_menu_background;
     main_menu_window->draw = menu_draw_window;
+    main_menu_window->frame = 0;
 
     //Moved update function to editor source file
     //main_menu_window->update = menu_update_base_window;
@@ -81,10 +85,14 @@ void menu_initialize_base_window()
     int play_x = (graphics_reference.screen_width / 2) - (play_w / 2);
     int play_y = (graphics_reference.screen_height / 2) - (play_w / 2);
 
+    int help_x = (graphics_reference.screen_width / 2) - (graphics_reference.tile_padding);
+    int help_y = play_y + play_w - graphics_reference.tile_padding_4;
+    int help_w = graphics_reference.tile_padding * 2;
+
     //int play_x = (graphics_reference.screen_width / 2) -
 
     menu_set_button(main_menu_window, 0, 0, "", SMALL, 0, main_menu_play_button, play_x, play_y, play_w, play_w);
-    //menu_set_button(main_menu_window, 1, 2, "HELP", SMALL, button_padding, main_menu_buttons, button_x, button_y * 3, button_width, button_height);
+    menu_set_button(main_menu_window, 1, 0, "", SMALL, 0, main_menu_help_button, help_x, help_y, help_w, help_w);
     //menu_set_button(main_menu_window, 2, 2, "EDIT", SMALL, button_padding, main_menu_buttons, button_x, button_y * 5, button_width, button_height);
 }
 
@@ -189,7 +197,7 @@ void menu_bubble_window(int handle)
 
 void menu_draw_window(Window *self)
 {
-    sprite_draw(self->background, 0, self->window_frame.x, self->window_frame.y, self->window_frame.w, self->window_frame.h, 0, SDL_FLIP_NONE);
+    sprite_draw(self->background, self->frame, self->window_frame.x, self->window_frame.y, self->window_frame.w, self->window_frame.h, 0, SDL_FLIP_NONE);
 
     for(int i = 0; i < self->button_count; i++)
     {
@@ -293,7 +301,7 @@ void menu_update_top_window(float touch_x, float touch_y)
 
 void menu_draw_top_window()
 {
-    sprite_draw(WIN_TOP->background, 0, WIN_TOP->window_frame.x, WIN_TOP->window_frame.y, WIN_TOP->window_frame.w, WIN_TOP->window_frame.h, 0, SDL_FLIP_NONE);
+    sprite_draw(WIN_TOP->background, WIN_TOP->frame, WIN_TOP->window_frame.x, WIN_TOP->window_frame.y, WIN_TOP->window_frame.w, WIN_TOP->window_frame.h, 0, SDL_FLIP_NONE);
 
     for(int i = 0; i < WIN_TOP->button_count; i++)
     {
@@ -329,6 +337,7 @@ void menu_initialize_pack_list_window()
     pack_menu_window->background = pack_menu_background;
     pack_menu_window->draw = menu_draw_window;
     pack_menu_window->update = menu_update_pack_list_window;
+    pack_menu_window->frame = 0;
 
     int button_width = graphics_reference.tile_padding * 2;
     int button_height = graphics_reference.tile_padding * 4;
@@ -387,6 +396,7 @@ void menu_initialize_map_list_window(char *filename)
     map_menu_window->background = map_menu_background;
     map_menu_window->draw = menu_draw_window;
     map_menu_window->update = menu_update_map_list_window;
+    map_menu_window->frame = 0;
 
     int button_width = graphics_reference.button_width;
     int button_height = graphics_reference.button_height;
@@ -470,6 +480,7 @@ void menu_initialize_map_side_window(int button_id)
     map_window->draw = menu_draw_window;
     map_window->update = menu_update_map_side_window;
     map_window->map_open = true;
+    map_window->frame = 0;
 
     int small_button_width = graphics_reference.tile_padding;
     int small_button_height = graphics_reference.tile_padding;
@@ -544,6 +555,7 @@ void menu_initialize_win_window()
     win_window->background = map_side_menu_background;
     win_window->draw = menu_draw_window;
     win_window->update = menu_update_win_window;
+    win_window->frame = 0;
 
     float button_width = graphics_reference.tile_padding;
     int button_col_1 = (graphics_reference.screen_width / 2) - (graphics_reference.tile_padding / 2);
@@ -595,3 +607,67 @@ void menu_update_win_window(Window *self, int button_id)
     }
 }
 
+void menu_initialize_help_window()
+{
+    Window *help_window = NULL;
+    help_window = menu_push_window();
+
+    Sprite *help_images = sprite_load("images/si_help.jpg", 768, 448, 3);
+    Sprite *next_button = sprite_load("images/si_tiles.png", 64, 64, 8);
+
+    help_window->window_frame.x = 0;
+    help_window->window_frame.y = 0;
+    help_window->window_frame.w = graphics_reference.screen_width;
+    help_window->window_frame.h = graphics_reference.screen_height;
+    help_window->background = help_images;
+    help_window->draw = menu_draw_window;
+    help_window->update = menu_update_help_window;
+    help_window->frame = 0;
+
+    int button_row = (graphics_reference.screen_height / 2) - (graphics_reference.tile_padding_2);
+    int button_left = 0;
+    int button_right = graphics_reference.screen_width - graphics_reference.tile_padding;
+
+    menu_set_button(help_window, 0, 62, "", SMALL, 0, next_button, button_left, button_row, graphics_reference.tile_padding, graphics_reference.tile_padding);
+    menu_set_button(help_window, 1, 63, "", SMALL, 0, next_button, button_right, button_row, graphics_reference.tile_padding, graphics_reference.tile_padding);
+
+    /*
+    float button_width = graphics_reference.tile_padding;
+    int button_col_1 = (graphics_reference.screen_width / 2) - (graphics_reference.tile_padding / 2);
+    int rbutton_col_1 = (graphics_reference.screen_width / 2) - (graphics_reference.button_width / 2);
+    int button_row_1 = (graphics_reference.screen_height / 2) - (graphics_reference.tile_padding * 2) + graphics_reference.tile_padding_4;
+    int button_row_2 = button_row_1 + graphics_reference.tile_padding + graphics_reference.tile_padding_2;
+    int button_row_3 = button_row_2 + graphics_reference.tile_padding + graphics_reference.tile_padding_2;
+
+    menu_set_button(win_window, 0, 65, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_width);
+    menu_set_button(win_window, 1, 66, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_width);
+    menu_set_button(win_window, 2, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_3, graphics_reference.button_width, graphics_reference.button_height);*/
+}
+
+void menu_update_help_window(Window *self, int button_id)
+{
+    switch(button_id)
+    {
+        case 0:
+            if(self->frame == 0)
+            {
+                self->frame = 5;
+            }
+            else
+            {
+                self->frame--;
+            }
+            break;
+        case 1:
+            if(self->frame == 5)
+            {
+                self->frame = 0;
+            }
+            else
+            {
+                self->frame++;
+            }
+        default:
+            break;
+    }
+}

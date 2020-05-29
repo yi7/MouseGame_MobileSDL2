@@ -70,8 +70,9 @@ void editor_update_base_window(Window *self, int button_id)
             menu_initialize_pack_list_window();
             break;
         case 1:
-            //SDL_Log("Help");
-            //break;
+            SDL_Log("Help");
+            menu_initialize_help_window();
+            break;
         case 2:
             /*map_free_all();
             file_free_all();
