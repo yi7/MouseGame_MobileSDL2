@@ -103,7 +103,7 @@ void menu_draw_window(Window *self);
  * @param w width of button
  * @param h height of button
  */
-void menu_set_button(Window *window, int button_id, int frame, const char *text, int size, int padding, Sprite *sprite, int x, int y, int w, int h);
+void menu_set_button(Window *window, int button_id, int frame, const char *text, int size, int padding, Sprite *sprite, float x, float y, int w, int h);
 
 void menu_update_button_selection(Window *window, int button_id);
 

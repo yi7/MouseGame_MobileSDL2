@@ -217,7 +217,7 @@ void menu_draw_window(Window *self)
     }
 }
 
-void menu_set_button(Window *window, int button_id, int frame, const char *text, int size, int padding, Sprite *sprite, int x, int y, int w, int h)
+void menu_set_button(Window *window, int button_id, int frame, const char *text, int size, int padding, Sprite *sprite, float x, float y, int w, int h)
 {
     Uint8 r = 0;
     Uint8 g = 0;
@@ -624,24 +624,16 @@ void menu_initialize_help_window()
     help_window->update = menu_update_help_window;
     help_window->frame = 0;
 
-    int button_row = (graphics_reference.screen_height / 2) - (graphics_reference.tile_padding_2);
-    int button_left = 0;
-    int button_right = graphics_reference.screen_width - graphics_reference.tile_padding;
+    int button_row = (graphics_reference.screen_height / 2) - graphics_reference.tile_padding_2;
+    int button_left = 0 - graphics_reference.tile_padding_2;
+    int button_right = graphics_reference.screen_width - graphics_reference.tile_padding_2;
 
     menu_set_button(help_window, 0, 62, "", SMALL, 0, next_button, button_left, button_row, graphics_reference.tile_padding, graphics_reference.tile_padding);
     menu_set_button(help_window, 1, 63, "", SMALL, 0, next_button, button_right, button_row, graphics_reference.tile_padding, graphics_reference.tile_padding);
 
-    /*
-    float button_width = graphics_reference.tile_padding;
-    int button_col_1 = (graphics_reference.screen_width / 2) - (graphics_reference.tile_padding / 2);
-    int rbutton_col_1 = (graphics_reference.screen_width / 2) - (graphics_reference.button_width / 2);
-    int button_row_1 = (graphics_reference.screen_height / 2) - (graphics_reference.tile_padding * 2) + graphics_reference.tile_padding_4;
-    int button_row_2 = button_row_1 + graphics_reference.tile_padding + graphics_reference.tile_padding_2;
-    int button_row_3 = button_row_2 + graphics_reference.tile_padding + graphics_reference.tile_padding_2;
+    int close_x = graphics_reference.screen_width - graphics_reference.tile_padding;
 
-    menu_set_button(win_window, 0, 65, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_width);
-    menu_set_button(win_window, 1, 66, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_width);
-    menu_set_button(win_window, 2, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_3, graphics_reference.button_width, graphics_reference.button_height);*/
+    menu_set_button(help_window, 2, 67, "", SMALL, 0, next_button, close_x, 0, graphics_reference.tile_padding, graphics_reference.tile_padding);
 }
 
 void menu_update_help_window(Window *self, int button_id)
@@ -667,6 +659,10 @@ void menu_update_help_window(Window *self, int button_id)
             {
                 self->frame++;
             }
+            break;
+        case 2:
+            menu_pop_window(self->handle);
+            break;
         default:
             break;
     }
