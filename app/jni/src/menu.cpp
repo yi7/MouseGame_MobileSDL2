@@ -628,12 +628,12 @@ void menu_initialize_help_window()
     int button_left = 0 - graphics_reference.tile_padding_2;
     int button_right = graphics_reference.screen_width - graphics_reference.tile_padding_2;
 
-    menu_set_button(help_window, 0, 62, "", SMALL, 0, next_button, button_left, button_row, graphics_reference.tile_padding, graphics_reference.tile_padding);
-    menu_set_button(help_window, 1, 63, "", SMALL, 0, next_button, button_right, button_row, graphics_reference.tile_padding, graphics_reference.tile_padding);
+    menu_set_button(help_window, 0, 70, "", SMALL, 0, next_button, button_left, button_row, graphics_reference.tile_padding, graphics_reference.tile_padding);
+    menu_set_button(help_window, 1, 71, "", SMALL, 0, next_button, button_right, button_row, graphics_reference.tile_padding, graphics_reference.tile_padding);
 
     int close_x = graphics_reference.screen_width - graphics_reference.tile_padding;
 
-    menu_set_button(help_window, 2, 67, "", SMALL, 0, next_button, close_x, 0, graphics_reference.tile_padding, graphics_reference.tile_padding);
+    menu_set_button(help_window, 2, 75, "", SMALL, 0, next_button, close_x, 0, graphics_reference.tile_padding, graphics_reference.tile_padding);
 }
 
 void menu_update_help_window(Window *self, int button_id)
