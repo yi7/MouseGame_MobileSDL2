@@ -5,6 +5,9 @@ Window window_list[WINDOW_MAX];
 int window_count = 0;
 int window_tag = 0;
 int active_button_id;
+int active_pack_id;
+
+SDL_RWops *save_file;
 
 #define WIN_TOP window_stack[window_count - 1]
 
@@ -20,6 +23,34 @@ void menu_initialize_system()
             window_list[i].handle = -1;
         }
     }
+
+    char* pref_path = SDL_GetPrefPath("yokamocha", "catalert");
+    if(!pref_path)
+    {
+        SDL_Log("menu_initialize_system() pref_path not set");
+    }
+    char* save_filename = "save.txt";
+    char* save_path = (char *)malloc(1 + strlen(pref_path) + strlen(save_filename));
+    strcpy(save_path, pref_path);
+    strcat(save_path, save_filename);
+    SDL_Log("%s", save_path);
+
+    save_file = SDL_RWFromFile(save_path, "w+");
+    if(!save_file)
+    {
+        SDL_Log("menu_initialize_system() save_file not found");
+        save_file = SDL_RWFromFile(save_path, "w+");
+    }
+
+    const char *test1 = "test";
+    size_t len = SDL_strlen(test1);
+    SDL_RWwrite(save_file, test1, len, 1);
+    SDL_RWclose(save_file);
+
+    SDL_RWops *read_file = SDL_RWFromFile(save_path, "r");
+    char* test = (char *)malloc(10);
+    SDL_RWread(read_file, test, sizeof(test), 1);
+    SDL_Log("test: %s", test);
 
     window_count = 0;
     atexit(menu_close_system);
@@ -366,9 +397,11 @@ void menu_update_pack_list_window(Window *self, int button_id)
     switch(button_id)
     {
         case 0:
+            active_pack_id = 0;
             menu_initialize_map_list_window("files/pack1.txt");
             break;
         case 1:
+            active_pack_id = 1;
             menu_initialize_map_list_window("files/pack2.txt");
             break;
         case 2:
@@ -567,6 +600,22 @@ void menu_initialize_win_window()
     menu_set_button(win_window, 0, 65, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_width);
     menu_set_button(win_window, 1, 66, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_width);
     menu_set_button(win_window, 2, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_3, graphics_reference.button_width, graphics_reference.button_height);
+
+
+    /*char* save_filename = "save.txt";
+    char* save_path = (char *)malloc(1 + strlen(pref_path) + strlen(save_filename));
+    strcpy(save_path, pref_path);
+    strcat(save_path, save_filename);*/
+    /*char clear_id[7];
+    snprintf(clear_id, 7, "p%dm%d", active_pack_id, active_button_id);
+    SDL_Log("%s", clear_id);
+
+    SDL_RWwrite(save_file, clear_id, 7, 1);
+    SDL_Log("test write");*/
+
+    //char* test;
+    //SDL_RWread(save_file, test, 7, 1);
+    SDL_Log("test read: %s", save_file);
 }
 
 void menu_update_win_window(Window *self, int button_id)

@@ -15,8 +15,6 @@
 void main_initialize_system();
 void main_close_system();
 
-
-
 void main_initialize_system()
 {
     //Initialize SDL subsystems
