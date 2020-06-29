@@ -7,7 +7,7 @@ int window_tag = 0;
 int active_button_id;
 int active_pack_id;
 
-SDL_RWops *save_file;
+char* save_path;
 
 #define WIN_TOP window_stack[window_count - 1]
 
@@ -30,27 +30,10 @@ void menu_initialize_system()
         SDL_Log("menu_initialize_system() pref_path not set");
     }
     char* save_filename = "save.txt";
-    char* save_path = (char *)malloc(1 + strlen(pref_path) + strlen(save_filename));
+    save_path = (char *)malloc(1 + strlen(pref_path) + strlen(save_filename));
     strcpy(save_path, pref_path);
     strcat(save_path, save_filename);
-    SDL_Log("%s", save_path);
-
-    save_file = SDL_RWFromFile(save_path, "w+");
-    if(!save_file)
-    {
-        SDL_Log("menu_initialize_system() save_file not found");
-        save_file = SDL_RWFromFile(save_path, "w+");
-    }
-
-    const char *test1 = "test";
-    size_t len = SDL_strlen(test1);
-    SDL_RWwrite(save_file, test1, len, 1);
-    SDL_RWclose(save_file);
-
-    SDL_RWops *read_file = SDL_RWFromFile(save_path, "r");
-    char* test = (char *)malloc(10);
-    SDL_RWread(read_file, test, sizeof(test), 1);
-    SDL_Log("test: %s", test);
+    SDL_Log("Save path: %s", save_path);
 
     window_count = 0;
     atexit(menu_close_system);
@@ -389,7 +372,7 @@ void menu_initialize_pack_list_window()
     //menu_set_button(pack_menu_window, 0, 2, "", SMALL, 0, pack_menu_buttons, pack3_x, button_y, button_width, button_height);
     //menu_set_button(pack_menu_window, 0, 3, "", SMALL, 0, pack_menu_buttons, pack4_x, button_y, button_width, button_height);
     //menu_set_button(pack_menu_window, 0, 4, "", SMALL, 0, pack_menu_buttons, pack5_x, button_y, button_width, button_height);
-    menu_set_button(pack_menu_window, 2, 20, "", SMALL, 0, return_button, rbutton_x, rbutton_y, rbutton_width, rbutton_height);
+    menu_set_button(pack_menu_window, 2, 40, "", SMALL, 0, return_button, rbutton_x, rbutton_y, rbutton_width, rbutton_height);
 }
 
 void menu_update_pack_list_window(Window *self, int button_id)
@@ -450,31 +433,36 @@ void menu_initialize_map_list_window(char *filename)
     int button_row_4 = button_row_3 + button_height;
     int button_row_5 = button_row_4 + button_height + graphics_reference.tile_padding_4;
 
+    SDL_RWops *read_file = SDL_RWFromFile(save_path, "r");
+    char* test = (char *)malloc(512);
+    SDL_RWread(read_file, test, sizeof(test), 40);
+    SDL_Log("Completed List: %s", test);
+
     menu_set_button(map_menu_window, 0, 0, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_height);
-    menu_set_button(map_menu_window, 1, 1, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_1, button_width, button_height);
-    menu_set_button(map_menu_window, 2, 2, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_1, button_width, button_height);
-    menu_set_button(map_menu_window, 3, 3, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_1, button_width, button_height);
-    menu_set_button(map_menu_window, 4, 4, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_1, button_width, button_height);
+    menu_set_button(map_menu_window, 1, 2, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_1, button_width, button_height);
+    menu_set_button(map_menu_window, 2, 4, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_1, button_width, button_height);
+    menu_set_button(map_menu_window, 3, 6, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_1, button_width, button_height);
+    menu_set_button(map_menu_window, 4, 8, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_1, button_width, button_height);
 
-    menu_set_button(map_menu_window, 5, 5, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_height);
-    menu_set_button(map_menu_window, 6, 6, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_2, button_width, button_height);
-    menu_set_button(map_menu_window, 7, 7, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_2, button_width, button_height);
-    menu_set_button(map_menu_window, 8, 8, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_2, button_width, button_height);
-    menu_set_button(map_menu_window, 9, 9, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 5, 10, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 6, 12, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 7, 14, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 8, 16, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_2, button_width, button_height);
+    menu_set_button(map_menu_window, 9, 18, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_2, button_width, button_height);
 
-    menu_set_button(map_menu_window, 10, 10, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_3, button_width, button_height);
-    menu_set_button(map_menu_window, 11, 11, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_3, button_width, button_height);
-    menu_set_button(map_menu_window, 12, 12, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_3, button_width, button_height);
-    menu_set_button(map_menu_window, 13, 13, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_3, button_width, button_height);
-    menu_set_button(map_menu_window, 14, 14, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 10, 20, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 11, 22, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 12, 24, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 13, 26, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_3, button_width, button_height);
+    menu_set_button(map_menu_window, 14, 28, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_3, button_width, button_height);
 
-    menu_set_button(map_menu_window, 15, 15, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_4, button_width, button_height);
-    menu_set_button(map_menu_window, 16, 16, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_4, button_width, button_height);
-    menu_set_button(map_menu_window, 17, 17, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_4, button_width, button_height);
-    menu_set_button(map_menu_window, 18, 18, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_4, button_width, button_height);
-    menu_set_button(map_menu_window, 19, 19, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 15, 30, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 16, 32, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 17, 34, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 18, 36, "", SMALL, 0, map_menu_buttons, button_col_4, button_row_4, button_width, button_height);
+    menu_set_button(map_menu_window, 19, 38, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_4, button_width, button_height);
 
-    menu_set_button(map_menu_window, 20, 20, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_5, rbutton_width, rbutton_height);
+    menu_set_button(map_menu_window, 20, 40, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_5, rbutton_width, rbutton_height);
 }
 
 void menu_update_map_list_window(Window *self, int button_id)
@@ -531,7 +519,7 @@ void menu_initialize_map_side_window(int button_id)
     menu_set_button(map_window, 1, 57, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_2, small_button_width, small_button_height);
     menu_set_button(map_window, 2, 58, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_3, small_button_width, small_button_height);
     menu_set_button(map_window, 3, 48, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_4, small_button_width, small_button_height);
-    menu_set_button(map_window, 4, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_5, rbutton_width, rbutton_height);
+    menu_set_button(map_window, 4, 40, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_5, rbutton_width, rbutton_height);
 }
 
 void menu_update_map_side_window(Window *self, int button_id)
@@ -599,23 +587,39 @@ void menu_initialize_win_window()
 
     menu_set_button(win_window, 0, 65, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_width);
     menu_set_button(win_window, 1, 66, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_2, button_width, button_width);
-    menu_set_button(win_window, 2, 20, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_3, graphics_reference.button_width, graphics_reference.button_height);
+    menu_set_button(win_window, 2, 40, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_3, graphics_reference.button_width, graphics_reference.button_height);
 
+    SDL_RWops *read_file = SDL_RWFromFile(save_path, "r");
+    char* completed_list = (char *)malloc(512);
+    SDL_RWread(read_file, completed_list, sizeof(completed_list), 40);
+    char delim[] = ",";
+    char *ptr = strtok(completed_list, delim);
+    char temp_map_id[7];
+    snprintf(temp_map_id, 8, "p%dm%d", active_pack_id, active_button_id);
+    while(ptr != NULL)
+    {
+        if(strncmp(ptr, temp_map_id, 7) == 0)
+        {
+            SDL_Log("Already in completed list");
+            return;
+        }
 
-    /*char* save_filename = "save.txt";
-    char* save_path = (char *)malloc(1 + strlen(pref_path) + strlen(save_filename));
-    strcpy(save_path, pref_path);
-    strcat(save_path, save_filename);*/
-    /*char clear_id[7];
-    snprintf(clear_id, 7, "p%dm%d", active_pack_id, active_button_id);
-    SDL_Log("%s", clear_id);
+        ptr = strtok(NULL, delim);
+    }
+    SDL_RWclose(read_file);
 
-    SDL_RWwrite(save_file, clear_id, 7, 1);
-    SDL_Log("test write");*/
+    char map_id[8];
+    snprintf(map_id, 8, "p%dm%d,", active_pack_id, active_button_id);
+    size_t len = SDL_strlen(map_id);
+    SDL_RWops *save_file = SDL_RWFromFile(save_path, "a");
+    if(!save_file)
+    {
+        SDL_Log("menu_initialize_system() save_file not created or found");
+    }
 
-    //char* test;
-    //SDL_RWread(save_file, test, 7, 1);
-    SDL_Log("test read: %s", save_file);
+    SDL_Log("Add to completed list: %s", map_id);
+    SDL_RWwrite(save_file, map_id, len, 1);
+    SDL_RWclose(save_file);
 }
 
 void menu_update_win_window(Window *self, int button_id)
