@@ -14,6 +14,8 @@
 #define SMALL 0
 #define MEDIUM 1
 #define LARGE 2
+#define PACKS 1
+#define LEVELS 2
 
 typedef struct
 {
@@ -39,6 +41,7 @@ typedef struct Window_S
     int button_count; /**<total of buttons on window*/
     Sprite *background; /**<sprite associated with window*/
     int frame;
+    int menu_key;
 
     void (*draw)(struct Window_S *self); /**<draw function of window*/
     void (*update)(struct Window_S *self, int button_id); /**<update function of window*/

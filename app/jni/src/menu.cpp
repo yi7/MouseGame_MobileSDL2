@@ -6,6 +6,9 @@ int window_count = 0;
 int window_tag = 0;
 int active_button_id;
 int active_pack_id;
+int pack1_completed_list[20];
+int pack2_completed_list[20];
+int level_list_handle;
 
 char* save_path;
 
@@ -35,6 +38,35 @@ void menu_initialize_system()
     strcat(save_path, save_filename);
     SDL_Log("Save path: %s", save_path);
 
+    memset(pack1_completed_list, 0, 20);
+    memset(pack2_completed_list, 0, 20);
+
+    SDL_RWops *read_file = SDL_RWFromFile(save_path, "a+");
+    SDL_RWseek(read_file, 0, RW_SEEK_SET);
+    char* completed_list = (char *)malloc(512);
+    SDL_RWread(read_file, completed_list, sizeof(completed_list), 40);
+    SDL_Log("Completed List: %s", completed_list);
+    char delim[] = ",";
+    char *ptr = strtok(completed_list, delim);
+    while(ptr != NULL)
+    {
+        char completed_id[3];
+        if(strncmp(ptr, "p0", 2) == 0)
+        {
+            strncpy(completed_id, ptr + 3, 2);
+            pack1_completed_list[atoi(completed_id)] = 1;
+        }
+        if(strncmp(ptr, "p1", 2) == 0)
+        {
+            strncpy(completed_id, ptr + 3, 2);
+            pack2_completed_list[atoi(completed_id)] = 1;
+        }
+
+        ptr = strtok(NULL, delim);
+    }
+    SDL_RWclose(read_file);
+
+    level_list_handle = 0;
     window_count = 0;
     atexit(menu_close_system);
 }
@@ -165,6 +197,7 @@ Window *menu_push_window()
     WIN_TOP->inuse = true;
     WIN_TOP->map_open = false;
     WIN_TOP->handle = ++window_tag;
+    WIN_TOP->menu_key = 0;
     return WIN_TOP;
 }
 
@@ -352,6 +385,7 @@ void menu_initialize_pack_list_window()
     pack_menu_window->draw = menu_draw_window;
     pack_menu_window->update = menu_update_pack_list_window;
     pack_menu_window->frame = 0;
+    pack_menu_window->menu_key = PACKS;
 
     int button_width = graphics_reference.tile_padding * 2;
     int button_height = graphics_reference.tile_padding * 4;
@@ -413,6 +447,8 @@ void menu_initialize_map_list_window(char *filename)
     map_menu_window->draw = menu_draw_window;
     map_menu_window->update = menu_update_map_list_window;
     map_menu_window->frame = 0;
+    map_menu_window->menu_key = LEVELS;
+    level_list_handle = map_menu_window->handle;
 
     int button_width = graphics_reference.button_width;
     int button_height = graphics_reference.button_height;
@@ -432,11 +468,6 @@ void menu_initialize_map_list_window(char *filename)
     int button_row_3 = button_row_2 + button_height;
     int button_row_4 = button_row_3 + button_height;
     int button_row_5 = button_row_4 + button_height + graphics_reference.tile_padding_4;
-
-    SDL_RWops *read_file = SDL_RWFromFile(save_path, "r");
-    char* test = (char *)malloc(512);
-    SDL_RWread(read_file, test, sizeof(test), 40);
-    SDL_Log("Completed List: %s", test);
 
     menu_set_button(map_menu_window, 0, 0, "", SMALL, 0, map_menu_buttons, button_col_1, button_row_1, button_width, button_height);
     menu_set_button(map_menu_window, 1, 2, "", SMALL, 0, map_menu_buttons, button_col_2, button_row_1, button_width, button_height);
@@ -463,6 +494,27 @@ void menu_initialize_map_list_window(char *filename)
     menu_set_button(map_menu_window, 19, 38, "", SMALL, 0, map_menu_buttons, button_col_5, button_row_4, button_width, button_height);
 
     menu_set_button(map_menu_window, 20, 40, "", SMALL, 0, map_menu_buttons, button_col_3, button_row_5, rbutton_width, rbutton_height);
+
+    for(int i = 0; i < 20; i++)
+    {
+        switch(active_pack_id)
+        {
+            case 0:
+                if(pack1_completed_list[i] == 1)
+                {
+                    map_menu_window->buttons[i].selected = true;
+                }
+                break;
+            case 1:
+                if(pack2_completed_list[i] == 1)
+                {
+                    map_menu_window->buttons[i].selected = true;
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 void menu_update_map_list_window(Window *self, int button_id)
@@ -598,7 +650,7 @@ void menu_initialize_win_window()
     snprintf(temp_map_id, 8, "p%dm%d", active_pack_id, active_button_id);
     while(ptr != NULL)
     {
-        if(strncmp(ptr, temp_map_id, 7) == 0)
+        if(strcmp(ptr, temp_map_id) == 0)
         {
             SDL_Log("Already in completed list");
             return;
@@ -606,20 +658,42 @@ void menu_initialize_win_window()
 
         ptr = strtok(NULL, delim);
     }
-    SDL_RWclose(read_file);
 
     char map_id[8];
     snprintf(map_id, 8, "p%dm%d,", active_pack_id, active_button_id);
     size_t len = SDL_strlen(map_id);
-    SDL_RWops *save_file = SDL_RWFromFile(save_path, "a");
+    SDL_RWops *save_file = SDL_RWFromFile(save_path, "a+");
     if(!save_file)
     {
-        SDL_Log("menu_initialize_system() save_file not created or found");
+        SDL_Log("menu_initialize_win_window() save_file not created or found");
     }
 
     SDL_Log("Add to completed list: %s", map_id);
     SDL_RWwrite(save_file, map_id, len, 1);
     SDL_RWclose(save_file);
+    SDL_RWclose(read_file);
+
+    switch(active_pack_id)
+    {
+        case 0:
+            pack1_completed_list[active_button_id] = 1;
+            break;
+        case 1:
+            pack2_completed_list[active_button_id] = 1;
+            break;
+        default:
+            break;
+    }
+
+
+    for(int i = 0; i < WINDOW_MAX; i++)
+    {
+        if(window_stack[i]->handle == level_list_handle)
+        {
+            window_stack[i]->buttons[active_button_id].selected = true;
+            return;
+        }
+    }
 }
 
 void menu_update_win_window(Window *self, int button_id)
