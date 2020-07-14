@@ -277,6 +277,9 @@ void map_load_entities(int map_id)
             case 11:
                 cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT_DRILL);
                 break;
+            case 12:
+                cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT_JET);
+                break;
             case 20:
                 map_initialize_entity_tile(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, map_detail->entities[i].angle, HOME);
                 break;

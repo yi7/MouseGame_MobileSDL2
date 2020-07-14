@@ -37,7 +37,7 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
             break;
         case MOUSE_HOVER:
             mouse->skip_frame = 16;
-            mouse->velocity = 7;
+            mouse->velocity = 6;
             break;
         default:
             mouse->skip_frame = 0;

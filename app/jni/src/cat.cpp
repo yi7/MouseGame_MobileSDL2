@@ -30,6 +30,10 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
             cat->skip_frame = 16;
             cat->velocity = 7;//364;
             break;
+        case CAT_JET:
+            cat->skip_frame = 24;
+            cat->velocity = 8;
+            break;
         default:
             break;
     }
@@ -98,6 +102,7 @@ void cat_touch(Entity *self, Entity *other)
             break;
         case MOUSE:
         case MOUSE_DRILL:
+        case MOUSE_HOVER:
             if(entity_intersect_percentage(self, other) >= 50)
             {
                 entity_free(&other);
@@ -111,9 +116,12 @@ void cat_touch(Entity *self, Entity *other)
             }
             break;
         case TILE_HOLE:
-            if(entity_intersect_percentage(self, other) >= 85)
+            if(self->type != CAT_JET)
             {
-                entity_free(&self);
+                if(entity_intersect_percentage(self, other) >= 85)
+                {
+                    entity_free(&self);
+                }
             }
             break;
         default:
