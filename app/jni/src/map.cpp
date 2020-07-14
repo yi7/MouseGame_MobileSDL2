@@ -267,6 +267,10 @@ void map_load_entities(int map_id)
                 mouse_max++;
                 mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE_DRILL);
                 break;
+            case 2:
+                mouse_max++;
+                mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE_HOVER);
+                break;
             case 10:
                 cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT);
                 break;

@@ -35,6 +35,10 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
             mouse->skip_frame = 24;
             mouse->velocity = 8;//420;
             break;
+        case MOUSE_HOVER:
+            mouse->skip_frame = 16;
+            mouse->velocity = 7;
+            break;
         default:
             mouse->skip_frame = 0;
             mouse->velocity = 0;
@@ -96,10 +100,13 @@ void mouse_touch(Entity *self, Entity *other)
             }
             break;
         case TILE_HOLE:
-            if(entity_intersect_percentage(self, other) > 85)
+            if(self->type != MOUSE_HOVER)
             {
-                entity_update_all_active_state(FREEZE);
-                entity_free(&self);
+                if(entity_intersect_percentage(self, other) > 85)
+                {
+                    entity_update_all_active_state(FREEZE);
+                    entity_free(&self);
+                }
             }
             break;
         default:

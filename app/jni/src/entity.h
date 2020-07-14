@@ -23,6 +23,7 @@ enum Entity_Type
 {
     MOUSE,
     MOUSE_DRILL,
+    MOUSE_HOVER,
     CAT,
     CAT_DRILL,
     WALL,
