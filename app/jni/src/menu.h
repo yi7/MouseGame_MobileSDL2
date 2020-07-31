@@ -162,6 +162,10 @@ void menu_initialize_map_side_window(int button_id);
  */
 void menu_update_map_side_window(Window *self, int button_id);
 
+void menu_update_map_side_window_pause(Window *self, int button_id);
+
+void menu_update_map_side_window_lose(Window *self, int button_id);
+
 void menu_think();
 
 void menu_draw_win_window(Window *self);

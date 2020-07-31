@@ -21,10 +21,10 @@ enum Entity_State
 
 enum Entity_Type
 {
-    MOUSE,
+    MOUSE_DEFAULT,
     MOUSE_DRILL,
     MOUSE_HOVER,
-    CAT,
+    CAT_DEFAULT,
     CAT_DRILL,
     CAT_JET,
     WALL,
@@ -32,6 +32,13 @@ enum Entity_Type
     TILE_ARROW,
     TILE_HOME,
     TILE_HOLE
+};
+
+enum Entity_Class
+{
+    MOUSE,
+    CAT,
+    OTHER
 };
 
 typedef struct Entity_S
@@ -48,6 +55,7 @@ typedef struct Entity_S
     int life;
     enum Entity_State state; /**<state of entity*/
     enum Entity_Type type; /**<type of entity*/
+    enum Entity_Class e_class;
     Sprite *sprite; /**<sprite associated with entity*/
 
     void (*free)(struct Entity_S *self); /**<cleanup function of entity*/
@@ -150,5 +158,7 @@ void entity_think_all();
  * @param state the state to change to
  */
 void entity_update_all_active_state(Entity_State state);
+
+int entity_count_class(Entity_Class e_class);
 
 #endif //MOUSEGAME_ENTITY_H

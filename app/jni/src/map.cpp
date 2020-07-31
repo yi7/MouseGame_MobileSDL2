@@ -261,7 +261,7 @@ void map_load_entities(int map_id)
         {
             case 0:
                 mouse_max++;
-                mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE);
+                mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE_DEFAULT);
                 break;
             case 1:
                 mouse_max++;
@@ -272,7 +272,7 @@ void map_load_entities(int map_id)
                 mouse_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, MOUSE_HOVER);
                 break;
             case 10:
-                cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT);
+                cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT_DEFAULT);
                 break;
             case 11:
                 cat_initialize(map_detail->entities[i].x * tile_frame_size, map_detail->entities[i].y * tile_frame_size, tile_frame_size, map_detail->entities[i].angle, CAT_DRILL);
@@ -418,7 +418,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case EMOUSE_NORMAL:
                 if(!tile_list[tile_position].occupied)
                 {
-                    mouse_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, MOUSE);
+                    mouse_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, MOUSE_DEFAULT);
                     tile_list[tile_position].occupied = true;
                     entity_count++;
                 }
@@ -434,7 +434,7 @@ void map_update(float touch_x, float touch_y, float untouch_x, float untouch_y)
             case ECAT_NORMAL:
                 if(!tile_list[tile_position].occupied)
                 {
-                    cat_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, CAT);
+                    cat_initialize(tile_list[tile_position].point.x, tile_list[tile_position].point.y, tile_list[tile_position].frame_size.w, angle, CAT_DEFAULT);
                     tile_list[tile_position].occupied = true;
                     entity_count++;
                 }
@@ -503,6 +503,7 @@ bool map_place_tile(int x, int y, int angle, int frame)
     tile->frame = frame;
     tile->life = 1;
     tile->state = STOP;
+    tile->e_class = OTHER;
     switch(frame)
     {
         case ARROW:
@@ -617,13 +618,13 @@ void map_touch_active_entity(Entity *self, Entity *other)
     switch(map_edit_type)
     {
         case EMOUSE_REMOVE:
-            if(other->type == MOUSE)
+            if(other->type == MOUSE_DEFAULT)
             {
                 entity_free(&other);
             }
             break;
         case ECAT_REMOVE:
-            if(other->type == CAT)
+            if(other->type == CAT_DEFAULT)
             {
                 entity_free(&other);
             }
@@ -790,6 +791,7 @@ void map_initialize_entity_tile(int x, int y, int angle, int frame)
     tile->frame = frame;
     tile->life = 1;
     tile->state = STOP;
+    tile->e_class = OTHER;
     switch(frame)
     {
         case HOLE:
@@ -812,8 +814,14 @@ void map_initialize_entity_tile(int x, int y, int angle, int frame)
     tile->think = NULL;
 }
 
-void map_update_home_tile(Entity *self)
+void map_update_home_tile(Entity *entity)
 {
+    if(entity->e_class == CAT)
+    {
+        map_state = LOSE;
+        return;
+    }
+
     mouse_count++;
     if(mouse_count == mouse_max)
     {
@@ -916,10 +924,10 @@ void map_save_edit()
             entity_list[entity_index].angle = check->angle;
             switch(check->type)
             {
-                case MOUSE:
+                case MOUSE_DEFAULT:
                     entity_list[entity_index].type = 0;
                     break;
-                case CAT:
+                case CAT_DEFAULT:
                     entity_list[entity_index].type = 10;
                     break;
                 case TILE_HOME:
@@ -961,4 +969,14 @@ int map_get_arrow_count()
 int map_get_arrow_max()
 {
     return arrow_max;
+}
+
+void map_think()
+{
+    int remaining_mouse = entity_count_class(MOUSE);
+    if(remaining_mouse + mouse_count < mouse_max)
+    {
+        //SDL_Log("Lose");
+        map_state = LOSE;
+    }
 }

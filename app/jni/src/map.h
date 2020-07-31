@@ -160,7 +160,7 @@ void map_change_edit_type(Edit_Type type);
 
 void map_initialize_entity_tile(int x, int y, int angle, int frame);
 
-void map_update_home_tile(Entity *self);
+void map_update_home_tile(Entity *entity);
 
 void map_set_properties(Map_State state, int active_id);
 
@@ -173,5 +173,7 @@ void map_reset_edit();
 int map_get_arrow_count();
 
 int map_get_arrow_max();
+
+void map_think();
 
 #endif //MOUSEGAME_MAP_H

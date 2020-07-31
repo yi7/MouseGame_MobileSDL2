@@ -18,11 +18,12 @@ void cat_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     cat->life = 1;
     cat->state = STOP;
     cat->type = type;
+    cat->e_class = CAT;
     cat->sprite = animals;
 
     switch(type)
     {
-        case CAT:
+        case CAT_DEFAULT:
             cat->skip_frame = 0;
             cat->velocity = 7;//364;
             break;
@@ -100,7 +101,7 @@ void cat_touch(Entity *self, Entity *other)
                 self->stuck = false;
             }
             break;
-        case MOUSE:
+        case MOUSE_DEFAULT:
         case MOUSE_DRILL:
         case MOUSE_HOVER:
             if(entity_intersect_percentage(self, other) >= 50)
@@ -112,6 +113,7 @@ void cat_touch(Entity *self, Entity *other)
         case TILE_HOME:
             if(entity_intersect_percentage(self, other) >= 85)
             {
+                other->update(self);
                 entity_update_all_active_state(FREEZE);
             }
             break;

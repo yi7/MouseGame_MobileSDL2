@@ -105,6 +105,7 @@ int SDL_main( int argc, char* args[] )
                 entity_draw_all();
                 entity_think_all();
                 menu_think();
+                map_think();
                 break;
         }
 

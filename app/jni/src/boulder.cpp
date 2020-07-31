@@ -16,6 +16,7 @@ void boulder_initialize(int x, int y)
     boulder->life = 1;
     boulder->state = STOP;
     boulder->type = BOULDER;
+    boulder->e_class = OTHER;
     boulder->sprite = tiles;
 
     boulder->free = boulder_free;

@@ -309,3 +309,22 @@ void entity_update_all_active_state(Entity_State state)
         }
     }
 }
+
+int entity_count_class(Entity_Class e_class)
+{
+    int count = 0;
+    for(int i = 0; i < ENTITY_MAX; i++)
+    {
+        if(!entity_list[i].inuse)
+        {
+            continue;
+        }
+
+        if(entity_list[i].e_class == e_class)
+        {
+            count++;
+        }
+    }
+
+    return count;
+}

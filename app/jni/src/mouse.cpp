@@ -18,6 +18,7 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
     mouse->life = 1;
     mouse->angle = angle;
     mouse->type = type;
+    mouse->e_class = MOUSE;
     mouse->sprite = animals;
     mouse->free = mouse_free;
     mouse->draw = mouse_draw;
@@ -27,7 +28,7 @@ void mouse_initialize(int x, int y, int frame_size, int angle, Entity_Type type)
 
     switch(type)
     {
-        case MOUSE:
+        case MOUSE_DEFAULT:
             mouse->skip_frame = 0;
             mouse->velocity = 8;//420;
             break;

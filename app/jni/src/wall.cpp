@@ -34,6 +34,7 @@ void wall_initialize(int x, int y, int frame, int frame_size, int angle, Entity_
     wall->life = 1;
     wall->state = STOP;
     wall->type = type;
+    wall->e_class = OTHER;
     wall->free = wall_free;
     wall->draw = wall_draw;
     wall->touch = NULL;

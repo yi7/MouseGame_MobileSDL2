@@ -131,9 +131,9 @@ void menu_initialize_base_window()
     int play_x = (graphics_reference.screen_width / 2) - (play_w / 2);
     int play_y = (graphics_reference.screen_height / 2) - (play_w / 2);
 
-    int help_x = (graphics_reference.screen_width / 2) - (graphics_reference.tile_padding);
-    int help_y = play_y + play_w - graphics_reference.tile_padding_4;
-    int help_w = graphics_reference.tile_padding * 2;
+    int help_x = (graphics_reference.screen_width / 2) - (graphics_reference.tile_padding * 1.25);
+    int help_y = play_y + play_w - graphics_reference.tile_padding_2;
+    int help_w = graphics_reference.tile_padding * 2.5;
 
     //int play_x = (graphics_reference.screen_width / 2) -
 
@@ -403,10 +403,10 @@ void menu_initialize_pack_list_window()
 
     menu_set_button(pack_menu_window, 0, 0, "", SMALL, 0, pack_menu_buttons, pack1_x, button_y, button_width, button_height);
     menu_set_button(pack_menu_window, 1, 1, "", SMALL, 0, pack_menu_buttons, pack2_x, button_y, button_width, button_height);
-    menu_set_button(pack_menu_window, 2, 2, "", SMALL, 0, pack_menu_buttons, pack3_x, button_y, button_width, button_height);
+    //menu_set_button(pack_menu_window, 2, 2, "", SMALL, 0, pack_menu_buttons, pack3_x, button_y, button_width, button_height);
     //menu_set_button(pack_menu_window, 0, 3, "", SMALL, 0, pack_menu_buttons, pack4_x, button_y, button_width, button_height);
     //menu_set_button(pack_menu_window, 0, 4, "", SMALL, 0, pack_menu_buttons, pack5_x, button_y, button_width, button_height);
-    menu_set_button(pack_menu_window, 3, 40, "", SMALL, 0, return_button, rbutton_x, rbutton_y, rbutton_width, rbutton_height);
+    menu_set_button(pack_menu_window, 2, 40, "", SMALL, 0, return_button, rbutton_x, rbutton_y, rbutton_width, rbutton_height);
 }
 
 void menu_update_pack_list_window(Window *self, int button_id)
@@ -421,11 +421,11 @@ void menu_update_pack_list_window(Window *self, int button_id)
             active_pack_id = 1;
             menu_initialize_map_list_window("files/pack2.txt");
             break;
-        case 2:
+        /*case 2:
             active_pack_id = 2;
             menu_initialize_map_list_window("files/pack3.txt");
-            break;
-        case 3:
+            break;*/
+        case 2:
             menu_pop_window(self->handle);
             break;
         default:
@@ -572,10 +572,10 @@ void menu_initialize_map_side_window(int button_id)
     int button_row_5 = button_row_4 + graphics_reference.tile_padding + graphics_reference.tile_padding_4 + graphics_reference.tile_padding_8;
 
     menu_set_button(map_window, 0, 56, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_1, small_button_width, small_button_height);
-    menu_set_button(map_window, 1, 57, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_2, small_button_width, small_button_height);
-    menu_set_button(map_window, 2, 58, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_3, small_button_width, small_button_height);
-    menu_set_button(map_window, 3, 48, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_4, small_button_width, small_button_height);
-    menu_set_button(map_window, 4, 40, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_5, rbutton_width, rbutton_height);
+    //menu_set_button(map_window, 1, 57, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_2, small_button_width, small_button_height);
+    menu_set_button(map_window, 1, 58, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_2, small_button_width, small_button_height);
+    menu_set_button(map_window, 2, 48, "", SMALL, 0, map_side_menu_buttons, button_col_1, button_row_4, small_button_width, small_button_height);
+    menu_set_button(map_window, 3, 40, "", SMALL, 0, map_return_button, rbutton_col_1, button_row_5, rbutton_width, rbutton_height);
 }
 
 void menu_update_map_side_window(Window *self, int button_id)
@@ -585,13 +585,53 @@ void menu_update_map_side_window(Window *self, int button_id)
         case 0:
             map_play();
             break;
-        case 1:
+        /*case 1:
             map_stop();
-            break;
-        case 2:
+            break;*/
+        case 1:
             map_reset();
             break;
-        case 4:
+        case 3:
+            map_free_all();
+            menu_pop_window(self->handle);
+            break;
+        default:
+            break;
+    }
+}
+
+void menu_update_map_side_window_pause(Window *self, int button_id)
+{
+    switch(button_id)
+    {
+        case 0:
+            map_stop();
+            break;
+        /*case 1:
+            map_stop();
+            break;*/
+        case 1:
+            map_reset();
+            self->update = menu_update_map_side_window;
+            break;
+        case 3:
+            map_free_all();
+            menu_pop_window(self->handle);
+            break;
+        default:
+            break;
+    }
+}
+
+void menu_update_map_side_window_lose(Window *self, int button_id)
+{
+    switch(button_id)
+    {
+        case 1:
+            map_reset();
+            self->update = menu_update_map_side_window;
+            break;
+        case 3:
             map_free_all();
             menu_pop_window(self->handle);
             break;
@@ -602,17 +642,34 @@ void menu_update_map_side_window(Window *self, int button_id)
 
 void menu_think()
 {
-    if(map_get_state() == WIN)
-    {
-        menu_initialize_win_window();
-    }
-
     //SDL_Log("%d", WIN_TOP->handle);
 
     if(WIN_TOP->map_open)
     {
+        switch(map_get_state())
+        {
+            case WIN:
+                menu_initialize_win_window();
+                return;
+            case LOSE:
+                WIN_TOP->buttons[0].frame = 75;
+                WIN_TOP->update = menu_update_map_side_window_lose;
+                break;
+            case PLAY:
+                WIN_TOP->buttons[0].frame = 57;
+                WIN_TOP->update = menu_update_map_side_window_pause;
+                break;
+            case PAUSE:
+                WIN_TOP->buttons[0].frame = 56;
+                WIN_TOP->update = menu_update_map_side_window;
+                break;
+            default:
+                WIN_TOP->buttons[0].frame = 56;
+                break;
+        }
+
         int arrow_placed = map_get_arrow_max() - map_get_arrow_count();
-        WIN_TOP->buttons[3].frame = arrow_placed + 48;
+        WIN_TOP->buttons[2].frame = arrow_placed + 48;
     }
 }
 
